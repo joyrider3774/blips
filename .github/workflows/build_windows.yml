@@ -42,48 +42,48 @@ jobs:
         run: |
           mkdir ./Release
           mkdir ./Release/Blips
-          cp blips.exe ./Release/Blips/
-          cp -R ./fonts ./Release/Blips/
-          cp -R ./graphics ./Release/Blips/
-          cp -R ./levelpacks ./Release/Blips/
-          cp -R ./music ./Release/Blips/
-          cp -R ./sound ./Release/Blips/
-          cp ./README.md ./Release/Blips/
-          cp ./LICENSE ./Release/Blips/
+          cp blips.exe ./Release/Blips/ || :
+          cp -R ./fonts ./Release/Blips/ || :
+          cp -R ./graphics ./Release/Blips/ || :
+          cp -R ./levelpacks ./Release/Blips/ || :
+          cp -R ./music ./Release/Blips/ || :
+          cp -R ./sound ./Release/Blips/ || :
+          cp ./README.md ./Release/Blips/ || :
+          cp ./LICENSE ./Release/Blips/ || :
       - name: Copy dll libraries
         shell: msys2 {0}
         run: |
-          cp /${{matrix.sys}}/bin/libbrotli*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libbz*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libfreetype*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libgcc*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libglib*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libgraphite*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libharfbuzz*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libiconv*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libintl*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libjbig*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libjpeg*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/liblcms*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libLerc*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/liblzma*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libmpg123*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libmikm*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libogg*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libopus*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libpcre*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libpng*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libstdc*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libtiff*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libwebp*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libzstd*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/zlib*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libSDL*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/SDL*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./Release/Blips/
-          cp /${{matrix.sys}}/bin/libwinpthread*.dll ./Release/Blips/
+          cp /${{matrix.sys}}/bin/libbrotli*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libbz*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libfreetype*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libgcc*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libglib*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libgraphite*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libharfbuzz*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libiconv*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libintl*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libjbig*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libjpeg*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/liblcms*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libLerc*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/liblzma*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libmpg123*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libmikm*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libogg*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libopus*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libpcre*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libpng*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libstdc*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libtiff*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libwebp*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libzstd*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/zlib*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libSDL*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/SDL*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libwinpthread*.dll ./Release/Blips/ || :
       - name: Store build
         uses: actions/upload-artifact@v3
         with:
