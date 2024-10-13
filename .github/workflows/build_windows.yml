@@ -66,13 +66,12 @@ jobs:
           cp /${{matrix.sys}}/bin/libintl*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libjbig*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libjpeg*.dll ./Release/Blips/ || :
-          cp /${{matrix.sys}}/bin/liblcms*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libLerc*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/liblzma*.dll ./Release/Blips/ || :
-          cp /${{matrix.sys}}/bin/libmpg123*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libmikm*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libmad*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libogg*.dll ./Release/Blips/ || :
-          cp /${{matrix.sys}}/bin/libopus*.dll ./Release/Blips/ || :
+          cp /${{matrix.sys}}/bin/libopenal*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libpcre*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libpng*.dll ./Release/Blips/ || :
           cp /${{matrix.sys}}/bin/libstdc*.dll ./Release/Blips/ || :
