@@ -25,7 +25,7 @@ bool LevelEditorMode=false,LevelHasChanged=false,StageReload=false;
 SDL_Color MenuBoxColor = {75,138,158,255}, MenuBoxBorderColor = {2,66,87,255}, MenuTextColor = {2,66,87,0};
 CWorldParts WorldParts;
 Uint32 NextTime=0;
-int Volume = 128,StartScreenX=20,StartScreenY=24;
+int Volume = 128,StartScreenX=0,StartScreenY=0;
 char LevelPackName[21]= "";
 char LevelPackFileName[21] = "";
 char InstalledLevelPacks[MaxLevelPacks][21];

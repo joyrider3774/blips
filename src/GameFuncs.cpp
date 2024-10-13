@@ -642,15 +642,11 @@ void LoadSettings()
 	if (Fp)
 	{
 		fscanf(Fp,"Volume=%d\n",&Volume);
-        StartScreenX = 0;
-        StartScreenY = 0;
 		fclose(Fp);
 	}
 	else
 	{
 		Volume = 128;
-		StartScreenX = (Screen->w - Buffer->w) / 2;
-        StartScreenY = (Screen->h - Buffer->h) / 2;
 	}
 	SetVolume(Volume);
 }
