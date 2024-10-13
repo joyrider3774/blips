@@ -10,9 +10,9 @@ void TitleScreen()
 	int alpha = 0;
     SDL_Surface *Tmp;
 	int Teller, Selection = 1;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
+	CInput *Input = CInput_Create(InputDelay, disableJoysticks);
 	SDL_Rect Rect;
-	char *Tekst = new char[300];
+	char *Tekst = (char*) malloc(sizeof(char)* 300);
 	Tmp = SDL_DisplayFormat(Buffer);
 	while (GameState == GSTitleScreen)
 	{
@@ -29,55 +29,24 @@ void TitleScreen()
 			}
 		}
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
-		Input->Update();
-
-		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)])
+		CInput_Update(Input);
+		//BUT_SELECT
+		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-
-		if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r])
-        {
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
-            {
-                if(StartScreenX - 2 >= 0)
-                    StartScreenX -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
-            {
-                if(StartScreenX + 2 + Buffer->w <= Screen->w)
-                    StartScreenX +=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
-            {
-                if(StartScreenY - 2 >=0)
-                    StartScreenY -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
-            {
-                if(StartScreenY + 2 + Buffer->h <= Screen->h)
-                    StartScreenY +=2;
-                Input->Delay();
-            }
-        }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+		//BUT_VOLUP
+		if (CInput_Ready(Input) && ( Input->KeyboardHeld[SDLK_KP_PLUS]))
         {
             IncVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+		//BUT_VOLMIN
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_KP_MINUS]))
         {
             DecVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+		//BUT_LEFT
+        if (CInput_Ready(Input) && ( Input->KeyboardHeld[SDLK_LEFT]))
         {
             if(Selection==3)
                 if (InstalledLevelPacksCount > 0)
@@ -88,10 +57,10 @@ void TitleScreen()
                         sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
                         AddUnderScores(LevelPackFileName);
                     }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+		//BUT_RIGHT
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_RIGHT]))
         {
             if (Selection==3)
                 if (InstalledLevelPacksCount > 0)
@@ -102,11 +71,10 @@ void TitleScreen()
                         sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
                         AddUnderScores(LevelPackFileName);
                     }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if((Input->Ready()) && (Input->KeyboardHeld[SDLK_DOWN] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]) &&
-           !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r]))
+		//BUT_DOWN 
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_DOWN]))
         {
             if (Selection < 6)
             {
@@ -115,11 +83,10 @@ void TitleScreen()
                     Mix_PlayChannel(-1,Sounds[SND_MENU],0);
             }
 
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if((Input->Ready()) && (Input->KeyboardHeld[SDLK_UP] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]) &&
-           !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r]))
+		//BUT_UP
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_UP]))
         {
             if (Selection > 1)
             {
@@ -127,10 +94,10 @@ void TitleScreen()
                 if (GlobalSoundEnabled)
                     Mix_PlayChannel(-1,Sounds[SND_MENU],0);
             }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN])
+		//BUT_A
+        if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN])
         {
             switch(Selection)
             {
@@ -154,23 +121,12 @@ void TitleScreen()
                             SDL_BlitSurface(IMGTitleScreen,NULL,Buffer,NULL);
                             sprintf(Tekst,"There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!",LevelPackName);
                             PrintForm(Tekst);
-                            Input->Reset();
+                            CInput_Reset(Input);
                         }
                     }
                     break;
-                case 2:
-                    GameState=GSLevelEditorMenu;
-                    LevelEditorMode=true;
-                    if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
-                    break;
                 case 4:
                     GameState=GSCredits;
-                    if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
-                    break;
-                case 5:
-                    GameState = GSSetupUsbJoystickButtons;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                     break;
@@ -225,7 +181,7 @@ void TitleScreen()
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
 	}
-	delete[] Tekst;
+	free(Tekst);
 	SDL_FreeSurface(Tmp);
-	delete Input;
+	CInput_Destroy(Input);
 }

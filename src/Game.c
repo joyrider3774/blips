@@ -6,13 +6,14 @@
 #include "Common.h"
 #include "GameFuncs.h"
 #include "CInput.h"
-#include "CPlayer.h"
-
+#include "CWorldPart.h"
+#include "CWorldParts.h"
+#include "stdbool.h"
 bool StageDone()
 {
 	int Teller,NumDiamonds=0;
-	for (Teller=0;Teller<WorldParts.ItemCount;Teller++)
-		if (WorldParts.Items[Teller]->GetType() == IDDiamond)
+	for (Teller=0;Teller<WorldParts->ItemCount;Teller++)
+		if (WorldParts->Items[Teller]->Type == IDDiamond)
 		{
 			NumDiamonds++;
 		}
@@ -27,28 +28,28 @@ void Game()
 	char Text[500];
 	int alpha=0,teller;
 	Uint32 Time=0,Time2=0;
-	CPlayer *Player=0;
+	CWorldPart *Player=NULL;
 	bool ResetViewPort=false;
-	for (teller=0;teller<WorldParts.ItemCount;teller++)
+	for (teller=0;teller<WorldParts->ItemCount;teller++)
 	{
-		if (WorldParts.Items[teller]->GetType() == IDPlayer)
+		if (WorldParts->Items[teller]->Type == IDPlayer)
 		{
-			Player = (CPlayer*) WorldParts.Items[teller];
+			Player = WorldParts->Items[teller];
 			break;
 		}
 	}
 	//should never happen
 	if(!Player)
 	{
-		Player = new CPlayer(0,0);
-		WorldParts.Add(Player);
+		Player = CWorldPart_Create(0,0,IDPlayer);
+		CWorldParts_Add(WorldParts, Player);
 	}
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
     Rect.h = Buffer->h;
     Rect.x = StartScreenX;
     Rect.y = StartScreenY;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
+	CInput *Input = CInput_Create(InputDelay, disableJoysticks);
 	Tmp = SDL_DisplayFormat(Buffer);
 	int framecounter=0,fps=0;
 	Time = SDL_GetTicks();
@@ -62,7 +63,7 @@ void Game()
 			SetVolume(Volume);
 		}
 	}
-    WorldParts.LimitVPLevel();
+    CWorldParts_LimitVPLevel(WorldParts);
     while (GameState == GSGame)
     {
         if(!Mix_PlayingMusic())
@@ -70,69 +71,66 @@ void Game()
         {
             if (MusicCount > 1)
             {
-                //printf("game():2\n");
                 SelectedMusic =	1+rand()%(MusicCount-1);
                 Mix_PlayMusic(Music[SelectedMusic],0);
                 SetVolume(Volume);
-                //printf("game():3\n");
             }
             else
                 if(MusicCount ==1)
                 {
-                    //printf("game():4\n");
                     SelectedMusic =	0;
                     Mix_PlayMusic(Music[SelectedMusic],0);
                     SetVolume(Volume);
-                    //printf("game():5\n");
                 }
 
         }
 
-        Input->Update();
-        //printf("game():6\n");
+        CInput_Update(Input);
+        
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-        //printf("game():7\n");
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        
+		//BUT_VOLUP
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_KP_PLUS]))
         {
             IncVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-        //printf("game():8\n");
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        //BUT_VOLMIN
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_KP_MINUS]))
         {
             DecVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-        //printf("game():9\n");
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        //BUT_SELECT
+        if(Input->KeyboardHeld[SDLK_ESCAPE])
         {
             if(!LevelEditorMode)
                 GameState = GSStageSelect;
         }
-        //printf("game():10\n");
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
+        //BUT_START
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_RETURN]))
         {
             if(LevelEditorMode)
                 GameState=GSLevelEditor;
             else
             {
                 sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                WorldParts.Load(FileName);
+                CWorldParts_Load(WorldParts, FileName);
 				//need to find player again
-				for (teller=0;teller<WorldParts.ItemCount;teller++)
+				for (teller=0;teller<WorldParts->ItemCount;teller++)
 				{
-					if (WorldParts.Items[teller]->GetType() == IDPlayer)
+					if (WorldParts->Items[teller]->Type == IDPlayer)
 					{
-						Player = (CPlayer*) WorldParts.Items[teller];
+						Player = WorldParts->Items[teller];
 						break;
 					}
 				}
             }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-        //printf("game():12\n");
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
+        //BUT_R
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
         {
             if (MusicCount > 1)
             {
@@ -143,84 +141,88 @@ void Game()
                 {
                     Mix_HaltMusic();
                     Mix_PlayMusic(Music[SelectedMusic],0);
-                    //Mix_HookMusicFinished(MusicFinished);
                     SetVolume(Volume);
                 }
             }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-        //printf("game():13\n");
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        //BUT_LEFT
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_LEFT]))
         {
-            Input->Delay();
+            CInput_Delay(Input);
         }
-        //printf("game():14\n");
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        //BUT_RIGHT
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_RIGHT]))
         {
 
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[SDLK_DOWN])
+		//BUT_DOWN
+        if (CInput_Ready(Input) && Input->KeyboardHeld[SDLK_DOWN])
         {
-            Input->Delay();
+            CInput_Delay(Input);
         }
 
-        //move up
-        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[SDLK_UP])
+        //BUT_UP
+        if (CInput_Ready(Input) && Input->KeyboardHeld[SDLK_UP])
         {
-            Input->Delay();
+            CInput_Delay(Input);
         }
 
-        //printf("game():15\n");
         if(Time+10<SDL_GetTicks())
         {
-            //printf("game():16\n");
-            if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y])
+			//BUT_Y
+            if (Input->KeyboardHeld[SDLK_y])
             {
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT])
-                    WorldParts.ViewPort->Move(-2,0);
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT])
-                    WorldParts.ViewPort->Move(2,0);
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP])
-                    WorldParts.ViewPort->Move(0,-2);
-                if( (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
-                    WorldParts.ViewPort->Move(0,2);
+				//BUT_LEFT
+                if(Input->KeyboardHeld[SDLK_LEFT])
+                    CViewPort_Move(WorldParts->ViewPort, -2,0);
+				//BUT_RIGHT
+                if(Input->KeyboardHeld[SDLK_RIGHT])
+                    CViewPort_Move(WorldParts->ViewPort, -2,0);
+				//BUT_UP
+                if(Input->KeyboardHeld[SDLK_UP])
+                    CViewPort_Move(WorldParts->ViewPort, -2,0);
+				//BUT_DOWN
+                if( (Input->KeyboardHeld[SDLK_DOWN]))
+                    CViewPort_Move(WorldParts->ViewPort, -2,0);
                 ResetViewPort = true;
             }
             else
             {
                 if (ResetViewPort)
                 {
-					WorldParts.LimitVPLevel();
-                    WorldParts.CenterVPOnPlayer();
+					CWorldParts_LimitVPLevel(WorldParts);
+                    CWorldParts_CenterVPOnPlayer(WorldParts);
                     ResetViewPort = false;
                 }
             }
-            //printf("game():17\n");
-            if (!Player->IsMoving && !Player->IsDeath && !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y]))
+            //BUT_Y
+            if (!Player->IsMoving && !Player->IsDeath && !(Input->KeyboardHeld[SDLK_y]))
             {
-
+				//BUT_DOWN
                 //move down
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[SDLK_DOWN])
+                if (Input->KeyboardHeld[SDLK_DOWN])
                 {
-                        Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()+1,false);
+                    CWorldPart_MoveTo(Player, Player->PlayFieldX,Player->PlayFieldY+1,false);
                 }
-
+				//BUT_UP
                 //move up
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[SDLK_UP])
+                if (Input->KeyboardHeld[SDLK_UP])
                 {
-                        Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()-1,false);
+                        CWorldPart_MoveTo(Player, Player->PlayFieldX,Player->PlayFieldY-1,false);
                 }
+				//BUT_LEFT
                 //move left
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT])
+                if (Input->KeyboardHeld[SDLK_LEFT])
                 {
-                        Player->MoveTo(Player->GetPlayFieldX()-1,Player->GetPlayFieldY(),false);
+                        CWorldPart_MoveTo(Player, Player->PlayFieldX-1,Player->PlayFieldY,false);
                 }
+				//BUT_RIGHT
                 //move right
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT])
+                if (Input->KeyboardHeld[SDLK_RIGHT])
                 {
-                        Player->MoveTo(Player->GetPlayFieldX()+1,Player->GetPlayFieldY(),false);
+                        CWorldPart_MoveTo(Player, Player->PlayFieldX+1,Player->PlayFieldY,false);
                 }
 
             }
@@ -233,8 +235,8 @@ void Game()
 		if(!Tmp)
 			printf("BLEEEEEH\n");
         SDL_BlitSurface(IMGBackground,NULL,Tmp,NULL);
-        WorldParts.Draw(Tmp);
-        WorldParts.Move();
+        CWorldParts_Draw(WorldParts,Tmp);
+        CWorldParts_Move(WorldParts);
 
 
         sprintf(Text,"Fps:%d",fps);
@@ -276,9 +278,9 @@ void Game()
         if (Player->IsDeath)
         {
             ExplosionsFound =false;
-            for(teller=0;teller<WorldParts.ItemCount;teller++)
+            for(teller=0;teller<WorldParts->ItemCount;teller++)
             {
-                if(WorldParts.Items[teller]->GetType() == IDExplosion)
+                if(WorldParts->Items[teller]->Type == IDExplosion)
                 {
                     ExplosionsFound = true;
                 }
@@ -293,12 +295,12 @@ void Game()
 					else
 					{
 						sprintf(FileName,"./temp.lev");
-						WorldParts.Load(FileName);
-						for (teller=0;teller<WorldParts.ItemCount;teller++)
+						CWorldParts_Load(WorldParts, FileName);
+						for (teller=0;teller<WorldParts->ItemCount;teller++)
 						{
-							if (WorldParts.Items[teller]->GetType() == IDPlayer)
+							if (WorldParts->Items[teller]->Type == IDPlayer)
 							{
-								Player = (CPlayer*)WorldParts.Items[teller];
+								Player = WorldParts->Items[teller];
 								break;
 							}
 
@@ -310,22 +312,22 @@ void Game()
 					if (AskQuestion("Too bad you died !\nDo you want to try again?\n\n(A) Try Again (X) Level Selector"))
 					{
 						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-						WorldParts.Load(FileName);
-						for (teller=0;teller<WorldParts.ItemCount;teller++)
+						CWorldParts_Load(WorldParts, FileName);
+						for (teller=0;teller<WorldParts->ItemCount;teller++)
 						{
-							if (WorldParts.Items[teller]->GetType() == IDPlayer)
+							if (WorldParts->Items[teller]->Type == IDPlayer)
 							{
-								Player = (CPlayer*) WorldParts.Items[teller];
+								Player = WorldParts->Items[teller];
 								break;
 							}
 						}
 								//should never happen
 						if(!Player)
 						{
-							Player = new CPlayer(0,0);
-							WorldParts.Add(Player);
+							Player = CWorldPart_Create(0,0,IDPlayer);
+							CWorldParts_Add(WorldParts, Player);
 						}
-						Input->Reset();
+						CInput_Reset(Input);
 					}
 					else
 						GameState = GSStageSelect;
@@ -345,12 +347,12 @@ void Game()
 				else
 				{
 					sprintf(FileName,"./temp.lev");
-					WorldParts.Load(FileName);
-					for (teller=0;teller<WorldParts.ItemCount;teller++)
+					CWorldParts_Load(WorldParts, FileName);
+					for (teller=0;teller<WorldParts->ItemCount;teller++)
 					{
-						if (WorldParts.Items[teller]->GetType() == IDPlayer)
+						if (WorldParts->Items[teller]->Type == IDPlayer)
 						{
-							Player = (CPlayer*)WorldParts.Items[teller];
+							Player = WorldParts->Items[teller];
 							break;
 						}
 
@@ -390,5 +392,5 @@ void Game()
     }
     Mix_HaltMusic();
     SDL_FreeSurface(Tmp);
-    delete Input;
+    CInput_Destroy(Input);
 }

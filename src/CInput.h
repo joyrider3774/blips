@@ -19,24 +19,27 @@
 #include <SDL_joystick.h>
 #include <SDL_keysym.h>
 #include <SDL.h>
+#include "stdbool.h"
 
-class CInput {
-    public:
-        bool JoystickHeld[MAXJOYSTICKS][MAXJOYSTICKBUTTONS];
-        bool SpecialsHeld[MAXSPECIALKEYS];
-        bool KeyboardHeld[SDLK_LAST];
-        bool MouseHeld[MAXMOUSES][MAXMOUSEBUTTONS];
-        CInput(int UpdateCounterDelay, bool DisableJoysticks);
-        ~CInput(void);
-        void Update();
-        void Reset();
-        bool Ready(){ return (UpdateCounter == 0);};
-        void Delay(){ UpdateCounter = PUpdateCounterDelay;};
-        int NumJoysticks() { return PNumJoysticks;};
-    private:
-       int PNumJoysticks;
-       int UpdateCounter;
-       int PUpdateCounterDelay;
+typedef struct CInput CInput;
+struct CInput 
+{
+    bool JoystickHeld[MAXJOYSTICKS][MAXJOYSTICKBUTTONS];
+    bool SpecialsHeld[MAXSPECIALKEYS];
+    bool KeyboardHeld[SDLK_LAST];
+    bool MouseHeld[MAXMOUSES][MAXMOUSEBUTTONS];
+	int PNumJoysticks;
+    int UpdateCounter;
+    int PUpdateCounterDelay;
 };
+
+CInput* CInput_Create(int UpdateCounterDelay, bool DisableJoysticks);
+void CInput_Destroy(CInput* Input);
+void CInput_Update(CInput* Input);
+void CInput_Reset(CInput* Input);
+bool CInput_Ready(CInput* Input);
+void CInput_Delay(CInput* Input);
+int CInput_NumJoysticks(CInput* Input);
+
 
 #endif

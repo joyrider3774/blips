@@ -10,8 +10,8 @@ void Credits()
 {
     int alpha = 0;
     SDL_Surface *Tmp;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
-	char *LevelPackCreator = new char[21];
+	CInput *Input = CInput_Create(InputDelay, disableJoysticks);
+	char *LevelPackCreator = (char*) malloc(sizeof(char)* 21);
 	char FileName[FILENAME_MAX];
 	FILE *Fp;
 	SDL_Rect Rect;
@@ -20,7 +20,7 @@ void Credits()
     Rect.x = StartScreenX;
     Rect.y = StartScreenY;
     Tmp = SDL_DisplayFormat(Buffer);
-	char *Tekst = new char[500];
+	char *Tekst = (char*) malloc(sizeof(char)* 500);
 	sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);
 	Fp = fopen(FileName,"rt");
 	if (Fp)
@@ -42,25 +42,24 @@ void Credits()
         }
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
 
-		Input->Update();
+		CInput_Update(Input);
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+		//BUT_VOLUP
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_KP_PLUS]))
         {
             IncVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+		//BUT_VOLMIN
+        if (CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_KP_MINUS]))
         {
             DecVolume();
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
+		//BUT_X BUT_Y BUT_A BUT_B
 		if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] ||
-           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
-           Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] )
+           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b])
         {
             GameState=GSTitleScreen;
         }
@@ -91,8 +90,8 @@ void Credits()
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
 	}
-	delete[] Tekst;
-	delete[] LevelPackCreator;
+	free(Tekst);
+	free(LevelPackCreator);
 	SDL_FreeSurface(Tmp);
-	delete Input;
+	CInput_Destroy(Input);
 }

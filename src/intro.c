@@ -1,14 +1,15 @@
 #include <SDL.h>
+#include <SDL_framerate.h>
+#include <SDL_rotozoom.h>
 #include "CInput.h"
 #include "Common.h"
 #include "defines.h"
 #include "GameFuncs.h"
-#include <SDL_framerate.h>
-#include <SDL_rotozoom.h>
+
 void Intro()
 {
     SDL_Rect Rect;
-    CInput *Input = new CInput(10, disableJoysticks);
+    CInput *Input = CInput_Create(10, disableJoysticks);
     Uint8 alpha = 0;
     Uint32 Time=0;
     int IntroScreenNr = 1;
@@ -17,53 +18,17 @@ void Intro()
     Time = SDL_GetTicks();
     while (GameState == GSIntro)
     {
-        Input->Update();
-
+        CInput_Update(Input);
+		//BUT_A BUT_B  BUT_X BUT_Y
         if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] ||
-           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
-           Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] )
+           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] )
         {
             GameState=GSTitleScreen;
         }
 
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r])
-        {
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
-            {
-                if(StartScreenX - 2 >= 0)
-                    StartScreenX -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
-            {
-                if(StartScreenX + 2 + Buffer->w <= Screen->w)
-                    StartScreenX +=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
-            {
-                if(StartScreenY - 2 >=0)
-                    StartScreenY -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
-            {
-                if(StartScreenY + 2 + Buffer->h <= Screen->h)
-                    StartScreenY +=2;
-                Input->Delay();
-            }
-        }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
-        {
-            Input->Delay();
-        }
+		
 
         //tekenen naar buffer
 

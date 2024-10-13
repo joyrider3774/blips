@@ -118,48 +118,10 @@ void UnloadSounds()
 			Mix_FreeChunk(Sounds[Teller]);
 }
 
-void LoadJoystickSettings()
-{
-#ifdef RG35XX
-    JoystickSetup->AddDefinition(BUT_SELECT,"Go back / Quit",4,4);
-    JoystickSetup->AddDefinition(BUT_R,"Next Music / Next Part",8,8);
-    JoystickSetup->AddDefinition(BUT_L,"Prev Part",7,7);
-    JoystickSetup->AddDefinition(BUT_LEFT,"Left",JOYSTICK_LEFT,JOYSTICK_LEFT);
-    JoystickSetup->AddDefinition(BUT_RIGHT,"Right",JOYSTICK_RIGHT,JOYSTICK_RIGHT);
-    JoystickSetup->AddDefinition(BUT_DOWN,"Down",JOYSTICK_DOWN,JOYSTICK_DOWN);
-    JoystickSetup->AddDefinition(BUT_UP,"Up",JOYSTICK_UP,JOYSTICK_UP);
-    JoystickSetup->AddDefinition(BUT_A,"Select / Place part",3,3);
-    JoystickSetup->AddDefinition(BUT_X,"Center level",6,6);
-    JoystickSetup->AddDefinition(BUT_Y,"New Level / Erase all parts",5,5);
-    JoystickSetup->AddDefinition(BUT_B,"Stats / Hide position",9,9);
-    JoystickSetup->AddDefinition(BUT_START,"Restart / Test level",10,10);
-    JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",13,13);
-    JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",12,12);
-#else
-    JoystickSetup->AddDefinition(BUT_SELECT,"Go back / Quit",1,1);
-    JoystickSetup->AddDefinition(BUT_R,"Next Music / Next Part",5,5);
-    JoystickSetup->AddDefinition(BUT_L,"Prev Part",4,4);
-    JoystickSetup->AddDefinition(BUT_LEFT,"Left",JOYSTICK_LEFT,JOYSTICK_LEFT);
-    JoystickSetup->AddDefinition(BUT_RIGHT,"Right",JOYSTICK_RIGHT,JOYSTICK_RIGHT);
-    JoystickSetup->AddDefinition(BUT_DOWN,"Down",JOYSTICK_DOWN,JOYSTICK_DOWN);
-    JoystickSetup->AddDefinition(BUT_UP,"Up",JOYSTICK_UP,JOYSTICK_UP);
-    JoystickSetup->AddDefinition(BUT_A,"Select / Place part",0,0);
-    JoystickSetup->AddDefinition(BUT_X,"Center level",2,2);
-    JoystickSetup->AddDefinition(BUT_Y,"New Level / Erase all parts",3,3);
-    JoystickSetup->AddDefinition(BUT_B,"Stats / Hide position",6,6);
-    JoystickSetup->AddDefinition(BUT_START,"Restart / Test level",7,7);
-    JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",9,9);
-    JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",8,8);
-#endif
-JoystickSetup->LoadCurrentButtonValues("./joystick.def");
-}
-
-
-
 void FindLevels()
 {
 	int Teller=1;
-	char *FileName = new char[FILENAME_MAX];
+	char *FileName =  (char*) malloc(sizeof(char)* FILENAME_MAX);
 	InstalledLevels = 0;
 	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
 	while (FileExists(FileName))
@@ -173,7 +135,7 @@ void FindLevels()
 		sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
 	}
 	InstalledLevels=Teller;
-	delete[] FileName;
+	free(FileName);
 }
 
 void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
@@ -263,10 +225,10 @@ void RemoveUnderScores (char *string)
 
 char *GetString(char *NameIn,char *Msg)
 {
-	char *PackName = new char[21];
+	char *PackName = (char*) malloc(sizeof(char)* 21);
 	bool End=false,SubmitChanges=false;
 	int Teller,MaxSelection=0, Selection = 0,asci=97;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
+	CInput *Input = CInput_Create(InputDelay, disableJoysticks);
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
     Rect.h = Buffer->h;
@@ -286,21 +248,21 @@ char *GetString(char *NameIn,char *Msg)
             Mix_PlayMusic(Music[SelectedMusic],0);
             SetVolume(Volume);
         }
-		Input->Update();
+		CInput_Update(Input);
 
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+		//BUT_LEFT
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_LEFT]))
         {
             if (Selection > 0)
             {	Selection--;
                 asci = ord(PackName[Selection]);
             }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+		//BUT_RIGHT
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_RIGHT]))
         {
             if (Selection < 19)
             {
@@ -313,10 +275,10 @@ char *GetString(char *NameIn,char *Msg)
                 }
                 asci = ord(PackName[Selection]);
             }
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
+		//BUT_UP
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_UP]))
         {
             asci++;
             if (asci==123)
@@ -333,10 +295,10 @@ char *GetString(char *NameIn,char *Msg)
                 asci=97;                
 			}
 			PackName[Selection] = chr(asci);
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
+		//BUT_DOWN
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_DOWN]))
         {
             asci--;
             if(asci==96)
@@ -352,18 +314,18 @@ char *GetString(char *NameIn,char *Msg)
                 asci=122;
 			}
             PackName[Selection] = chr(asci);
-            Input->Delay();
+            CInput_Delay(Input);
         }
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_RETURN]))
+		//BUT_A
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_RETURN]))
         {
             if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
             End = true;
             SubmitChanges=true;
         }
-
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_ESCAPE] ))
+		//BUT_X
+        if(CInput_Ready(Input) && (Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_ESCAPE] ))
         {
             End=true;
             SubmitChanges=false;
@@ -407,7 +369,7 @@ char *GetString(char *NameIn,char *Msg)
 		}
 	if (!SubmitChanges)
 		sprintf(PackName,"%s",NameIn);
-	delete Input;
+	CInput_Destroy(Input);
 	return PackName;
 }
 
@@ -532,7 +494,7 @@ void LoadUnlockData()
 
 bool AskQuestion(char *Msg)
 {
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
+	CInput *Input = CInput_Create(InputDelay, disableJoysticks);
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
     Rect.h = Buffer->h;
@@ -549,9 +511,10 @@ bool AskQuestion(char *Msg)
     SDL_FreeSurface(ScreenBufferZoom);
     SDL_Flip(Screen);
 	{
-		while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
+		//BUT_A BUT_X
+		while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] ||  Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
 		{
-		    Input->Update();
+		    CInput_Update(Input);
 			if(GlobalSoundEnabled)
 			if(!Mix_PlayingMusic())
 			{
@@ -562,18 +525,19 @@ bool AskQuestion(char *Msg)
 		}
 		if (Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-		if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y])
+		//BUT_A
+		if (Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y])
 			return true;
 		else
 			return false;
 
 	}
-	delete Input;
+	CInput_Destroy(Input);
 }
 
 void PrintForm(char *msg)
 {
-    CInput *Input = new CInput(InputDelay, disableJoysticks);
+    CInput *Input = CInput_Create(InputDelay, disableJoysticks);
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
     Rect.h = Buffer->h;
@@ -589,9 +553,10 @@ void PrintForm(char *msg)
     SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
     SDL_FreeSurface(ScreenBufferZoom);
     SDL_Flip(Screen);
-    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
+	//BUT_A
+    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
     {
-        Input->Update();
+        CInput_Update(Input);
         if(GlobalSoundEnabled)
         if(!Mix_PlayingMusic())
         {
@@ -602,7 +567,7 @@ void PrintForm(char *msg)
         SDL_framerateDelay(&Fpsman);
     }
 
-	delete Input;
+	CInput_Destroy(Input);
 }
 
 

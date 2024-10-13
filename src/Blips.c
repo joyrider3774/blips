@@ -12,10 +12,8 @@
 #include "StageSelect.h"
 #include "Credits.h"
 #include "TitleScreen.h"
-#include "SetupUsbJoysticks.h"
-#include "LevelEditorMenu.h"
 #include "Game.h"
-#include "LevelEditor.h"
+#include "stdbool.h"
 
 int main(int argc, char **argv)
 {
@@ -96,9 +94,8 @@ int main(int argc, char **argv)
 					MonoFont = TTF_OpenFont("./fonts/font1.ttf",17*UI_HEIGHT_SCALE);
 					if (font && BigFont && MonoFont)
 					{
+						WorldParts = CWorldParts_Create();
 						printf("Succesfully Loaded fonts\n");
-						JoystickSetup = new CUsbJoystickSetup();
-						LoadJoystickSettings();
 						SDL_initFramerate(&Fpsman);
 						SDL_setFramerate(&Fpsman,FPS);
 						TTF_SetFontStyle(font,TTF_STYLE_NORMAL);
@@ -128,17 +125,7 @@ int main(int argc, char **argv)
 									break;
 								case GSStageSelect:
 									StageSelect();
-									break;
-								case GSLevelEditor:
-									LevelEditor();
-									break;
-								case GSLevelEditorMenu:
-									LevelEditorMode = true;
-									LevelEditorMenu();
-									break;
-								case GSSetupUsbJoystickButtons:
-									SetupUsbJoystickButtons();
-									break;
+									break;																
 								default:
 									break;
 							}
@@ -153,8 +140,7 @@ int main(int argc, char **argv)
 						MonoFont=NULL;
 						font=NULL;
 						BigFont=NULL;
-						JoystickSetup->SaveCurrentButtonValues("./joystick.def");
-						delete JoystickSetup;
+						CWorldParts_Destroy(WorldParts);
 					}
 					else
 					{
@@ -189,8 +175,7 @@ int main(int argc, char **argv)
 	else
 	{
 		printf("Couldn't initialise SDL!: %s\n", SDL_GetError());
-	}
-	WorldParts.RemoveAll();
+	}	
 	return 0;
 
 }
