@@ -30,5 +30,5 @@ void CWorldParts_RemoveAll(CWorldParts* WorldParts);
 void CWorldParts_Save(CWorldParts* WorldParts, char *Filename);
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename);
 void CWorldParts_Destroy(CWorldParts* WorldParts);
-
+void CWorldParts_Save_vircon(CWorldParts* WorldParts, char *Filename);
 #endif

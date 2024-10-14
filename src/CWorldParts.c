@@ -142,6 +142,37 @@ void CWorldParts_Save(CWorldParts* WorldParts, char *Filename)
 	free(Buffer);
 }
 
+void CWorldParts_Save_vircon(CWorldParts* WorldParts, char *Filename)
+{
+	FILE *Fp;
+	int Teller,BufferPosition=0;
+	Uint32 tmp;
+	Fp = fopen(Filename,"wb");
+	if (Fp)
+	{
+		int found = 0;
+		for (int z = 0; z < WorldParts->ItemCount; z++)
+		{
+			tmp = WorldParts->Items[z]->Type; 
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+			tmp = WorldParts->Items[z]->PlayFieldX; 
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+			tmp = WorldParts->Items[z]->PlayFieldY; 
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+			found++;
+		}
+		//pad with zero			
+		for (int z = found; z < 2*NrOfRows*NrOfCols; z++)
+		{
+			tmp = 0; 
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+			fwrite(&tmp,sizeof(tmp),1,Fp);	
+		}
+		fclose(Fp);
+	}
+}
+
 void CWorldParts_Load(CWorldParts* WorldParts, char *Filename)
 {
 	int X,Y,Type;

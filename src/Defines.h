@@ -3,7 +3,7 @@
 
 
 #define ORIG_WINDOW_WIDTH 640
-#define ORIG_WINDOW_HEIGHT 352 //will be slightly stretched for 8 pixels 
+#define ORIG_WINDOW_HEIGHT 360 
 #define TileWidth 32
 #define TileHeight 32
 #define SCREEN_BPP 32
@@ -15,7 +15,7 @@
 #define NrOfRows 50
 #define NrOfCols 50
 #define NrOfColsVisible (ORIG_WINDOW_WIDTH / TileWidth)
-#define NrOfRowsVisible (ORIG_WINDOW_HEIGHT / TileHeight)
+#define NrOfRowsVisible (ORIG_WINDOW_HEIGHT / TileHeight) -1 //360 not divisible by 32, each level has 1 extra row of wall at the bottom and i make game believe it is not there this fixes 8 pixels of background showing
 #define IDEmpty 1
 #define IDPlayer 2
 #define IDBox 3

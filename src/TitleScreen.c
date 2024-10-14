@@ -123,6 +123,19 @@ void TitleScreen()
                             PrintForm(Tekst);
                             CInput_Reset(Input);
                         }
+
+                    	char *FileName =(char*) malloc(sizeof(char)* FILENAME_MAX);
+						for (SelectedLevel = 0; SelectedLevel <= InstalledLevels; SelectedLevel++)
+						{
+							if (SelectedLevel > 0)
+							{
+								sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+								CWorldParts_Load(WorldParts, FileName);
+								sprintf(FileName,"./levelpacks/%s/u32_level%d.lev",LevelPackFileName,SelectedLevel);
+								CWorldParts_Save_vircon(WorldParts, FileName);
+							}
+						}
+						free(FileName);                        
                     }
                     break;
                 case 4:
