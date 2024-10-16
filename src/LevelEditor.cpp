@@ -182,14 +182,24 @@ void LevelEditor()
                             SelectedLevel = InstalledLevels;
                         LevelHasChanged=false;
                         GameState = GSStageSelect;
+						if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     }
                 }
                 else
+				{
+					if (GlobalSoundEnabled)
+                		Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     GameState = GSStageSelect;
+				}
                 Input->Reset();
             }
             else
+			{
+				if (GlobalSoundEnabled)
+                		Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                 GameState = GSStageSelect;
+			}
         }
 
         if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))

@@ -107,6 +107,7 @@ void LoadSounds()
 		Sounds[SND_STAGEEND] = Mix_LoadWAV("./sound/stageend.wav");
 		Sounds[SND_EXPLODE] = Mix_LoadWAV("./sound/explode.wav");
 		Sounds[SND_COLLECT] = Mix_LoadWAV("./sound/collect.wav");
+		Sounds[SND_BACK] = Mix_LoadWAV("./sound/menuback.wav");
 	}
 }
 

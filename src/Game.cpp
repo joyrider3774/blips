@@ -108,13 +108,21 @@ void Game()
         if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
         {
             if(!LevelEditorMode)
+			{
+				if (GlobalSoundEnabled)
+                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                 GameState = GSStageSelect;
+			}
         }
         //printf("game():10\n");
         if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
         {
             if(LevelEditorMode)
+			{
+				if (GlobalSoundEnabled)
+                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                 GameState=GSLevelEditor;
+			}
             else
             {
                 sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);

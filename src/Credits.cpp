@@ -62,6 +62,8 @@ void Credits()
            Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
            Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] )
         {
+			if (GlobalSoundEnabled)
+                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
             GameState=GSTitleScreen;
         }
 
