@@ -160,9 +160,9 @@ void StageSelect()
 
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
         {
-            SelectedLevel -= 5;
             if(LevelEditorMode)
             {
+				SelectedLevel -= 5;
                 if (SelectedLevel <= 0)
                 {
                     SelectedLevel = 0;
@@ -176,29 +176,37 @@ void StageSelect()
             }
             else
             {
-                if (SelectedLevel < 1)
-                    SelectedLevel = 1;
-                sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                WorldParts.Load(FileName);
+				if (SelectedLevel != 1)
+				{
+					SelectedLevel -= 5;
+                	if (SelectedLevel < 1)
+                    	SelectedLevel = 1;
+                	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                	WorldParts.Load(FileName);
+				}
             }
             Input->Delay();
         }
 
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
-        {
-            SelectedLevel +=5;
-            if (SelectedLevel > InstalledLevels)
-                    SelectedLevel = InstalledLevels;
-            sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-            WorldParts.Load(FileName);
+        {           
+			if (SelectedLevel != InstalledLevels)
+			{
+				SelectedLevel +=5;
+            	if (SelectedLevel > InstalledLevels)
+                	SelectedLevel = InstalledLevels;
+            	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+            	WorldParts.Load(FileName);
+			}
             Input->Delay();
         }
 
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
         {
-            SelectedLevel--;
+            
             if(LevelEditorMode)
-            {
+            {	
+				SelectedLevel--;
                 if (SelectedLevel <= 0)
                 {
                     SelectedLevel = 0;
@@ -212,10 +220,14 @@ void StageSelect()
             }
             else
             {
-                if (SelectedLevel < 1)
-                    SelectedLevel = 1;
-                sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                WorldParts.Load(FileName);
+				if(SelectedLevel != 1)
+				{
+					SelectedLevel--;
+                	if (SelectedLevel < 1)
+                    	SelectedLevel = 1;
+                	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                	WorldParts.Load(FileName);
+				}
             }
 
             Input->Delay();
@@ -223,11 +235,15 @@ void StageSelect()
 
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
         {
-            SelectedLevel++;
-            if (SelectedLevel > InstalledLevels)
-                SelectedLevel = InstalledLevels;
-            sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-            WorldParts.Load(FileName);
+            if(SelectedLevel != InstalledLevels)
+			{
+				SelectedLevel++;
+
+            	if (SelectedLevel > InstalledLevels)
+                	SelectedLevel = InstalledLevels;
+            	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+            	WorldParts.Load(FileName);
+			}
             Input->Delay();
         }
 
