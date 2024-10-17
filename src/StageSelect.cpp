@@ -95,7 +95,7 @@ void StageSelect()
             WorldParts.RemoveAll();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z]))
         {
             if(LevelEditorMode && (SelectedLevel > 0))
             {

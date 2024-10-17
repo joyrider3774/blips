@@ -14,9 +14,9 @@ bool StageDone()
 	for (Teller=0;Teller<WorldParts.ItemCount;Teller++)
 		if (WorldParts.Items[Teller]->GetType() == IDDiamond)
 		{
-			NumDiamonds++;
+			return false;
 		}
-    return (NumDiamonds ==0);
+    return true;
 }
 
 void Game()
@@ -308,7 +308,7 @@ void Game()
 								break;
 							}
 						}
-								//should never happen
+						//should never happen
 						if(!Player)
 						{
 							Player = new CPlayer(0,0);
@@ -377,7 +377,6 @@ void Game()
 			}
 		}
     }
-    Mix_HaltMusic();
     SDL_FreeSurface(Tmp);
     delete Input;
 }

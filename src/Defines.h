@@ -11,7 +11,7 @@
 #define UI_WIDTH_SCALE 2
 #define UI_HEIGHT_SCALE 1.5
 
-#define AlphaInc 20
+#define AlphaInc 5
 #define NrOfRows 50
 #define NrOfCols 50
 #define NrOfColsVisible (ORIG_WINDOW_WIDTH / TileWidth)

@@ -364,7 +364,7 @@ char *GetString(char *NameIn,char *Msg)
             SubmitChanges=true;
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_ESCAPE] ))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[SDLK_ESCAPE] ))
         {
             End=true;
             SubmitChanges=false;
@@ -533,6 +533,7 @@ void LoadUnlockData()
 
 bool AskQuestion(char *Msg)
 {
+	bool Result = false;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
@@ -550,7 +551,7 @@ bool AskQuestion(char *Msg)
     SDL_FreeSurface(ScreenBufferZoom);
     SDL_Flip(Screen);
 	{
-		while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
+		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
 		{
 		    Input->Update();
 			if(GlobalSoundEnabled)
@@ -564,12 +565,10 @@ bool AskQuestion(char *Msg)
 		if (Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 		if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y])
-			return true;
-		else
-			return false;
-
+			Result = true;
 	}
 	delete Input;
+	return Result;
 }
 
 void PrintForm(char *msg)

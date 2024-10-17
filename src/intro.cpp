@@ -20,7 +20,7 @@ void Intro()
         Input->Update();
 
         if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] ||
-           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
+           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
            Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] )
         {
             GameState=GSTitleScreen;
@@ -60,10 +60,6 @@ void Intro()
             }
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
-        {
-            Input->Delay();
-        }
 
         //tekenen naar buffer
 
