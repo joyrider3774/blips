@@ -31,7 +31,7 @@ void TitleScreen()
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
 		Input->Update();
 
-		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)])
+		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
 		if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r])

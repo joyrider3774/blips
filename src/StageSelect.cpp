@@ -84,7 +84,7 @@ void StageSelect()
             }
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
         {
 			if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_BACK],0);

@@ -140,7 +140,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
         {
             if (LevelHasChanged)
             {
@@ -349,7 +349,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_b]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_b]))
         {
             if(ShowPosition && ShowGrid)
                 ShowGrid = !ShowGrid;

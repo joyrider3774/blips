@@ -100,7 +100,7 @@ void Game()
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->Ready() && Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
         {
             if(!LevelEditorMode)
 			{
@@ -228,8 +228,6 @@ void Game()
         }
 
 
-		if(!Tmp)
-			printf("BLEEEEEH\n");
         SDL_BlitSurface(IMGBackground,NULL,Tmp,NULL);
         WorldParts.Draw(Tmp);
         WorldParts.Move();
@@ -293,6 +291,7 @@ void Game()
 
 						}
 					}
+					Input->Reset();
 				}
 				else
 				{
@@ -314,10 +313,10 @@ void Game()
 							Player = new CPlayer(0,0);
 							WorldParts.Add(Player);
 						}
-						Input->Reset();
 					}
 					else
 						GameState = GSStageSelect;
+					Input->Reset();
 
 				}
 			}
@@ -342,9 +341,10 @@ void Game()
 							Player = (CPlayer*)WorldParts.Items[teller];
 							break;
 						}
-
 					}
+
 				}
+				Input->Reset();
 
 			}
 			else
@@ -375,6 +375,7 @@ void Game()
 
 				}
 			}
+			Input->Reset();
 		}
     }
     SDL_FreeSurface(Tmp);

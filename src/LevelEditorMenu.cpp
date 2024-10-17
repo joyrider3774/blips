@@ -37,7 +37,7 @@ void LevelEditorMenu()
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
 		Input->Update();
 
-		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)])
+		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
 		{
 			if (GlobalSoundEnabled)
             	Mix_PlayChannel(-1,Sounds[SND_BACK],0);

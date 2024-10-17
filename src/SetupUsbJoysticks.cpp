@@ -38,7 +38,7 @@ void SetupUsbJoystickButtons()
 		if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
-		if(Input->KeyboardHeld[SDLK_ESCAPE] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)])
+		if(Input->KeyboardHeld[SDLK_ESCAPE] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
 		{
 			if (GlobalSoundEnabled)
             	Mix_PlayChannel(-1,Sounds[SND_BACK],0); 
@@ -131,7 +131,7 @@ void SetupUsbJoystickButtons()
                     if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_SPACE]))
                         done = true;
 
-                    if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)])
+                    if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
                         done= true;
                     SDL_framerateDelay(&Fpsman);
                 }

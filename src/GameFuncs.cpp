@@ -122,7 +122,7 @@ void UnloadSounds()
 void LoadJoystickSettings()
 {
 #ifdef RG35XX
-    JoystickSetup->AddDefinition(BUT_SELECT,"Go back / Quit",4,4);
+    JoystickSetup->AddDefinition(BUT_B,"Go back / Quit",4,4);
     JoystickSetup->AddDefinition(BUT_R,"Next Music / Next Part",8,8);
     JoystickSetup->AddDefinition(BUT_L,"Prev Part",7,7);
     JoystickSetup->AddDefinition(BUT_LEFT,"Left",JOYSTICK_LEFT,JOYSTICK_LEFT);
@@ -132,12 +132,12 @@ void LoadJoystickSettings()
     JoystickSetup->AddDefinition(BUT_A,"Select / Place part",3,3);
     JoystickSetup->AddDefinition(BUT_X,"Center level",6,6);
     JoystickSetup->AddDefinition(BUT_Y,"New Level / Erase all parts",5,5);
-    JoystickSetup->AddDefinition(BUT_B,"Stats / Hide position",9,9);
+    JoystickSetup->AddDefinition(BUT_SELECT,"Stats / Hide position",9,9);
     JoystickSetup->AddDefinition(BUT_START,"Restart / Test level",10,10);
     JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",13,13);
     JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",12,12);
 #else
-    JoystickSetup->AddDefinition(BUT_SELECT,"Go back / Quit",1,1);
+    JoystickSetup->AddDefinition(BUT_B,"Go back / Quit",1,1);
     JoystickSetup->AddDefinition(BUT_R,"Next Music / Next Part",5,5);
     JoystickSetup->AddDefinition(BUT_L,"Prev Part",4,4);
     JoystickSetup->AddDefinition(BUT_LEFT,"Left",JOYSTICK_LEFT,JOYSTICK_LEFT);
@@ -147,7 +147,7 @@ void LoadJoystickSettings()
     JoystickSetup->AddDefinition(BUT_A,"Select / Place part",0,0);
     JoystickSetup->AddDefinition(BUT_X,"Center level",2,2);
     JoystickSetup->AddDefinition(BUT_Y,"New Level / Erase all parts",3,3);
-    JoystickSetup->AddDefinition(BUT_B,"Stats / Hide position",6,6);
+    JoystickSetup->AddDefinition(BUT_SELECT,"Stats / Hide position",6,6);
     JoystickSetup->AddDefinition(BUT_START,"Restart / Test level",7,7);
     JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",9,9);
     JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",8,8);
