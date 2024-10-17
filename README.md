@@ -1,4 +1,4 @@
-# Blips Vircon32 Version
+# Blips
 ![DownloadCountTotal](https://img.shields.io/github/downloads/joyrider3774/blips/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/joyrider3774/blips/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/joyrider3774/blips?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/joyrider3774/blips?style=plastic)
 
 Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban style puzzle game but with exploding dynamite and collecting coins
@@ -9,8 +9,9 @@ Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban st
 ![screenshot 3](screenshots/screenshot3.png)
 ![screenshot 4](screenshots/screenshot4.png)
 
-## Vircon32 Game Features:
+## Game Features:
 - 26 Levels of original Bips game
+- Level Editor (Create your own Level Packs)
 - Autosaves progress
 
 ## Playing the Game:
