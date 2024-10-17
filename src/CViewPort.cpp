@@ -87,7 +87,6 @@ void CViewPort::SetVPLimit(int MinX,int MinY, int MaxX,int MaxY)
 
 void CViewPort::Move(int Xi,int Yi)
 {
-//            printf("Screen : %d %d %d %d Limit:MinX: %d MinY : %d MaxX: %d MaxY: %d \n",MinScreenX +Xi,MinScreenY+Yi,MaxScreenX+Xi,MaxScreenY+Yi,VPLimitMinX*TileWidth,VPLimitMinY*TileHeight,TileWidth*(VPLimitMaxX),TileHeight*(VPLimitMaxY));
 	if ((MinScreenX + Xi <= TileWidth*(VPLimitMaxX)) && (MinScreenX + Xi >=VPLimitMinX*TileWidth) && (MaxScreenX + Xi <= TileWidth*(VPLimitMaxX)) && (MaxScreenX + Xi >=VPLimitMinX *TileWidth) &&
 		(MinScreenY + Yi <= TileHeight*(VPLimitMaxY)) && (MinScreenY + Yi >=VPLimitMinY*TileHeight) && (MaxScreenY + Yi <= TileHeight*(VPLimitMaxY)) && (MaxScreenY + Yi >=VPLimitMinY*TileHeight))
 		{

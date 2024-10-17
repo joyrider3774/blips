@@ -38,7 +38,6 @@ void StageSelect()
             {
                 SelectedMusic = 0;
                 Mix_PlayMusic(Music[SelectedMusic],0);
-				//Mix_HookMusicFinished(MusicFinished);
                 SetVolume(Volume);
             }
 		SDL_BlitSurface(IMGBackground,NULL,Tmp,NULL);
@@ -83,8 +82,6 @@ void StageSelect()
                 LevelHasChanged = false;
                 GameState = GSLevelEditor;
             }
-           // else
-                //printf("not leveleditor mode\n");
         }
 
         if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
@@ -106,16 +103,12 @@ void StageSelect()
                 if (AskQuestion(Tekst))
                 {
                     sprintf(Tekst,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                    //system(Command);
                     remove(Tekst);
-                    //printf("%s\n",Command);
                     for(Teller=SelectedLevel;Teller<InstalledLevels;Teller++)
                     {
                         sprintf(Tekst,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller+1);
                         sprintf(Tekst1,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
                         rename(Tekst,Tekst1);
-                      //  system(Command);
-                        //printf("%s\n",Command);
                     }
                     InstalledLevels--;
                     if (SelectedLevel > InstalledLevels)

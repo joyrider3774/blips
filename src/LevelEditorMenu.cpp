@@ -32,7 +32,6 @@ void LevelEditorMenu()
             {
                 SelectedMusic = 0;
                 Mix_PlayMusic(Music[SelectedMusic],0);
-				//Mix_HookMusicFinished(MusicFinished);
                 SetVolume(Volume);
             }
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
@@ -169,14 +168,11 @@ void LevelEditorMenu()
                             sprintf(LevelPackFileName,"%s",PackName);
                             AddUnderScores(LevelPackFileName);
                             sprintf(Tekst,"./levelpacks/%s",LevelPackFileName);
-                            //system(Command);
 #ifdef WIN32
                             mkdir(Tekst);
 #else
                             mkdir(Tekst,S_IRWXO|S_IRWXU|S_IRWXG);
 #endif
-                            //sprintf(Command,"chdmod 777 ./levelpacks/%s",LevelPackFileName);
-                            //system(Command);
                             sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);
                             Fp = fopen(FileName,"wt");
                             if (Fp)

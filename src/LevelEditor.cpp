@@ -44,17 +44,14 @@ bool LevelErrorsFound()
 
 void LevelEditor()
 {
-    SDL_Color Color={255,0,255,255};
 	int Teller,Teller2,alpha=0;
 	SDL_Surface *Tmp,*Tmp1;
-	Uint32 Time2=0;
 	bool ShowPosition=true,AnotherPartFound,SamePartFound,PlayerFound=false,ShowGrid=true;
 	char Tekst[200];
 	char *FileName = new char[FILENAME_MAX];
 	CInput *Input = new CInput(InputDelay-5, disableJoysticks);
 	CSelector Selector(&WorldParts);
 	int MaxX=0,MaxY=0,MinY=NrOfRows,MinX=NrOfCols,Xi=0,Yi=0;
-	int framecounter=0,fps=0;
 	SDL_Rect Rect;
     Rect.w = Buffer->w;
     Rect.h = Buffer->h;
@@ -73,7 +70,6 @@ void LevelEditor()
         if(WorldParts.Items[Teller]->GetType() == IDPlayer)
         {
             PlayerFound = true;
-            //printf("Player found, item count: %d\n",WorldParts.ItemCount);
             Selector.SetPosition(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY());
             break;
         }
@@ -84,7 +80,6 @@ void LevelEditor()
         Selector.SetPosition((NrOfCols/2),(NrOfRows/2));
     }
 
-    //
 	while (GameState == GSLevelEditor)
 	{
         if(GlobalSoundEnabled)
@@ -113,8 +108,6 @@ void LevelEditor()
             SDL_BlitSurface(IMGGrid,NULL,Tmp,NULL);
 		WorldParts.Draw(Tmp);
 		Selector.Draw(Tmp);
-		sprintf(Tekst,"Fps:%d",fps);
-        WriteText(Tmp,BigFont,Tekst,strlen(Tekst),0,0,0,Color,false);
 		if (ShowPosition)
 		{
 			sprintf(Tekst,"X: %d - Y: %d",Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
@@ -132,13 +125,6 @@ void LevelEditor()
         SDL_Flip(Screen);
 
         Input->Update();
-        framecounter++;
-        if(Time2 + 1000 < SDL_GetTicks())
-        {
-            fps = framecounter;
-            framecounter = 0;
-            Time2 = SDL_GetTicks();
-        }
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 

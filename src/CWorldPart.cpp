@@ -134,7 +134,6 @@ void CWorldPart::SetPosition(const int PlayFieldXin,const int PlayFieldYin)
 		PlayFieldY=PlayFieldYin;
 		X=PlayFieldXin*TileWidth;
 		Y=PlayFieldYin*TileHeight;
-		//Event_ArrivedOnNewSpot();
 	}
 }
 
@@ -208,44 +207,42 @@ void CWorldPart::Draw(SDL_Surface* Surface)
 {
 	if(!BHide)
 	{
-	//printf("Start draw type:%d\n",Type);
-	if (*Image)
-	{
-		Event_BeforeDraw();
-		SDL_Rect SrcRect,DstRect;
-		SrcRect.x = AnimPhase * TileWidth;
-		SrcRect.y = 0;
-		SrcRect.w = TileWidth;
-		SrcRect.h = TileHeight;
-		if(ParentList)
+		if (*Image)
 		{
-			DstRect.x = X- ParentList->ViewPort->MinScreenX;
-			DstRect.y = Y- ParentList->ViewPort->MinScreenY;
+			Event_BeforeDraw();
+			SDL_Rect SrcRect,DstRect;
+			SrcRect.x = AnimPhase * TileWidth;
+			SrcRect.y = 0;
+			SrcRect.w = TileWidth;
+			SrcRect.h = TileHeight;
+			if(ParentList)
+			{
+				DstRect.x = X- ParentList->ViewPort->MinScreenX;
+				DstRect.y = Y- ParentList->ViewPort->MinScreenY;
+			}
+			else
+			{
+				DstRect.x = X;
+				DstRect.y = Y;
+			}
+			DstRect.w = TileWidth;
+			DstRect.h = TileHeight;
+			SDL_BlitSurface((*Image),&SrcRect,Surface,&DstRect);
 		}
-		else
+		if (Selected)
 		{
-			DstRect.x = X;
-			DstRect.y = Y;
+			if (ParentList)
+			{
+				boxRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,200,15);
+				rectangleRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,255,50);
+			}
+			else
+			{
+				boxRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,200,15);
+				rectangleRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,255,50);
+			}
 		}
-		DstRect.w = TileWidth;
-		DstRect.h = TileHeight;
-		SDL_BlitSurface((*Image),&SrcRect,Surface,&DstRect);
 	}
-	if (Selected)
-	{
-		if (ParentList)
-		{
-			boxRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,200,15);
-			rectangleRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,255,50);
-		}
-		else
-		{
-			boxRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,200,15);
-			rectangleRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,255,50);
-		}
-	}
-	}
-	//printf("End draw type:%d\n",Type);
 }
 
 CWorldPart::~CWorldPart()
@@ -356,10 +353,8 @@ void CBox::Event_ArrivedOnNewSpot()
 {
 	int Teller;
 	AnimPhase = 0;
-	//printf("Arrive Event fired\n");
 	if (ParentList)
 	{
-		//printf("Parent List Set\n");
 		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
 		{
            if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY) &&

@@ -428,7 +428,7 @@ void SaveUnlockData()
 	sprintf(Filename,"./%s.dat",LevelPackFileName);
 	for (Teller=0;Teller<4;Teller++)
 		LevelHash[Teller] = LevelHash[Teller] ^ LevelPackFileName[strlen(LevelPackFileName)-1];
-	for (Teller=0;Teller<(size_t)strlen(LevelPackFileName);Teller++)
+	for (Teller=0;Teller<strlen(LevelPackFileName);Teller++)
 		LevelHash[Teller%4] = LevelHash[Teller%4] ^ LevelPackFileName[Teller];
 	LevelHash[0] = LevelHash[0] ^ LevelHash[2];
 	LevelHash[1] = LevelHash[1] ^ LevelHash[0];
@@ -597,7 +597,6 @@ void PrintForm(char *msg)
         if(!Mix_PlayingMusic())
         {
             Mix_PlayMusic(Music[SelectedMusic],0);
-            //Mix_HookMusicFinished(MusicFinished);
             SetVolume(Volume);
         }
         SDL_framerateDelay(&Fpsman);
@@ -716,7 +715,6 @@ void SearchForLevelPacks()
 			stat(FileName,&Stats);
 			if(S_ISDIR(Stats.st_mode))
 			{
-				//printf("%s\n",Entry->d_name);
 				if(strncmp(".", Entry->d_name, 1)  && (Teller< MaxLevelPacks) && (strlen(Entry->d_name) < 21))
 				{
 					sprintf(InstalledLevelPacks[Teller],"%s",Entry->d_name);

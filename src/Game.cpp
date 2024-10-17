@@ -26,7 +26,7 @@ void Game()
 	char FileName[FILENAME_MAX];
 	char Text[500];
 	int alpha=0,teller;
-	Uint32 Time=0,Time2=0;
+	Uint32 Time=0;
 	CPlayer *Player=0;
 	bool ResetViewPort=false;
 	for (teller=0;teller<WorldParts.ItemCount;teller++)
@@ -50,7 +50,6 @@ void Game()
     Rect.y = StartScreenY;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	Tmp = SDL_DisplayFormat(Buffer);
-	int framecounter=0,fps=0;
 	Time = SDL_GetTicks();
 	if (MusicCount > 1)
  	{
@@ -70,41 +69,37 @@ void Game()
         {
             if (MusicCount > 1)
             {
-                //printf("game():2\n");
                 SelectedMusic =	1+rand()%(MusicCount-1);
                 Mix_PlayMusic(Music[SelectedMusic],0);
                 SetVolume(Volume);
-                //printf("game():3\n");
             }
             else
                 if(MusicCount ==1)
                 {
-                    //printf("game():4\n");
                     SelectedMusic =	0;
                     Mix_PlayMusic(Music[SelectedMusic],0);
                     SetVolume(Volume);
-                    //printf("game():5\n");
                 }
 
         }
 
         Input->Update();
-        //printf("game():6\n");
+
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-        //printf("game():7\n");
+
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
         {
             IncVolume();
             Input->Delay();
         }
-        //printf("game():8\n");
+
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
         {
             DecVolume();
             Input->Delay();
         }
-        //printf("game():9\n");
+
         if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_ESCAPE])
         {
             if(!LevelEditorMode)
@@ -114,7 +109,7 @@ void Game()
                 GameState = GSStageSelect;
 			}
         }
-        //printf("game():10\n");
+
         if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
         {
             if(LevelEditorMode)
@@ -139,7 +134,7 @@ void Game()
             }
             Input->Delay();
         }
-        //printf("game():12\n");
+
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
         {
             if (MusicCount > 1)
@@ -151,18 +146,17 @@ void Game()
                 {
                     Mix_HaltMusic();
                     Mix_PlayMusic(Music[SelectedMusic],0);
-                    //Mix_HookMusicFinished(MusicFinished);
                     SetVolume(Volume);
                 }
             }
             Input->Delay();
         }
-        //printf("game():13\n");
+
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
         {
             Input->Delay();
         }
-        //printf("game():14\n");
+
         if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
         {
 
@@ -180,10 +174,8 @@ void Game()
             Input->Delay();
         }
 
-        //printf("game():15\n");
         if(Time+10<SDL_GetTicks())
         {
-            //printf("game():16\n");
             if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y])
             {
                 if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT])
@@ -205,7 +197,6 @@ void Game()
                     ResetViewPort = false;
                 }
             }
-            //printf("game():17\n");
             if (!Player->IsMoving && !Player->IsDeath && !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y]))
             {
 
@@ -232,7 +223,6 @@ void Game()
                 }
 
             }
-            //printf("game():20\n");
             Time = SDL_GetTicks();
 
         }
@@ -245,8 +235,6 @@ void Game()
         WorldParts.Move();
 
 
-        sprintf(Text,"Fps:%d",fps);
-       // WriteText(Tmp,BigFont,Text,strlen(Text),0,0,0,Color,false);
         //tekenen naar buffer
         Rect.w = Buffer->w;
         Rect.h = Buffer->h;
@@ -274,13 +262,6 @@ void Game()
 
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
-        framecounter++;
-        if(Time2 + 1000 < SDL_GetTicks())
-        {
-            fps = framecounter;
-            framecounter = 0;
-            Time2 = SDL_GetTicks();
-        }
         if (Player->IsDeath)
         {
             ExplosionsFound =false;
