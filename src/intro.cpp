@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include "CInput.h"
 #include "Common.h"
-#include "defines.h"
+#include "Defines.h"
 #include "GameFuncs.h"
 #include <SDL_framerate.h>
 #include <SDL_rotozoom.h>

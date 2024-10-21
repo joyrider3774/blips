@@ -4,7 +4,7 @@
 #include "CUsbJoystickSetup.h"
 #include <SDL_framerate.h>
 #include "SPoint.h"
-#include "defines.h"
+#include "Defines.h"
 #include "Common.h"
 
 bool GlobalSoundEnabled = true;

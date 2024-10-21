@@ -1,7 +1,7 @@
 #ifndef CWORLDPARTS_H
 #define CWORLDPARTS_H
 
-#include "defines.h"
+#include "Defines.h"
 #include "CViewPort.h"
 
 class CWorldPart;
