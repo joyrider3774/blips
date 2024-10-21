@@ -190,13 +190,13 @@ void TitleScreen()
 		WriteText(Tmp,BigFont,Tekst,strlen(Tekst),90*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 1)
 		{
-			sprintf(Tekst,"\n");
+			strcpy(Tekst,"\n");
 			for(Teller=2;Teller<Selection;Teller++)
-				sprintf(Tekst,"%s%s",Tekst,"\n");
-			sprintf(Tekst,"%s%s",Tekst,">>");
+				strcat(Tekst, "\n");
+			strcat(Tekst, ">>");
 		}
 		else
-			sprintf(Tekst,">>");
+			strcpy(Tekst,">>");
 		WriteText(Tmp,BigFont,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		Rect.w = Buffer->w;
         Rect.h = Buffer->h;

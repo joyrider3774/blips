@@ -290,7 +290,11 @@ char *GetString(char *NameIn,char *Msg)
 		Input->Update();
 
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
+		{
             GameState = GSQuit;
+			SubmitChanges=false;
+			End = true;
+		}
 
         if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
         {
@@ -370,20 +374,20 @@ char *GetString(char *NameIn,char *Msg)
             SubmitChanges=false;
         }
 		SDL_BlitSurface(IMGTitleScreen,NULL,Buffer,NULL);
-		boxRGBA(Buffer,60,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
-		rectangleRGBA(Buffer,60,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		rectangleRGBA(Buffer,61,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		boxRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
+		rectangleRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		rectangleRGBA(Buffer,61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 		WriteText(Buffer,font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,85*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		WriteText(Buffer,MonoFont,PackName,strlen(PackName),85*UI_WIDTH_SCALE,110*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 0)
 		{
-			sprintf(Tekst," ");
+			strcpy(Tekst," ");
 			for (Teller=1;Teller<Selection;Teller++)
-				sprintf(Tekst,"%s ",Tekst);
-			sprintf(Tekst,"%s_",Tekst);
+				strcat(Tekst," ");
+			strcat(Tekst,"_");
 		}
 		else
-			sprintf(Tekst,"_");
+			strcpy(Tekst,"_");
 		WriteText(Buffer,MonoFont,Tekst,strlen(Tekst),85*UI_WIDTH_SCALE,112*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		sprintf(Tekst,"Use Up,Down,Left,right. A = Ok X = Cancel" );
 		WriteText(Buffer,font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,135*UI_HEIGHT_SCALE,2,MenuTextColor,false);
@@ -553,7 +557,7 @@ bool AskQuestion(char *Msg)
     SDL_FreeSurface(ScreenBufferZoom);
     SDL_Flip(Screen);
 	{
-		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
+		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
 		{
 		    Input->Update();
 			if(GlobalSoundEnabled)
@@ -591,7 +595,7 @@ void PrintForm(char *msg)
     SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
     SDL_FreeSurface(ScreenBufferZoom);
     SDL_Flip(Screen);
-    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
+    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
     {
         Input->Update();
         if(GlobalSoundEnabled)
@@ -602,6 +606,8 @@ void PrintForm(char *msg)
         }
         SDL_framerateDelay(&Fpsman);
     }
+	if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
+		GameState = GSQuit;
 
 	delete Input;
 }
