@@ -219,9 +219,16 @@ void TitleScreen()
         SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
         SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
         SDL_BlitSurface(Buffer1,NULL,Screen,NULL);
-		SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-        SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-        SDL_FreeSurface(ScreenBufferZoom);
+		if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+		{
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+			SDL_FreeSurface(ScreenBufferZoom);
+		}
+		else
+		{
+			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+		}
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
 	}

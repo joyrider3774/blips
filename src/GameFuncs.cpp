@@ -399,9 +399,16 @@ char *GetString(char *NameIn,char *Msg)
 		WriteText(Buffer,font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,135*UI_HEIGHT_SCALE,2,MenuTextColor,false);
         SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
         SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-        SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-    	SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-   		SDL_FreeSurface(ScreenBufferZoom);
+        if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+		{
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+			SDL_FreeSurface(ScreenBufferZoom);
+		}
+		else
+		{
+			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+		}
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
 	}
@@ -558,9 +565,16 @@ bool AskQuestion(char *Msg)
 	WriteText(Buffer,font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 	SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
     SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-	SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-    SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-    SDL_FreeSurface(ScreenBufferZoom);
+	if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+	{
+		SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+		SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+		SDL_FreeSurface(ScreenBufferZoom);
+	}
+	else
+	{
+		SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+	}
     SDL_Flip(Screen);
 	{
 		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
@@ -597,9 +611,16 @@ void PrintForm(char *msg)
 	WriteText(Buffer,font,msg,strlen(msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
     SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
     SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-	SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-    SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-    SDL_FreeSurface(ScreenBufferZoom);
+	if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+	{
+		SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+		SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+		SDL_FreeSurface(ScreenBufferZoom);
+	}
+	else
+	{
+		SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+	}
     SDL_Flip(Screen);
     while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
     {

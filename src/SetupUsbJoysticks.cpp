@@ -87,9 +87,16 @@ void SetupUsbJoystickButtons()
             }
         }
         SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-        SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-        SDL_FreeSurface(ScreenBufferZoom);
+        if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+		{
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+			SDL_FreeSurface(ScreenBufferZoom);
+		}
+		else
+		{
+			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
+		}
         SDL_Flip(Screen);
 
         if(Input->Ready() && (Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)]))
@@ -111,9 +118,16 @@ void SetupUsbJoystickButtons()
                     JoystickSetup->DrawCurrentSetup(Tmp,font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuBoxBorderColor);
                     SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
                     SDL_FillRect(Screen,NULL,SDL_MapRGB(Screen->format,0,0,0));
-                    SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-					SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-					SDL_FreeSurface(ScreenBufferZoom);
+                    if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+					{
+						SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+						SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+						SDL_FreeSurface(ScreenBufferZoom);
+					}
+					else
+					{
+						SDL_BlitSurface(Buffer, NULL, Screen, NULL);
+					}
                     SDL_Flip(Screen);
                     for (Teller = 0;Teller<MAXJOYSTICKBUTTONS;Teller++)
                         if(Input->JoystickHeld[0][Teller])
