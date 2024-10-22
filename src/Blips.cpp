@@ -186,6 +186,7 @@ int main(int argc, char **argv)
 		{
 			printf("Failed to Set Videomode %dx%dx%d\n",WINDOW_WIDTH, WINDOW_HEIGHT,SCREEN_BPP);
 		}
+		SDL_QuitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 		SDL_Quit();
 	}
 	else
