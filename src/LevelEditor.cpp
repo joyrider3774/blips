@@ -4,6 +4,7 @@
 #include <SDL_gfxPrimitives.h>
 #include <SDL_rotozoom.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "Common.h"
 #include "GameFuncs.h"
 #include "CInput.h"
