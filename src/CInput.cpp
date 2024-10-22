@@ -7,8 +7,8 @@ CInput::CInput(int UpdateCounterDelay, bool DisableJoysticks) {
 	if(!DisableJoysticks)
 	{
     	for (int teller=0;teller< PNumJoysticks;teller++)
-        	SDL_JoystickOpen(teller);
-    	SDL_JoystickEventState(SDL_ENABLE);
+        	if(SDL_JoystickOpen(teller) != NULL)
+    			SDL_JoystickEventState(SDL_ENABLE);
 	}
     PUpdateCounterDelay = UpdateCounterDelay;
     UpdateCounter = 0;
