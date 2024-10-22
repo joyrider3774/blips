@@ -226,15 +226,14 @@ void LevelEditorMenu()
                         sprintf(Tekst,"do you want to delete the selected level pack:\n\"%s\"\nAll Levels in Levelpack will be deleted !!!\n\nPress A to Delete, X to Cancel",InstalledLevelPacks[SelectedLevelPack]);
                         if(AskQuestion(Tekst))
                         {
-                            for(Teller=1;Teller<INT_MAX;Teller++)
+                            FindLevels();
+                            for(Teller=1;Teller<=InstalledLevels;Teller++)
                             {
                                 sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,Teller);
                                 if(FileExists(Tekst))
                                 {
                                     remove(Tekst);
                                 }
-                                else
-                                    break;
                             }
                             sprintf(Tekst,"%s/.blips_levelpacks/%s/credits.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
                             if(FileExists(Tekst))
