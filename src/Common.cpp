@@ -31,6 +31,6 @@ char LevelPackFileName[21] = "";
 char InstalledLevelPacks[MaxLevelPacks][21];
 Mix_Music *Music[MaxMusicFiles];
 FPSmanager Fpsman;
-bool disableJoysticks;
+bool disableJoysticks = false;
 int WINDOW_WIDTH = 640;
 int WINDOW_HEIGHT = 360;
