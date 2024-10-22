@@ -25,7 +25,9 @@ void StageSelect()
     CInput *Input = new CInput(InputDelay, disableJoysticks);
 	if (SelectedLevel > 0)
 	{
-		sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+		if(!FileExists(FileName))
+			sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 		WorldParts.Load(FileName);
 
 	}
@@ -102,23 +104,33 @@ void StageSelect()
                 sprintf(Tekst,"Are you sure you want to delete this level:\n%s - Level %d\n\nPress (A) to Delete (X) to Cancel",LevelPackName,SelectedLevel);
                 if (AskQuestion(Tekst))
                 {
-                    sprintf(Tekst,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                    remove(Tekst);
-                    for(Teller=SelectedLevel;Teller<InstalledLevels;Teller++)
-                    {
-                        sprintf(Tekst,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller+1);
-                        sprintf(Tekst1,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
-                        rename(Tekst,Tekst1);
-                    }
-                    InstalledLevels--;
-                    if (SelectedLevel > InstalledLevels)
-                        SelectedLevel = InstalledLevels;
-                    if (SelectedLevel==0)
-                        WorldParts.RemoveAll();
-                    else
-                    {
-                        sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                        WorldParts.Load(FileName);
+                    sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                    if(FileExists(Tekst))
+					{
+						remove(Tekst);
+						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+						//only swap levels if we did not edit a level that also exists as a default level
+						if(!FileExists(FileName))
+						{
+							for(Teller=SelectedLevel;Teller<InstalledLevels;Teller++)
+							{
+								sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller+1);
+								sprintf(Tekst1,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,Teller);                      
+								rename(Tekst,Tekst1);
+							}
+						}
+						FindLevels();
+						if (SelectedLevel > InstalledLevels)
+							SelectedLevel = InstalledLevels;
+						if (SelectedLevel==0)
+							WorldParts.RemoveAll();
+						else
+						{
+							sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,SelectedLevel);
+							if(!FileExists(FileName))
+								sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+							WorldParts.Load(FileName);
+						}
                     }
                 }
                 Input->Reset();
@@ -143,8 +155,10 @@ void StageSelect()
                     sprintf(Tekst,"This Level Hasn't been unlocked yet!\nDo you want to play the last unlocked\nlevel %d/%d\n\nPress (A) to Play (X) to Cancel",UnlockedLevels,InstalledLevels);
                     if	(AskQuestion(Tekst))
                     {
-                        SelectedLevel = UnlockedLevels;
-                        sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+						SelectedLevel = UnlockedLevels;
+ 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                        if(!FileExists(FileName))
+							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName, SelectedLevel);
                         WorldParts.Load(FileName);
                         GameState = GSGame;
                     }
@@ -165,7 +179,10 @@ void StageSelect()
                 }
                 else
                 {
-                    sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                    sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                    if(!FileExists(FileName))
+						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        
                     WorldParts.Load(FileName);
                 }
             }
@@ -176,7 +193,10 @@ void StageSelect()
 					SelectedLevel -= 5;
                 	if (SelectedLevel < 1)
                     	SelectedLevel = 1;
-                	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                    if(!FileExists(FileName))
+						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        
                 	WorldParts.Load(FileName);
 				}
             }
@@ -190,7 +210,10 @@ void StageSelect()
 				SelectedLevel +=5;
             	if (SelectedLevel > InstalledLevels)
                 	SelectedLevel = InstalledLevels;
-            	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+            	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                if(!FileExists(FileName))
+					sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        
             	WorldParts.Load(FileName);
 			}
             Input->Delay();
@@ -209,7 +232,10 @@ void StageSelect()
                 }
                 else
                 {
-                    sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                    sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                    if(!FileExists(FileName))
+						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        
                     WorldParts.Load(FileName);
                 }
             }
@@ -220,7 +246,9 @@ void StageSelect()
 					SelectedLevel--;
                 	if (SelectedLevel < 1)
                     	SelectedLevel = 1;
-                	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                    if(!FileExists(FileName))
+						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);	
                 	WorldParts.Load(FileName);
 				}
             }
@@ -236,7 +264,10 @@ void StageSelect()
 
             	if (SelectedLevel > InstalledLevels)
                 	SelectedLevel = InstalledLevels;
-            	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+            	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+                if(!FileExists(FileName))
+					sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        
             	WorldParts.Load(FileName);
 			}
             Input->Delay();

@@ -167,13 +167,27 @@ void LevelEditorMenu()
                             sprintf(LevelPackName,"%s",PackName);
                             sprintf(LevelPackFileName,"%s",PackName);
                             AddUnderScores(LevelPackFileName);
-                            sprintf(Tekst,"./levelpacks/%s",LevelPackFileName);
+							sprintf(Tekst,"%s", getenv("HOME") == NULL ? ".": getenv("HOME"));
 #ifdef WIN32
                             mkdir(Tekst);
 #else
                             mkdir(Tekst,S_IRWXO|S_IRWXU|S_IRWXG);
 #endif
-                            sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);
+
+							sprintf(Tekst,"%s/.blips_levelpacks", getenv("HOME") == NULL ? ".": getenv("HOME"));
+#ifdef WIN32
+                            mkdir(Tekst);
+#else
+                            mkdir(Tekst,S_IRWXO|S_IRWXU|S_IRWXG);
+#endif
+
+							sprintf(Tekst,"%s/.blips_levelpacks/%s", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
+#ifdef WIN32
+                            mkdir(Tekst);
+#else
+                            mkdir(Tekst,S_IRWXO|S_IRWXU|S_IRWXG);
+#endif
+							sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
                             Fp = fopen(FileName,"wt");
                             if (Fp)
                             {
@@ -212,9 +226,9 @@ void LevelEditorMenu()
                         sprintf(Tekst,"do you want to delete the selected level pack:\n\"%s\"\nAll Levels in Levelpack will be deleted !!!\n\nPress A to Delete, X to Cancel",InstalledLevelPacks[SelectedLevelPack]);
                         if(AskQuestion(Tekst))
                         {
-                            for(Teller=1;Teller<50;Teller++)
+                            for(Teller=1;Teller<INT_MAX;Teller++)
                             {
-                                sprintf(Tekst,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
+                                sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,Teller);
                                 if(FileExists(Tekst))
                                 {
                                     remove(Tekst);
@@ -222,12 +236,12 @@ void LevelEditorMenu()
                                 else
                                     break;
                             }
-                            sprintf(Tekst,"./levelpacks/%s/credits.dat",LevelPackFileName);
+                            sprintf(Tekst,"%s/.blips_levelpacks/%s/credits.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
                             if(FileExists(Tekst))
                             {
                                 remove(Tekst);
                             }
-                            sprintf(Tekst,"./levelpacks/%s",LevelPackFileName);
+                            sprintf(Tekst,"%s/.blips_levelpacks/%s",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
                             rmdir(Tekst);
 
                             SearchForLevelPacks();

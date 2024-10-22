@@ -161,20 +161,26 @@ void FindLevels()
 {
 	int Teller=1;
 	char *FileName = new char[FILENAME_MAX];
+	char *FileName2 = new char[FILENAME_MAX];
 	InstalledLevels = 0;
-	sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
-	while (FileExists(FileName))
+	bool homepath=false;
+	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller);
+	sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);		
+	while (FileExists(FileName) || FileExists(FileName2))
 	{
-		Teller+=25;
-		sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
+		Teller+=30;
+		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller);
+		sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
 	}
-	while (!FileExists(FileName) && (Teller >=1) )
+	while (!FileExists(FileName) && !FileExists(FileName2) && (Teller >=1) )
 	{
 		Teller--;
-		sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
+		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller);
+		sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
 	}
 	InstalledLevels=Teller;
 	delete[] FileName;
+	delete[] FileName2;
 }
 
 void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
@@ -431,7 +437,7 @@ void SaveUnlockData()
 	LevelHash[1] = HashTable[UnlockedLevels];
 	LevelHash[2] = HashTable[UnlockedLevels+1];
 	LevelHash[3] = HashTable[UnlockedLevels+2];
-	sprintf(Filename,"./%s.dat",LevelPackFileName);
+	sprintf(Filename,"%s/.blips_%s.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
 	for (Teller=0;Teller<4;Teller++)
 		LevelHash[Teller] = LevelHash[Teller] ^ LevelPackFileName[strlen(LevelPackFileName)-1];
 	for (Teller=0;Teller<strlen(LevelPackFileName);Teller++)
@@ -494,7 +500,7 @@ void LoadUnlockData()
 	int Teller=0;
 	unsigned char HashBuffer[64];
 	char Filename[FILENAME_MAX];
-	sprintf(Filename,"./%s.dat",LevelPackFileName);
+	sprintf(Filename,"%s/.blips_%s.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
 	Fp = fopen(Filename,"rb");
 	int CheckSum,ValidCheckSum=0;
 	if (Fp)
@@ -645,7 +651,9 @@ void DecVolume()
 void LoadSettings()
 {
 	FILE *Fp;
-	Fp = fopen("./settings.dat","rt");
+	char FileName[FILENAME_MAX];
+	sprintf(FileName,"%s/.blips_settings", getenv("HOME") == NULL ? ".": getenv("HOME"));
+	Fp = fopen(FileName,"rt");
 	if (Fp)
 	{
 		fscanf(Fp,"Volume=%d\n",&Volume);
@@ -661,7 +669,9 @@ void LoadSettings()
 void SaveSettings()
 {
 	FILE *Fp;
-	Fp = fopen("./settings.dat","wt");
+	char FileName[FILENAME_MAX];
+	sprintf(FileName,"%s/.blips_settings", getenv("HOME") == NULL ? ".": getenv("HOME"));
+	Fp = fopen(FileName,"wt");
 	if (Fp)
 	{
 		fprintf(Fp,"Volume=%d\n",Volume);
@@ -705,35 +715,58 @@ void SearchForMusic()
 	MusicCount = Teller;
 }
 
-void SearchForLevelPacks()
+void DoSearchForLevelPacks(char* Path)
 {
 	struct dirent *Entry;
 	DIR *Directory;
 	struct stat Stats;
-	int Teller=0;
 	char FileName[FILENAME_MAX];
-	Directory = opendir("./levelpacks");
+	char Name[21];
+	Directory = opendir(Path);
 	if (Directory)
 	{
 		Entry=readdir(Directory);
 		while(Entry)
 		{
-			sprintf(FileName,"./levelpacks/%s",Entry->d_name);
+			sprintf(FileName,"%s/%s",Path,Entry->d_name);
 			stat(FileName,&Stats);
 			if(S_ISDIR(Stats.st_mode))
 			{
-				if(strncmp(".", Entry->d_name, 1)  && (Teller< MaxLevelPacks) && (strlen(Entry->d_name) < 21))
+				if(strncmp(".", Entry->d_name, 1)  && (InstalledLevelPacksCount< MaxLevelPacks) && (strlen(Entry->d_name) < 21))
 				{
-					sprintf(InstalledLevelPacks[Teller],"%s",Entry->d_name);
-					RemoveUnderScores(InstalledLevelPacks[Teller]);
-					Teller++;
+					sprintf(Name,"%s",Entry->d_name);
+					RemoveUnderScores(Name);
+					bool found = false;
+					for (int i = 0; i < InstalledLevelPacksCount; i++)
+					{
+						if(strcmp(Name, InstalledLevelPacks[i]) == 0)
+						{
+							found = true;
+							break;
+						}
+					}
+					
+					if(!found)
+					{
+						sprintf(InstalledLevelPacks[InstalledLevelPacksCount],"%s",Entry->d_name);
+						RemoveUnderScores(InstalledLevelPacks[InstalledLevelPacksCount]);
+						InstalledLevelPacksCount++;
+					}
 				}
 			}
 			Entry=readdir(Directory);
 		}
 		closedir(Directory);
 	}
-	InstalledLevelPacksCount = Teller;
+}
+
+void SearchForLevelPacks()
+{
+	InstalledLevelPacksCount = 0;
+	DoSearchForLevelPacks("./levelpacks");
+	char Path[FILENAME_MAX];
+	sprintf(Path, "%s/.blips_levelpacks", getenv("HOME") == NULL ? ".": getenv("HOME"));
+	DoSearchForLevelPacks(Path);
 	SelectedLevelPack=0;
 	if (InstalledLevelPacksCount > 0)
 	{

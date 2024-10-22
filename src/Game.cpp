@@ -10,7 +10,7 @@
 
 bool StageDone()
 {
-	int Teller,NumDiamonds=0;
+	int Teller;
 	for (Teller=0;Teller<WorldParts.ItemCount;Teller++)
 		if (WorldParts.Items[Teller]->GetType() == IDDiamond)
 		{
@@ -279,7 +279,8 @@ void Game()
 						GameState = GSLevelEditor;
 					else
 					{
-						sprintf(FileName,"./temp.lev");
+						
+						sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
 						WorldParts.Load(FileName);
 						for (teller=0;teller<WorldParts.ItemCount;teller++)
 						{
@@ -297,7 +298,9 @@ void Game()
 				{
 					if (AskQuestion("Too bad you died !\nDo you want to try again?\n\n(A) Try Again (X) Level Selector"))
 					{
-						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,SelectedLevel);
+						if(!FileExists(FileName))
+							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 						WorldParts.Load(FileName);
 						for (teller=0;teller<WorldParts.ItemCount;teller++)
 						{
@@ -332,7 +335,7 @@ void Game()
 					GameState = GSLevelEditor;
 				else
 				{
-					sprintf(FileName,"./temp.lev");
+					sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
 					WorldParts.Load(FileName);
 					for (teller=0;teller<WorldParts.ItemCount;teller++)
 					{

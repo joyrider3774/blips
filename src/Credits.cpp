@@ -21,7 +21,9 @@ void Credits()
     Rect.y = StartScreenY;
     Tmp = SDL_DisplayFormat(Buffer);
 	char *Tekst = new char[500];
-	sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);
+	sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
+	if(!FileExists(FileName))
+		sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);		
 	Fp = fopen(FileName,"rt");
 	if (Fp)
 	{

@@ -3,6 +3,7 @@
 #include <SDL_framerate.h>
 #include <SDL_gfxPrimitives.h>
 #include <SDL_rotozoom.h>
+#include <unistd.h>
 #include "Common.h"
 #include "GameFuncs.h"
 #include "CInput.h"
@@ -57,13 +58,14 @@ void LevelEditor()
     Rect.h = Buffer->h;
     Rect.x = StartScreenX;
     Rect.y = StartScreenY;
-    Tmp1 = SDL_CreateRGBSurface(SDL_HWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
+    Tmp1 = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
 	Tmp = SDL_DisplayFormat(Tmp1);
 	SDL_FreeSurface(Tmp1);
 	if (StageReload)
 	{
-		WorldParts.Load("./temp.lev");
-		remove("./temp.lev");
+		sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
+		WorldParts.Load(FileName);
+		remove(FileName);
 		StageReload=false;
 	}
     for (Teller = 0;Teller< WorldParts.ItemCount;Teller++)
@@ -158,11 +160,25 @@ void LevelEditor()
                     }
                     if (!LevelErrorsFound())
                     {
+
+						sprintf(FileName,"%s/.blips_levelpacks",getenv("HOME") == NULL ? ".": getenv("HOME"));
+#ifdef WIN32
+                        mkdir(FileName);
+#else
+                        mkdir(FileName,S_IRWXO|S_IRWXU|S_IRWXG);
+#endif
+						sprintf(FileName,"%s/.blips_levelpacks/%s",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
+#ifdef WIN32
+                        mkdir(FileName);
+#else
+                        mkdir(FileName,S_IRWXO|S_IRWXU|S_IRWXG);
+#endif
+
                         if (SelectedLevel==0)
-                                sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,InstalledLevels+1);
+                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"),LevelPackFileName,InstalledLevels+1);
                         else
-                            sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                        WorldParts.Save(FileName);
+                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"),LevelPackFileName,SelectedLevel);
+						WorldParts.Save(FileName);
                         FindLevels();
                         if (SelectedLevel==0)
                             SelectedLevel = InstalledLevels;
@@ -192,7 +208,8 @@ void LevelEditor()
         {
             if(!LevelErrorsFound())
             {
-                WorldParts.Save("./temp.lev");
+				sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
+                WorldParts.Save(FileName);
                 StageReload = true;
                 GameState=GSGame;
 				WorldParts.LimitVPLevel();
@@ -241,30 +258,33 @@ void LevelEditor()
                     {
                         if((WorldParts.Items[Teller]->GetPlayFieldX() == Selector.GetPlayFieldX()) &&
                            (WorldParts.Items[Teller]->GetPlayFieldY() == Selector.GetPlayFieldY()))
-                            if(WorldParts.Items[Teller]->GetType() == IDFloor)
-                            {
-                                AnotherPartFound = false;
-                                for(Teller2=Teller+1;Teller2<WorldParts.ItemCount;Teller2++)
-                                    if((WorldParts.Items[Teller2]->GetPlayFieldX() == Selector.GetPlayFieldX()) &&
-                                       (WorldParts.Items[Teller2]->GetPlayFieldY() == Selector.GetPlayFieldY()))
-                                        {
-                                                WorldParts.Remove(WorldParts.Items[Teller2]->GetPlayFieldX(),WorldParts.Items[Teller2]->GetPlayFieldY(),WorldParts.Items[Teller2]->GetType());
-                                                AnotherPartFound = true;
-                                                break;
-                                        }
+						   {
+								if(WorldParts.Items[Teller]->GetType() == IDFloor)
+								{
+									AnotherPartFound = false;
+									for(Teller2=Teller+1;Teller2<WorldParts.ItemCount;Teller2++)
+										if((WorldParts.Items[Teller2]->GetPlayFieldX() == Selector.GetPlayFieldX()) &&
+										(WorldParts.Items[Teller2]->GetPlayFieldY() == Selector.GetPlayFieldY()))
+											{
+													WorldParts.Remove(WorldParts.Items[Teller2]->GetPlayFieldX(),WorldParts.Items[Teller2]->GetPlayFieldY(),WorldParts.Items[Teller2]->GetType());
+													AnotherPartFound = true;
+													break;
+											}
 
 
-                                if (!AnotherPartFound)
-                                {
-                                    WorldParts.Remove(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY(),IDFloor);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
-                                break;
-                            }
+									if (!AnotherPartFound)
+									{
+										WorldParts.Remove(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY(),IDFloor);
+										break;
+									}
+								}
+								else
+								{
+									WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
+									break;
+								
+								}
+						   }
                     }
                     break;
                 case IDBox:
