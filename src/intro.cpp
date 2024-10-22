@@ -127,5 +127,6 @@ void Intro()
 
     }
     SDL_FreeSurface(Tmp);
+	delete Input;
 
 }
