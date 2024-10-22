@@ -161,6 +161,8 @@ int main(int argc, char **argv)
 						printf("Failed to Load fonts\n");
 					}
 					TTF_Quit();
+					if(GlobalSoundEnabled)
+						Mix_CloseAudio();
 				}
 				else
 				{
