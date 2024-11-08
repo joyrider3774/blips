@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 		Uint32 flags = SDL_SWSURFACE;
 		if (fullscreen)
 			flags |= SDL_FULLSCREEN;
-        Screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT,SCREEN_BPP, flags);
+        Screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT,0, flags);
         Icon = IMG_Load("./graphics/blips.png");
         SDL_WM_SetIcon(Icon,NULL);
         SDL_WM_SetCaption( "Blips - Created By Willems Davy - Original game by Bryant Brownell", NULL );
@@ -72,8 +72,13 @@ int main(int argc, char **argv)
 			{
 				printf("Running FullScreen\n");
 			}
-		    Buffer = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
-            Buffer1 = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
+		    
+			SDL_Surface* tmp = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
+			Buffer = SDL_DisplayFormat(tmp);
+			SDL_FreeSurface(tmp);
+            tmp = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
+			Buffer1 = SDL_DisplayFormat(tmp);
+			SDL_FreeSurface(tmp);
 			if (Buffer && Buffer1)
 			{
 			    SDL_FillRect(Buffer,NULL,SDL_MapRGB(Buffer->format,0,0,0));
