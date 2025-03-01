@@ -43,11 +43,6 @@ void Game()
 		Player = new CPlayer(0,0);
 		WorldParts.Add(Player);
 	}
-	SDL_Rect Rect;
-    Rect.w = Buffer->w;
-    Rect.h = Buffer->h;
-    Rect.x = StartScreenX;
-    Rect.y = StartScreenY;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	Tmp = SDL_DisplayFormat(Buffer);
 	Time = SDL_GetTicks();
@@ -234,10 +229,6 @@ void Game()
 
 
         //tekenen naar buffer
-        Rect.w = Buffer->w;
-        Rect.h = Buffer->h;
-        Rect.x = StartScreenX;
-        Rect.y = StartScreenY;
         if (alpha < 255)
         {
             if(alpha+AlphaInc > MaxAlpha)
@@ -250,19 +241,17 @@ void Game()
                 alpha+=AlphaInc;
                 SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
             }
-        }
-        SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
-        SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
+        }        
+        SDL_BlitSurface(Tmp, NULL, Buffer, NULL);
         if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer, (double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
 			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
 			SDL_FreeSurface(ScreenBufferZoom);
 		}
 		else
 		{
-			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
 
         SDL_Flip(Screen);

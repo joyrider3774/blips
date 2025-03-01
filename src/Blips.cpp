@@ -76,10 +76,7 @@ int main(int argc, char **argv)
 			SDL_Surface* tmp = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
 			Buffer = SDL_DisplayFormat(tmp);
 			SDL_FreeSurface(tmp);
-            tmp = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
-			Buffer1 = SDL_DisplayFormat(tmp);
-			SDL_FreeSurface(tmp);
-			if (Buffer && Buffer1)
+			if (Buffer)
 			{
 			    SDL_FillRect(Buffer,NULL,SDL_MapRGB(Buffer->format,0,0,0));
                 SDL_ShowCursor(SDL_DISABLE);
@@ -178,8 +175,6 @@ int main(int argc, char **argv)
 
                 SDL_FreeSurface(Buffer);
                 Buffer=NULL;
-                SDL_FreeSurface(Buffer1);
-                Buffer1=NULL;
 			}
 			else
                 printf("Failed To Create Buffer\n");

@@ -20,7 +20,7 @@ extern SDL_Surface *IMGBackground, *IMGFloor, *IMGPlayer, *IMGBox, *IMGEmpty, *I
 extern CUsbJoystickSetup *JoystickSetup;
 
 extern unsigned char HashTable[1004];
-extern SDL_Surface* Screen,*Buffer,*Buffer1;
+extern SDL_Surface* Screen,*Buffer;
 extern TTF_Font* font,* BigFont,*MonoFont;
 extern SDL_Joystick *Joystick;
 extern GameStates GameState;
@@ -29,7 +29,7 @@ extern bool LevelEditorMode, LevelHasChanged, StageReload;
 extern SDL_Color MenuBoxColor, MenuBoxBorderColor, MenuTextColor;
 extern CWorldParts WorldParts;
 extern Uint32 NextTime;
-extern int Volume, StartScreenX, StartScreenY;
+extern int Volume;
 extern char LevelPackName[21];
 extern char LevelPackFileName[21];
 extern char InstalledLevelPacks[MaxLevelPacks][21];

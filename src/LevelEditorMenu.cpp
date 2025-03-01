@@ -17,11 +17,6 @@ void LevelEditorMenu()
 	int Teller, Selection = 1;
 	char *PackName,*CreatorName;
 	char FileName[FILENAME_MAX];
-	SDL_Rect Rect;
-    Rect.w = Buffer->w;
-    Rect.h = Buffer->h;
-    Rect.x = StartScreenX;
-    Rect.y = StartScreenY;
     Tmp = SDL_DisplayFormat(Buffer);
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	char *Tekst = new char[300];
@@ -44,38 +39,7 @@ void LevelEditorMenu()
             GameState = GSTitleScreen;
 		}
 
-		if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r])
-        {
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
-            {
-                if(StartScreenX - 2 >= 0)
-                    StartScreenX -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
-            {
-                if(StartScreenX + 2 + Buffer->w <= Screen->w)
-                    StartScreenX +=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
-            {
-                if(StartScreenY - 2 >=0)
-                    StartScreenY -=2;
-                Input->Delay();
-            }
-
-            if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
-            {
-                if(StartScreenY + 2 + Buffer->h <= Screen->h)
-                    StartScreenY +=2;
-                Input->Delay();
-            }
-        }
-
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
+		if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
         {
             Input->Delay();
         }
@@ -285,18 +249,15 @@ void LevelEditorMenu()
             }
         }
         SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
-        SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-        SDL_BlitSurface(Buffer1,NULL,Screen,NULL);
 		if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
 			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
 			SDL_FreeSurface(ScreenBufferZoom);
 		}
 		else
 		{
-			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);

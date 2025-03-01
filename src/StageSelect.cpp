@@ -16,11 +16,6 @@ void StageSelect()
 	char *FileName = new char[FILENAME_MAX];
 	char Tekst[300];
 	char Tekst1[300];
-	SDL_Rect Rect;
-    Rect.w = Buffer->w;
-    Rect.h = Buffer->h;
-    Rect.x = StartScreenX;
-    Rect.y = StartScreenY;
     Tmp = SDL_DisplayFormat(Buffer);
     CInput *Input = new CInput(InputDelay, disableJoysticks);
 	if (SelectedLevel > 0)
@@ -290,19 +285,16 @@ void StageSelect()
                 SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
             }
         }
-        SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
-        SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-        SDL_BlitSurface(Buffer1,NULL,Screen,NULL);
+		SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
         if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
 			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
 			SDL_FreeSurface(ScreenBufferZoom);
 		}
 		else
 		{
-			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
 		SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);

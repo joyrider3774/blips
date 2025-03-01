@@ -54,11 +54,6 @@ void LevelEditor()
 	CInput *Input = new CInput(InputDelay-5, disableJoysticks);
 	CSelector Selector(&WorldParts);
 	int MaxX=0,MaxY=0,MinY=NrOfRows,MinX=NrOfCols,Xi=0,Yi=0;
-	SDL_Rect Rect;
-    Rect.w = Buffer->w;
-    Rect.h = Buffer->h;
-    Rect.x = StartScreenX;
-    Rect.y = StartScreenY;
     Tmp1 = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
 	Tmp = SDL_DisplayFormat(Tmp1);
 	SDL_FreeSurface(Tmp1);
@@ -117,20 +112,17 @@ void LevelEditor()
 			boxRGBA(Tmp,257*UI_WIDTH_SCALE,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 			rectangleRGBA(Tmp,257*UI_WIDTH_SCALE,-1,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 			WriteText(Tmp,font,Tekst,strlen(Tekst),259*UI_WIDTH_SCALE,0,0,MenuTextColor,false);
-		}
-		SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        SDL_FillRect(Buffer1,NULL,SDL_MapRGB(Buffer1->format,0,0,0));
-        SDL_BlitSurface(Buffer,NULL,Buffer1,&Rect);
-        SDL_BlitSurface(Buffer1,NULL,Screen,NULL);
+		}		
+        SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
 		if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer1,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
 			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
 			SDL_FreeSurface(ScreenBufferZoom);
 		}
 		else
 		{
-			SDL_BlitSurface(Buffer1, NULL, Screen, NULL);
+			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
         SDL_Flip(Screen);
 
