@@ -1,8 +1,8 @@
 #ifndef CUSBJOYSTICK_H
 #define CUSBJOYSTICK_H
 
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <stdio.h>
 
 #define MAXDEFINITIONS 50
@@ -24,7 +24,7 @@ class CUsbJoystickSetup {
         bool SaveCurrentButtonValues(const char *Filename);
         bool LoadCurrentButtonValues(const char *Filename);
         void SetButtonValue(int Button, int Value);
-        void DrawCurrentSetup(SDL_Surface *Surface,TTF_Font* FontIn,int X, int Y, int XSpacing, int YSpacing ,int Selection, SDL_Color TextColor,SDL_Color SelectedTextColor);
+        void DrawCurrentSetup(TTF_Font* FontIn,int X, int Y, int XSpacing, int YSpacing ,int Selection, SDL_Color TextColor,SDL_Color SelectedTextColor);
         CUsbJoystickSetup();
         ~CUsbJoystickSetup();
         void ResetToDefaults();

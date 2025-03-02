@@ -1,7 +1,7 @@
 #ifndef CSELECTOR_H
 #define CSELECTOR_H
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "CWorldParts.h"
 #include "CWorldPart.h"
 
@@ -20,7 +20,7 @@ class CSelector
 	void IncSelection();
 	void DecSelection();
 	void SetPosition(const int PlayFieldXin,const int PlayFieldYin);
-	void Draw(SDL_Surface *Surface);
+	void Draw();
 	int GetSelection();
 	int GetPlayFieldX();
 	int GetPlayFieldY();

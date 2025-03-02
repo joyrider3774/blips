@@ -1,8 +1,5 @@
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_framerate.h>
-#include <SDL_gfxPrimitives.h>
-#include <SDL_rotozoom.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "Common.h"
@@ -54,12 +51,9 @@ void LevelEditor()
 	CInput *Input = new CInput(InputDelay-5, disableJoysticks);
 	CSelector Selector(&WorldParts);
 	int MaxX=0,MaxY=0,MinY=NrOfRows,MinX=NrOfCols,Xi=0,Yi=0;
-    Tmp1 = SDL_CreateRGBSurface(SDL_SWSURFACE,ORIG_WINDOW_WIDTH,ORIG_WINDOW_HEIGHT,SCREEN_BPP,Screen->format->Rmask,Screen->format->Gmask,Screen->format->Bmask,Screen->format->Amask);
-	Tmp = SDL_DisplayFormat(Tmp1);
-	SDL_FreeSurface(Tmp1);
-	if (StageReload)
+    if (StageReload)
 	{
-		sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
+		sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 		WorldParts.Load(FileName);
 		remove(FileName);
 		StageReload=false;
@@ -80,6 +74,8 @@ void LevelEditor()
 
 	while (GameState == GSLevelEditor)
 	{
+        frameticks = SDL_GetPerformanceCounter();
+        SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
             if (! Mix_PlayingMusic())
             {
@@ -93,81 +89,128 @@ void LevelEditor()
             if(alpha+AlphaInc > MaxAlpha)
             {
                 alpha = 255;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
             else
             {
                 alpha+=AlphaInc;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
         }
-		SDL_BlitSurface(IMGBackground,NULL,Tmp,NULL);
+		SDL_RenderTexture(Renderer, IMGBackground,NULL,NULL);
 		if(ShowGrid)
-            SDL_BlitSurface(IMGGrid,NULL,Tmp,NULL);
-		WorldParts.Draw(Tmp);
-		Selector.Draw(Tmp);
+            SDL_RenderTexture(Renderer, IMGGrid,NULL,NULL);
+		WorldParts.Draw();
+		Selector.Draw();
 		if (ShowPosition)
 		{
 			sprintf(Tekst,"X: %d - Y: %d",Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
-			boxRGBA(Tmp,257*UI_WIDTH_SCALE,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
-			rectangleRGBA(Tmp,257*UI_WIDTH_SCALE,-1,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-			WriteText(Tmp,font,Tekst,strlen(Tekst),259*UI_WIDTH_SCALE,0,0,MenuTextColor,false);
-		}		
-        SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-		if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
-		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-			SDL_FreeSurface(ScreenBufferZoom);
+			SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
+            SDL_FRect Rect = {257*UI_WIDTH_SCALE,0,ORIG_WINDOW_WIDTH-257-1,13*UI_HEIGHT_SCALE};
+            SDL_RenderFillRect(Renderer, &Rect);
+            SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
+            SDL_RenderRect(Renderer, &Rect);
+			WriteText(font,Tekst,strlen(Tekst),259*UI_WIDTH_SCALE,0,0,MenuTextColor,false);
 		}
-		else
-		{
-			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
-		}
-        SDL_Flip(Screen);
-
+        if(showfps)
+        {
+            char fpsText[100];
+            sprintf(fpsText, "FPS: %.2f\n", avgfps);
+            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
+            SDL_RenderFillRect(Renderer, &Rect);
+            SDL_Color col = {0,0,0,255};
+            WriteText(font, fpsText, strlen(fpsText), 0, 0, 0, col, false);
+        }
+        SDL_SetRenderTarget(Renderer, Buffer2);
+        SDL_RenderTexture(Renderer, Buffer, NULL, NULL);
+        SDL_SetRenderTarget(Renderer, NULL);
+        SDL_SetRenderDrawColor(Renderer, 0,0,0,255);
+        SDL_RenderClear(Renderer);
+        SDL_SetRenderLogicalPresentation(Renderer, ORIG_WINDOW_WIDTH, ORIG_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);        
+        SDL_RenderTexture(Renderer, Buffer2, NULL, NULL);
+        SDL_RenderPresent(Renderer);
+        Uint64 frameEndTicks = SDL_GetPerformanceCounter();
+        Uint64 FramePerf = frameEndTicks - frameticks;
+        frameTime = (double)FramePerf / (double)SDL_GetPerformanceFrequency() * 1000.0f;
+        double delay = 1000.0f / FPS - frameTime;
+        if (!nodelay && (delay > 0.0f))
+            SDL_Delay((Uint32)(delay)); 
+        if (showfps)
+        {
+            if(skipCounter > 0)
+            {
+                skipCounter--;
+                lastfpstime = SDL_GetTicks();
+            }
+            else
+            {
+                framecount++;
+                if(SDL_GetTicks() - lastfpstime >= 1000)
+                {
+                    for (int i = FPS_SAMPLES-1; i > 0; i--)
+                        fpsSamples[i] = fpsSamples[i-1];
+                    fpsSamples[0] = framecount;
+                    fpsAvgCount++;
+                    if(fpsAvgCount > FPS_SAMPLES)
+                        fpsAvgCount = FPS_SAMPLES;
+                    int fpsSum = 0;
+                    for (int i = 0; i < fpsAvgCount; i++)
+                        fpsSum += fpsSamples[i];
+                    avgfps = (double)fpsSum / (double)fpsAvgCount;
+                    framecount = 0;
+                    lastfpstime = SDL_GetTicks();
+                }
+            }
+        }
+        SDL_SetRenderTarget(Renderer, Buffer);
         Input->Update();
-        if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
+        if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLUP)) || Input->KeyboardHeld(SDLK_KP_PLUS)))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLMIN)) || Input->KeyboardHeld(SDLK_KP_MINUS)))
         {
             DecVolume();
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) || Input->KeyboardHeld(SDLK_ESCAPE))
         {
             if (LevelHasChanged)
             {
                 if(AskQuestion("The current level isn't saved yet!\nDo you want to save it now ?\n\nPress (A) to save, (X) to cancel saving"))
-                {
-                    SDL_BlitSurface(IMGBackground,NULL,Buffer,NULL);
-                    WorldParts.Draw(Buffer);
-                    Selector.Draw(Buffer);
+                {                    
+                    SDL_SetRenderTarget(Renderer, Buffer);
+                    SDL_RenderTexture(Renderer, IMGBackground,NULL, NULL);
+                    WorldParts.Draw();
+                    Selector.Draw();
                     if (ShowPosition)
                     {
                         sprintf(Tekst,"X: %d - Y: %d",Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
-                        boxRGBA(Buffer,257*UI_WIDTH_SCALE,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
-                        rectangleRGBA(Buffer,257*UI_WIDTH_SCALE,-1,ORIG_WINDOW_HEIGHT,13*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-                        WriteText(Buffer,font,Tekst,strlen(Tekst),259*UI_WIDTH_SCALE,0,0,MenuTextColor,false);
+                        SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
+                        SDL_FRect Rect = {257*UI_WIDTH_SCALE,0,ORIG_WINDOW_WIDTH-257-1,13*UI_HEIGHT_SCALE};
+                        SDL_RenderFillRect(Renderer, &Rect);
+                        SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
+                        SDL_RenderRect(Renderer, &Rect);
+                        WriteText(font,Tekst,strlen(Tekst),259*UI_WIDTH_SCALE,0,0,MenuTextColor,false);
+
                     }
                     if (!LevelErrorsFound())
                     {
 
-						sprintf(FileName,"%s/.blips_levelpacks",getenv("HOME") == NULL ? ".": getenv("HOME"));
+						sprintf(FileName,"%s/.blips_levelpacks",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 #ifdef WIN32
                         mkdir(FileName);
 #else
                         mkdir(FileName,S_IRWXO|S_IRWXU|S_IRWXG);
 #endif
-						sprintf(FileName,"%s/.blips_levelpacks/%s",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
+						sprintf(FileName,"%s/.blips_levelpacks/%s",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName);
 #ifdef WIN32
                         mkdir(FileName);
 #else
@@ -175,9 +218,9 @@ void LevelEditor()
 #endif
 
                         if (SelectedLevel==0)
-                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"),LevelPackFileName,InstalledLevels+1);
+                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"),LevelPackFileName,InstalledLevels+1);
                         else
-                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"),LevelPackFileName,SelectedLevel);
+                            sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"),LevelPackFileName,SelectedLevel);
 						WorldParts.Save(FileName);
                         FindLevels();
                         if (SelectedLevel==0)
@@ -204,11 +247,11 @@ void LevelEditor()
 			}
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
+        if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_START)) || Input->KeyboardHeld(SDLK_RETURN)))
         {
             if(!LevelErrorsFound())
             {
-				sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
+				sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
                 WorldParts.Save(FileName);
                 StageReload = true;
                 GameState=GSGame;
@@ -219,19 +262,19 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_L)) || Input->KeyboardHeld(SDLK_PAGEDOWN) || Input->KeyboardHeld(SDLK_L)))
         {
             Selector.DecSelection();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_R)) || Input->KeyboardHeld(SDLK_PAGEUP) || Input->KeyboardHeld(SDLK_R)))
         {
             Selector.IncSelection();
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_SPACE])
+        if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_SPACE))
         {
             SamePartFound = false;
             for(Teller=0;Teller<WorldParts.ItemCount;Teller++)
@@ -337,7 +380,7 @@ void LevelEditor()
             }
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_LEFT)) || Input->KeyboardHeld(SDLK_LEFT)))
         {
             Selector.MoveLeft();
             if(Selector.GetPlayFieldX() <  WorldParts.ViewPort->VPMinX+3)
@@ -345,7 +388,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_RIGHT)) || Input->KeyboardHeld(SDLK_RIGHT)))
         {
             Selector.MoveRight();
             if(Selector.GetPlayFieldX() > WorldParts.ViewPort->VPMaxX - 3)
@@ -353,7 +396,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_UP)) || Input->KeyboardHeld(SDLK_UP)))
         {
             Selector.MoveUp();
             if(Selector.GetPlayFieldY() < WorldParts.ViewPort->VPMinY+3)
@@ -361,7 +404,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_DOWN)) || Input->KeyboardHeld(SDLK_DOWN)))
         {
             Selector.MoveDown();
             if(Selector.GetPlayFieldY() > WorldParts.ViewPort->VPMaxY-3)
@@ -369,7 +412,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_b]))
+        if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_SELECT)) || Input->KeyboardHeld(SDLK_B)))
         {
             if(ShowPosition && ShowGrid)
                 ShowGrid = !ShowGrid;
@@ -385,7 +428,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_BACKSPACE] || Input->KeyboardHeld[SDLK_DELETE]))
+        if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y)) || Input->KeyboardHeld(SDLK_Y) || Input->KeyboardHeld(SDLK_BACKSPACE) || Input->KeyboardHeld(SDLK_DELETE)))
         {
             if (WorldParts.ItemCount > 0)
             if(AskQuestion("You are about to delete all parts\nin this level, are you sure\nyou want to do this?\n\nPress (A) to delete, (X) to cancel"))
@@ -397,7 +440,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] ))
+        if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X)) || Input->KeyboardHeld(SDLK_X) || Input->KeyboardHeld(SDLK_Z) ))
         {
             MinX = NrOfCols-1;
             MinY = NrOfRows-1;
@@ -439,9 +482,7 @@ void LevelEditor()
                 LevelHasChanged = true;
             Input->Delay();
         }
-        SDL_framerateDelay(&Fpsman);
 	}
 	delete[] FileName;
-	SDL_FreeSurface(Tmp);
 	delete Input;
 }

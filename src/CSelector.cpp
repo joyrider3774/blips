@@ -1,5 +1,5 @@
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "CSelector.h"
 #include "CWorldParts.h"
 #include "CWorldPart.h"
@@ -115,9 +115,9 @@ void CSelector::DecSelection()
 	Part->Selected = true;
 }
 
-void CSelector::Draw(SDL_Surface *Surface)
+void CSelector::Draw()
 {
-	Part->Draw(Surface);
+	Part->Draw();
 }
 
 int CSelector::GetSelection()

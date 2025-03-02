@@ -1,6 +1,5 @@
-#include <SDL.h>
-#include <SDL_gfxPrimitives.h>
-#include <SDL_mixer.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include "Common.h"
 #include "CWorldPart.h"
 #include "SPoint.h"
@@ -203,14 +202,14 @@ void CWorldPart::Move()
 		}
 }
 
-void CWorldPart::Draw(SDL_Surface* Surface)
+void CWorldPart::Draw()
 {
 	if(!BHide)
 	{
 		if (*Image)
 		{
 			Event_BeforeDraw();
-			SDL_Rect SrcRect,DstRect;
+			SDL_FRect SrcRect,DstRect;
 			SrcRect.x = AnimPhase * TileWidth;
 			SrcRect.y = 0;
 			SrcRect.w = TileWidth;
@@ -227,19 +226,29 @@ void CWorldPart::Draw(SDL_Surface* Surface)
 			}
 			DstRect.w = TileWidth;
 			DstRect.h = TileHeight;
-			SDL_BlitSurface((*Image),&SrcRect,Surface,&DstRect);
+			SDL_RenderTexture(Renderer, (*Image),&SrcRect,&DstRect);
 		}
 		if (Selected)
 		{
 			if (ParentList)
 			{
-				boxRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,200,15);
-				rectangleRGBA(Surface,X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,X- ParentList->ViewPort->MinScreenX+TileWidth-1,Y- ParentList->ViewPort->MinScreenY+TileHeight-1,0,0,255,50);
+				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
+				SDL_SetRenderDrawColor(Renderer,0,0,200,50);
+				SDL_FRect Rect = {X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,TileWidth,TileHeight};
+				SDL_RenderFillRect(Renderer, &Rect);
+				SDL_SetRenderDrawColor(Renderer,0,0,255,50);
+				SDL_RenderRect(Renderer, &Rect);
+				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_NONE);
 			}
 			else
 			{
-				boxRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,200,15);
-				rectangleRGBA(Surface,X,Y,X+TileWidth-1,Y+TileHeight-1,0,0,255,50);
+				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
+				SDL_SetRenderDrawColor(Renderer,0,0,200,50);
+				SDL_FRect Rect = {X,Y,TileWidth,TileHeight};
+				SDL_RenderFillRect(Renderer, &Rect);
+				SDL_SetRenderDrawColor(Renderer,0,0,255,50);
+				SDL_RenderRect(Renderer, &Rect);
+				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_NONE);
 			}
 		}
 	}

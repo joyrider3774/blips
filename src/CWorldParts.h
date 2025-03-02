@@ -21,7 +21,7 @@ class CWorldParts
 		void CenterVPOnPlayer();
 		void LimitVPLevel();
 		void Move();
-		void Draw(SDL_Surface *Surface);
+		void Draw();
 		void Remove(int PlayFieldXin,int PlayFieldYin);
 		void Remove(int PlayFieldXin,int PlayFieldYin,int Type);
 		void RemoveAll();

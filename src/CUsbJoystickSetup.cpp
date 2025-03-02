@@ -1,4 +1,3 @@
-#include <SDL_gfxPrimitives.h>
 #include "CUsbJoystickSetup.h"
 #include "CInput.h"
 #include "Common.h"
@@ -37,14 +36,14 @@ int CUsbJoystickSetup::GetButtonValue(int Button) {
     return -1;
 }
 
-void CUsbJoystickSetup::DrawCurrentSetup(SDL_Surface *Surface,TTF_Font* FontIn,int X, int Y, int XSpacing,int YSpacing,int Selection,  SDL_Color TextColor,SDL_Color SelectedColor) {
+void CUsbJoystickSetup::DrawCurrentSetup(TTF_Font* FontIn,int X, int Y, int XSpacing,int YSpacing,int Selection,  SDL_Color TextColor,SDL_Color SelectedColor) {
     char ButtonText[100];
     char SelectedDescText[DESCRIPTIONSIZE+4];
     for (int Teller=0; Teller < NROFBUTTONS; Teller++)
     {
         if (strlen(PJoystickButtons[Teller].ButtonDescription) > 0)
         {
-            WriteText(Surface,FontIn,PJoystickButtons[Teller].ButtonDescription,strlen(PJoystickButtons[Teller].ButtonDescription),X ,Y + (YSpacing*Teller),0,TextColor,false);
+            WriteText(FontIn,PJoystickButtons[Teller].ButtonDescription,strlen(PJoystickButtons[Teller].ButtonDescription),X ,Y + (YSpacing*Teller),0,TextColor,false);
             if(PJoystickButtons[Teller].CurrentButtonValue >= -1 && PJoystickButtons[Teller].CurrentButtonValue < MAXJOYSTICKBUTTONS)
 
                 switch (PJoystickButtons[Teller].CurrentButtonValue) {
@@ -59,10 +58,10 @@ void CUsbJoystickSetup::DrawCurrentSetup(SDL_Surface *Surface,TTF_Font* FontIn,i
             if(Selection == Teller)
             {
                 sprintf(SelectedDescText,"%s <<",ButtonText);
-                WriteText(Surface,FontIn,SelectedDescText,strlen(SelectedDescText),X + XSpacing ,Y + (YSpacing*Teller),YSpacing,SelectedColor,false);
+                WriteText(FontIn,SelectedDescText,strlen(SelectedDescText),X + XSpacing ,Y + (YSpacing*Teller),YSpacing,SelectedColor,false);
             }
             else
-                WriteText(Surface,FontIn,ButtonText,strlen(ButtonText),X + XSpacing ,Y + (YSpacing*Teller),0,TextColor,false);
+                WriteText(FontIn,ButtonText,strlen(ButtonText),X + XSpacing ,Y + (YSpacing*Teller),0,TextColor,false);
         }
     }
 }

@@ -1,14 +1,15 @@
 #include "CInput.h"
-
+#include <SDL3/SDL_scancode.h>
+#include <SDL3/SDL_joystick.h>
 
 CInput::CInput(int UpdateCounterDelay, bool DisableJoysticks) {
     Reset();
-    PNumJoysticks = SDL_NumJoysticks();
+    SDL_GetJoysticks(&PNumJoysticks);
 	if(!DisableJoysticks)
 	{
     	for (int teller=0;teller< PNumJoysticks;teller++)
-        	if(SDL_JoystickOpen(teller) != NULL)
-    			SDL_JoystickEventState(SDL_ENABLE);
+        	if(SDL_OpenJoystick(teller) != NULL)
+                SDL_SetJoystickEventsEnabled(true);
 	}
     PUpdateCounterDelay = UpdateCounterDelay;
     UpdateCounter = 0;
@@ -23,67 +24,60 @@ void CInput::Update() {
         UpdateCounter--;
     while(SDL_PollEvent(&Event))
     {
-        if(Event.type == SDL_QUIT)
-            SpecialsHeld[SPECIAL_QUIT_EV] = true;
-        if(Event.type == SDL_KEYDOWN)
-            KeyboardHeld[Event.key.keysym.sym] = true;
-        if(Event.type == SDL_KEYUP)
-            KeyboardHeld[Event.key.keysym.sym] = false;
-		if (Event.type == SDL_JOYHATMOTION)
+        if(Event.type == SDL_EVENT_QUIT)
+            _SpecialsHeld[SPECIAL_QUIT_EV] = true;
+        if(Event.type == SDL_EVENT_KEY_DOWN)
+            _KeyboardHeld[Event.key.scancode] = true;
+        if(Event.type == SDL_EVENT_KEY_UP)
+            _KeyboardHeld[Event.key.scancode] = false;
+		if (Event.type == SDL_EVENT_JOYSTICK_HAT_MOTION)
 		{
-			printf("%d\n", Event.jhat.value);
 			switch (Event.jhat.value)
 			{
 				case 1: 
-					JoystickHeld[Event.jhat.which][JOYSTICK_UP] = true;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_UP] = true;
 					break;
 				case 2: 
-					JoystickHeld[Event.jhat.which][JOYSTICK_RIGHT] = true;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_RIGHT] = true;
 					break;
 				case 4: 
-					JoystickHeld[Event.jhat.which][JOYSTICK_DOWN] = true;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_DOWN] = true;
 					break;
 				case 8: 
-					JoystickHeld[Event.jhat.which][JOYSTICK_LEFT] = true;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_LEFT] = true;
 					break;
 				default:
-					JoystickHeld[Event.jhat.which][JOYSTICK_UP] = false;
-					JoystickHeld[Event.jhat.which][JOYSTICK_RIGHT] = false;
-					JoystickHeld[Event.jhat.which][JOYSTICK_DOWN] = false;
-					JoystickHeld[Event.jhat.which][JOYSTICK_LEFT] = false;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_UP] = false;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_RIGHT] = false;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_DOWN] = false;
+					_JoystickHeld[Event.jhat.which][JOYSTICK_LEFT] = false;
 					break;
 			
 			}
 		}
 
-		if (Event.type == SDL_JOYBALLMOTION)
+        if(Event.type == SDL_EVENT_JOYSTICK_AXIS_MOTION)
 		{
-			printf("%d %d\n", Event.jball.xrel, Event.jball.yrel);
-		}
-
-        if(Event.type == SDL_JOYAXISMOTION)
-		{
-			printf("%d %d\n", Event.jaxis.axis, Event.jaxis.value);
             if(Event.jaxis.axis == 0)
             {
                 if(Event.jaxis.value > JOYSTICKDEADZONE)
                 {
                     if(Event.jaxis.which < MAXJOYSTICKS)
-                        JoystickHeld[Event.jaxis.which][JOYSTICK_RIGHT] = true;
+                        _JoystickHeld[Event.jaxis.which][JOYSTICK_RIGHT] = true;
                 }
                 else
                     if(Event.jaxis.value < -JOYSTICKDEADZONE)
                     {
                         if(Event.jaxis.which < MAXJOYSTICKS)
-                            JoystickHeld[Event.jaxis.which][JOYSTICK_LEFT] = true;
+                            _JoystickHeld[Event.jaxis.which][JOYSTICK_LEFT] = true;
                     }
                     else
                     {
                         if(Event.jaxis.which < MAXJOYSTICKS)
                         {
 
-                            JoystickHeld[Event.jaxis.which][JOYSTICK_LEFT] = false;
-                            JoystickHeld[Event.jaxis.which][JOYSTICK_RIGHT] = false;
+                            _JoystickHeld[Event.jaxis.which][JOYSTICK_LEFT] = false;
+                            _JoystickHeld[Event.jaxis.which][JOYSTICK_RIGHT] = false;
                         }
                     }
             }
@@ -94,49 +88,48 @@ void CInput::Update() {
                     if(Event.jaxis.value > JOYSTICKDEADZONE)
                     {
                        if(Event.jaxis.which < MAXJOYSTICKS)
-                            JoystickHeld[Event.jaxis.which][JOYSTICK_DOWN] = true;
+                            _JoystickHeld[Event.jaxis.which][JOYSTICK_DOWN] = true;
                     }
                     else
                         if(Event.jaxis.value < -JOYSTICKDEADZONE)
                         {
                             if(Event.jaxis.which < MAXJOYSTICKS)
-                                JoystickHeld[Event.jaxis.which][JOYSTICK_UP] = true;
+                                _JoystickHeld[Event.jaxis.which][JOYSTICK_UP] = true;
                         }
                         else
                         {
                             if(Event.jaxis.which < MAXJOYSTICKS)
                             {
-                                JoystickHeld[Event.jaxis.which][JOYSTICK_DOWN] = false;
-                                JoystickHeld[Event.jaxis.which][JOYSTICK_UP] = false;
+                                _JoystickHeld[Event.jaxis.which][JOYSTICK_DOWN] = false;
+                                _JoystickHeld[Event.jaxis.which][JOYSTICK_UP] = false;
                             }
                         }
                 }
 			}
 		}
-        if(Event.type == SDL_JOYBUTTONDOWN)
+        if(Event.type == SDL_EVENT_JOYSTICK_BUTTON_DOWN)
 		{
-			printf("%d\n", Event.jbutton.button);
             if(Event.jbutton.button < MAXJOYSTICKBUTTONS)
             {
                 if(Event.jbutton.which < MAXJOYSTICKS)
-                    JoystickHeld[Event.jbutton.which][Event.jbutton.button] = true;
+                    _JoystickHeld[Event.jbutton.which][Event.jbutton.button] = true;
             }
 		}
-        if(Event.type == SDL_JOYBUTTONUP)
+        if(Event.type == SDL_EVENT_JOYSTICK_BUTTON_UP)
             if(Event.jbutton.button < MAXJOYSTICKBUTTONS)
             {
                 if(Event.jbutton.which < MAXJOYSTICKS)
-                    JoystickHeld[Event.jbutton.which][Event.jbutton.button] = false;
+                    _JoystickHeld[Event.jbutton.which][Event.jbutton.button] = false;
             }
-        if(Event.type == SDL_MOUSEBUTTONDOWN)
+        if(Event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
             if(Event.button.which < MAXMOUSES)
                 if(Event.button.button < MAXMOUSEBUTTONS)
-                    MouseHeld[Event.button.which][Event.button.button] = true;
+                    _MouseHeld[Event.button.which][Event.button.button] = true;
 
-        if(Event.type == SDL_MOUSEBUTTONUP)
+        if(Event.type == SDL_EVENT_MOUSE_BUTTON_UP)
             if(Event.button.which < MAXMOUSES)
                 if(Event.button.button < MAXMOUSEBUTTONS)
-                    MouseHeld[Event.button.which][Event.button.button] = false;
+                    _MouseHeld[Event.button.which][Event.button.button] = false;
 
     }
 }
@@ -145,13 +138,13 @@ void CInput::Reset() {
     int x,y;
     for (x=0;x<MAXJOYSTICKS;x++)
         for (y=0;y<MAXJOYSTICKBUTTONS;y++)
-            JoystickHeld[x][y] = false;
+            _JoystickHeld[x][y] = false;
     for (x=0;x<MAXMOUSES;x++)
         for (y=0;y<MAXMOUSEBUTTONS;y++)
-            MouseHeld[x][y] = false;
-    for (x=0;x<SDLK_LAST;x++)
-        KeyboardHeld[x] = false;
+            _MouseHeld[x][y] = false;
+    for (x=0;x<SDL_SCANCODE_COUNT;x++)
+        _KeyboardHeld[x] = false;
     for (x=0;x<MAXSPECIALKEYS;x++)
-        SpecialsHeld[x] = false;
+        _SpecialsHeld[x] = false;
 }
 

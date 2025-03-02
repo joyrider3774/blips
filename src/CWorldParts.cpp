@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "CWorldParts.h"
 #include "CPlayer.h"
 
@@ -207,7 +207,7 @@ void CWorldParts::Move()
 	}
 }
 
-void CWorldParts::Draw(SDL_Surface *Surface)
+void CWorldParts::Draw()
 {
 	int Teller;
 	for (Teller=0;Teller<ItemCount;Teller++)
@@ -222,7 +222,7 @@ void CWorldParts::Draw(SDL_Surface *Surface)
             if((Items[Teller]->GetPlayFieldX() >= ViewPort->VPMinX) && (Items[Teller]->GetPlayFieldX()-1 <= ViewPort->VPMaxX) &&
                 (Items[Teller]->GetPlayFieldY() >= ViewPort->VPMinY) && (Items[Teller]->GetPlayFieldY()-1 <= ViewPort->VPMaxY))
                 {
-                    Items[Teller]->Draw(Surface);
+                    Items[Teller]->Draw();
                 }
 
 

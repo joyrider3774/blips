@@ -1,8 +1,8 @@
 #ifndef GAMEFUNCS_H
 #define GAMEFUNCS_H
 
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 void LoadJoystickSettings();
 void UnloadSounds();
@@ -15,7 +15,7 @@ void AddUnderScores (char *string);
 int ord(char chr);
 char chr(int ascii);
 bool FileExists(char * FileName);
-void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered);
+void WriteText(TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered);
 char *GetString(char *NameIn,char *Msg);
 void LoadUnlockData();
 void SaveUnlockData();
@@ -29,5 +29,5 @@ void DecVolume();
 void IncVolume();
 void SetVolume(const int VolumeIn);
 void LoadGraphics();
-
+void logMessage(SDL_PRINTF_FORMAT_STRING const char *fmt, ...);
 #endif

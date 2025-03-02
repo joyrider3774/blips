@@ -1,7 +1,5 @@
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <stdio.h>
-#include <SDL_gfxPrimitives.h>
-#include <SDL_rotozoom.h>
 #include "CInput.h"
 #include "Common.h"
 #include "GameFuncs.h"
@@ -9,14 +7,12 @@
 void Credits()
 {
     int alpha = 0;
-    SDL_Surface *Tmp;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	char *LevelPackCreator = new char[21];
 	char FileName[FILENAME_MAX];
 	FILE *Fp;
-    Tmp = SDL_DisplayFormat(Buffer);    
-	char *Tekst = new char[500];
-	sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName);
+    char *Tekst = new char[500];
+	sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName);
 	if(!FileExists(FileName))
 		sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);		
 	Fp = fopen(FileName,"rt");
@@ -30,73 +26,117 @@ void Credits()
 		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2024.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby unknown person.",LevelPackName);
 	while (GameState == GSCredits)
 	{
-	    if(GlobalSoundEnabled)
-		if(!Mix_PlayingMusic())
-        {
-            SelectedMusic = 0;
-            Mix_PlayMusic(Music[SelectedMusic],0);
-            SetVolume(Volume);
-        }
-		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
+        frameticks = SDL_GetPerformanceCounter();
+        SDL_SetRenderTarget(Renderer, Buffer);
+        if(GlobalSoundEnabled)
+            if(!Mix_PlayingMusic())
+            {
+                SelectedMusic = 0;
+                Mix_PlayMusic(Music[SelectedMusic],0);
+                SetVolume(Volume);
+            }
+		SDL_RenderTexture(Renderer, IMGTitleScreen,NULL,NULL);
 
 		Input->Update();
-        if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
+        if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLUP)) || Input->KeyboardHeld(SDLK_KP_PLUS)))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0,JoystickSetup->GetButtonValue(BUT_VOLMIN)) || Input->KeyboardHeld(SDLK_KP_MINUS)))
         {
             DecVolume();
             Input->Delay();
         }
 
-		if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] ||
-           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
-           Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] )
+		if(Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_ESCAPE) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) ||
+           Input->KeyboardHeld(SDLK_X) || Input->KeyboardHeld(SDLK_Z) || Input->KeyboardHeld(SDLK_Y) || Input->KeyboardHeld(SDLK_B) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) ||
+           Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X)) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y))  || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) )
         {
 			if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_BACK],0);
             GameState=GSTitleScreen;
         }
 
-		boxRGBA(Tmp,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
-		rectangleRGBA(Tmp,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		rectangleRGBA(Tmp,61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		WriteText(Tmp,font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,1,MenuTextColor,false);
+        SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
+        SDL_FRect Rect1 = {60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,200*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE};
+		SDL_RenderFillRect(Renderer, &Rect1);
+        SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
+		SDL_RenderRect(Renderer, &Rect1);
+        SDL_FRect Rect2 = {61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,198*UI_WIDTH_SCALE,78*UI_HEIGHT_SCALE};
+        SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
+        SDL_RenderRect(Renderer, &Rect2);
+		WriteText(font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,1,MenuTextColor,false);
         if (alpha < 255)
         {
             if(alpha+AlphaInc > MaxAlpha)
             {
                 alpha = 255;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
             else
             {
                 alpha+=AlphaInc;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
-        }          
-        SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
-		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-			SDL_FreeSurface(ScreenBufferZoom);
-		}
-		else
-		{
-			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
-		}
-        SDL_Flip(Screen);
-        SDL_framerateDelay(&Fpsman);
+        }
+        if(showfps)
+        {
+            char fpsText[100];
+            sprintf(fpsText, "FPS: %.2f\n", avgfps);
+            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
+            SDL_RenderFillRect(Renderer, &Rect);
+            SDL_Color col = {0,0,0,255};
+            WriteText(font, fpsText, strlen(fpsText), 0, 0, 0, col, false);
+        }
+        SDL_SetRenderTarget(Renderer, Buffer2);
+        SDL_RenderTexture(Renderer, Buffer, NULL, NULL);
+        SDL_SetRenderTarget(Renderer, NULL);
+        SDL_SetRenderDrawColor(Renderer, 0,0,0,255);
+        SDL_RenderClear(Renderer);
+        SDL_SetRenderLogicalPresentation(Renderer, ORIG_WINDOW_WIDTH, ORIG_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);        
+        SDL_RenderTexture(Renderer, Buffer2, NULL, NULL);
+        SDL_RenderPresent(Renderer);
+        Uint64 frameEndTicks = SDL_GetPerformanceCounter();
+        Uint64 FramePerf = frameEndTicks - frameticks;
+        frameTime = (double)FramePerf / (double)SDL_GetPerformanceFrequency() * 1000.0f;
+        double delay = 1000.0f / FPS - frameTime;
+        if (!nodelay && (delay > 0.0f))
+            SDL_Delay((Uint32)(delay)); 
+        if (showfps)
+        {
+            if(skipCounter > 0)
+            {
+                skipCounter--;
+                lastfpstime = SDL_GetTicks();
+            }
+            else
+            {
+                framecount++;
+                if(SDL_GetTicks() - lastfpstime >= 1000)
+                {
+                    for (int i = FPS_SAMPLES-1; i > 0; i--)
+                        fpsSamples[i] = fpsSamples[i-1];
+                    fpsSamples[0] = framecount;
+                    fpsAvgCount++;
+                    if(fpsAvgCount > FPS_SAMPLES)
+                        fpsAvgCount = FPS_SAMPLES;
+                    int fpsSum = 0;
+                    for (int i = 0; i < fpsAvgCount; i++)
+                        fpsSum += fpsSamples[i];
+                    avgfps = (double)fpsSum / (double)fpsAvgCount;
+                    framecount = 0;
+                    lastfpstime = SDL_GetTicks();
+                }
+            }
+        }
 	}
 	delete[] Tekst;
 	delete[] LevelPackCreator;
-	SDL_FreeSurface(Tmp);
 	delete Input;
 }

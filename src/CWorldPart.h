@@ -1,7 +1,7 @@
 #ifndef CWORLDPART_H
 #define CWORLDPART_H
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <vector>
 #include "Common.h"
 #include "CWorldParts.h"
@@ -16,7 +16,7 @@ class CWorldPart
 		bool FirstArriveEventFired,PNeedToKill;
 		int Type,MoveSpeed,MoveDelay,Xi,Yi,X,Y,AnimPhase,PlayFieldX,PlayFieldY,Z,Group;
 		bool BHide;
-		SDL_Surface ** Image;
+		SDL_Texture ** Image;
 		std::vector<SPoint> MoveQue;
 
 	public:
@@ -46,7 +46,7 @@ class CWorldPart
 		virtual void MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWards);
 		virtual bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
 		virtual void Move();
-		virtual void Draw(SDL_Surface* Surface);
+		virtual void Draw();
 		virtual ~CWorldPart(); 
 };
 

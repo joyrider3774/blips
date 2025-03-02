@@ -32,3 +32,9 @@
 *.app
 /.vscode
 /MyTempOutputFolder
+/.blips_settings
+/bips.dat
+/Blips.exe
+/settings.dat
+/stdout.txt
+/joystick.def

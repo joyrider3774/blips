@@ -1,5 +1,5 @@
 #include "CPlayer.h"
-#include <SDL_mixer.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 CPlayer::CPlayer(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
 {

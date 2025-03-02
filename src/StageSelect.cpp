@@ -1,7 +1,4 @@
-#include <SDL.h>
-#include <SDL_framerate.h>
-#include <SDL_gfxPrimitives.h>
-#include <SDL_rotozoom.h>
+#include <SDL3/SDL.h>
 #include "CInput.h"
 #include "Common.h"
 #include "GameFuncs.h"
@@ -16,11 +13,10 @@ void StageSelect()
 	char *FileName = new char[FILENAME_MAX];
 	char Tekst[300];
 	char Tekst1[300];
-    Tmp = SDL_DisplayFormat(Buffer);
     CInput *Input = new CInput(InputDelay, disableJoysticks);
 	if (SelectedLevel > 0)
 	{
-		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 		if(!FileExists(FileName))
 			sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 		WorldParts.Load(FileName);
@@ -30,6 +26,8 @@ void StageSelect()
 		WorldParts.RemoveAll();
 	while (GameState == GSStageSelect)
 	{
+		frameticks = SDL_GetPerformanceCounter();
+		SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
             if (! Mix_PlayingMusic())
             {
@@ -37,10 +35,13 @@ void StageSelect()
                 Mix_PlayMusic(Music[SelectedMusic],0);
                 SetVolume(Volume);
             }
-		SDL_BlitSurface(IMGBackground,NULL,Tmp,NULL);
-		WorldParts.Draw(Tmp);
-		boxRGBA(Tmp,0,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
-		rectangleRGBA(Tmp,0,-1,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		SDL_RenderTexture(Renderer, IMGBackground,NULL,NULL);
+		WorldParts.Draw();
+		SDL_FRect Rect = {0,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE};
+		SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
+		SDL_RenderFillRect(Renderer, &Rect);
+		SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
+		SDL_RenderRect(Renderer, &Rect);
 		if (SelectedLevel ==0)
 			sprintf(Tekst,"Level Pack: %s -> %d Levels - (A) Create New Level",LevelPackName,InstalledLevels);
 		else
@@ -51,25 +52,25 @@ void StageSelect()
 					sprintf(Tekst,"Level Pack: %s Level:%d/%d - (A) Play Level",LevelPackName,SelectedLevel,InstalledLevels);
 				else
 					sprintf(Tekst,"Level Pack: %s Level:%d/%d - Level is locked!",LevelPackName,SelectedLevel,InstalledLevels);
-		WriteText(Tmp,font,Tekst,strlen(Tekst),2,0,0,MenuTextColor,false);
+		WriteText(font,Tekst,strlen(Tekst),2,0,0,MenuTextColor,false);
 		Input->Update();
 
-        if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
+        if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLUP)) || Input->KeyboardHeld(SDLK_KP_PLUS)))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLMIN)) || Input->KeyboardHeld(SDLK_KP_MINUS)))
         {
             DecVolume();
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y])
+        if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y)) || Input->KeyboardHeld(SDLK_Y))
         {
             if(LevelEditorMode)
             {
@@ -81,7 +82,7 @@ void StageSelect()
             }
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) || Input->KeyboardHeld(SDLK_ESCAPE))
         {
 			if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_BACK],0);
@@ -95,14 +96,14 @@ void StageSelect()
 		//it would result in clearing the worldparts but still going back to Game Gamestate with no level loaded !
 		if(GameState == GSStageSelect)
 		{
-			if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z]))
+			if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X)) || Input->KeyboardHeld(SDLK_X) || Input->KeyboardHeld(SDLK_Z)))
 			{
 				if(LevelEditorMode && (SelectedLevel > 0))
 				{
 					sprintf(Tekst,"Are you sure you want to delete this level:\n%s - Level %d\n\nPress (A) to Delete (X) to Cancel",LevelPackName,SelectedLevel);
 					if (AskQuestion(Tekst))
 					{
-						sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+						sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(FileExists(Tekst))
 						{
 							remove(Tekst);
@@ -112,8 +113,8 @@ void StageSelect()
 							{
 								for(Teller=SelectedLevel;Teller<InstalledLevels;Teller++)
 								{
-									sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller+1);
-									sprintf(Tekst1,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,Teller);                      
+									sprintf(Tekst,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, Teller+1);
+									sprintf(Tekst1,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName,Teller);                      
 									rename(Tekst,Tekst1);
 								}
 							}
@@ -124,7 +125,7 @@ void StageSelect()
 								WorldParts.RemoveAll();
 							else
 							{
-								sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName,SelectedLevel);
+								sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName,SelectedLevel);
 								if(!FileExists(FileName))
 									sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 								WorldParts.Load(FileName);
@@ -136,7 +137,7 @@ void StageSelect()
 				Input->Delay();
 			}
 
-			if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
+			if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_SPACE)))
 			{
 				if (GlobalSoundEnabled)
 					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
@@ -154,7 +155,7 @@ void StageSelect()
 						if	(AskQuestion(Tekst))
 						{
 							SelectedLevel = UnlockedLevels;
-							sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+							sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 							if(!FileExists(FileName))
 								sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName, SelectedLevel);
 							WorldParts.Load(FileName);
@@ -165,7 +166,7 @@ void StageSelect()
 				Input->Delay();
 			}
 
-			if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
+			if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_L)) || Input->KeyboardHeld(SDLK_PAGEDOWN) || Input->KeyboardHeld(SDLK_L)))
 			{
 				if(LevelEditorMode)
 				{
@@ -177,7 +178,7 @@ void StageSelect()
 					}
 					else
 					{
-						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 							
@@ -191,7 +192,7 @@ void StageSelect()
 						SelectedLevel -= 5;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
-						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 							
@@ -201,14 +202,14 @@ void StageSelect()
 				Input->Delay();
 			}
 
-			if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
+			if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_R)) || Input->KeyboardHeld(SDLK_PAGEUP) || Input->KeyboardHeld(SDLK_R)))
 			{           
 				if (SelectedLevel != InstalledLevels)
 				{
 					SelectedLevel +=5;
 					if (SelectedLevel > InstalledLevels)
 						SelectedLevel = InstalledLevels;
-					sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+					sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 					if(!FileExists(FileName))
 						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 							
@@ -217,7 +218,7 @@ void StageSelect()
 				Input->Delay();
 			}
 
-			if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+			if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_LEFT)) || Input->KeyboardHeld(SDLK_LEFT)))
 			{
 				
 				if(LevelEditorMode)
@@ -230,7 +231,7 @@ void StageSelect()
 					}
 					else
 					{
-						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 							
@@ -244,7 +245,7 @@ void StageSelect()
 						SelectedLevel--;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
-						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);	
 						WorldParts.Load(FileName);
@@ -254,7 +255,7 @@ void StageSelect()
 				Input->Delay();
 			}
 
-			if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+			if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_RIGHT)) || Input->KeyboardHeld(SDLK_RIGHT)))
 			{
 				if(SelectedLevel != InstalledLevels)
 				{
@@ -262,7 +263,7 @@ void StageSelect()
 
 					if (SelectedLevel > InstalledLevels)
 						SelectedLevel = InstalledLevels;
-					sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, SelectedLevel);
+					sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 					if(!FileExists(FileName))
 						sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
 							
@@ -277,30 +278,66 @@ void StageSelect()
             if(alpha+AlphaInc > MaxAlpha)
             {
                 alpha = 255;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
             else
             {
                 alpha+=AlphaInc;
-                SDL_SetAlpha(Tmp,SDL_SRCALPHA | SDL_RLEACCEL,alpha);
+                SDL_SetTextureAlphaMod(Buffer,alpha);
             }
         }
-		SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
-        if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
+		if(showfps)
+        {
+            char fpsText[100];
+            sprintf(fpsText, "FPS: %.2f\n", avgfps);
+            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
+            SDL_RenderFillRect(Renderer, &Rect);
+            SDL_Color col = {0,0,0,255};
+            WriteText(font, fpsText, strlen(fpsText), 0, 0, 0, col, false);
+        }
+        SDL_SetRenderTarget(Renderer, Buffer2);
+        SDL_RenderTexture(Renderer, Buffer, NULL, NULL);
+        SDL_SetRenderTarget(Renderer, NULL);
+        SDL_SetRenderDrawColor(Renderer, 0,0,0,255);
+        SDL_RenderClear(Renderer);
+        SDL_SetRenderLogicalPresentation(Renderer, ORIG_WINDOW_WIDTH, ORIG_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);        
+        SDL_RenderTexture(Renderer, Buffer2, NULL, NULL);
+        SDL_RenderPresent(Renderer);
+        Uint64 frameEndTicks = SDL_GetPerformanceCounter();
+        Uint64 FramePerf = frameEndTicks - frameticks;
+        frameTime = (double)FramePerf / (double)SDL_GetPerformanceFrequency() * 1000.0f;
+        double delay = 1000.0f / FPS - frameTime;
+        if (!nodelay && (delay > 0.0f))
+            SDL_Delay((Uint32)(delay)); 
+		if (showfps)
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-			SDL_FreeSurface(ScreenBufferZoom);
+			if(skipCounter > 0)
+			{
+				skipCounter--;
+				lastfpstime = SDL_GetTicks();
+			}
+			else
+			{
+				framecount++;
+				if(SDL_GetTicks() - lastfpstime >= 1000)
+				{
+					for (int i = FPS_SAMPLES-1; i > 0; i--)
+						fpsSamples[i] = fpsSamples[i-1];
+					fpsSamples[0] = framecount;
+					fpsAvgCount++;
+					if(fpsAvgCount > FPS_SAMPLES)
+						fpsAvgCount = FPS_SAMPLES;
+					int fpsSum = 0;
+					for (int i = 0; i < fpsAvgCount; i++)
+						fpsSum += fpsSamples[i];
+					avgfps = (double)fpsSum / (double)fpsAvgCount;
+					framecount = 0;
+					lastfpstime = SDL_GetTicks();
+				}
+			}
 		}
-		else
-		{
-			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
-		}
-		SDL_Flip(Screen);
-        SDL_framerateDelay(&Fpsman);
-
 	}
 	delete[] FileName;
-	SDL_FreeSurface(Tmp);
 	delete Input;
 }
