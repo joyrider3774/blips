@@ -190,7 +190,9 @@ void LoadJoystickSettings()
     JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",9,9);
     JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",8,8);
 #endif
-JoystickSetup->LoadCurrentButtonValues("./joystick.def");
+	char FileName[FILENAME_MAX];
+	sprintf(FileName,"%s/.blips_joystick.def", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
+	JoystickSetup->LoadCurrentButtonValues(FileName);
 }
 
 

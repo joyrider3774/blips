@@ -258,7 +258,9 @@ int main(int argc, char **argv)
 							MonoFont=NULL;
 							font=NULL;
 							BigFont=NULL;
-							JoystickSetup->SaveCurrentButtonValues("./joystick.def");
+							char FileName[FILENAME_MAX];
+							sprintf(FileName,"%s/.blips_joystick.def", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
+							JoystickSetup->SaveCurrentButtonValues(FileName);
 							delete JoystickSetup;
 						}
 						else
