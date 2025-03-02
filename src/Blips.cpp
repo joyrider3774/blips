@@ -98,6 +98,8 @@ int main(int argc, char **argv)
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO))
 	{
+		logMessage("SDL Succesfully initialized\n");
+
 		memset(basePath, 0, FILENAME_MAX);
 		const char* SDL_BasePath = SDL_GetBasePath();
 		if(SDL_BasePath)
@@ -105,7 +107,8 @@ int main(int argc, char **argv)
 		else
 			snprintf(basePath, FILENAME_MAX, "./");
 
-		logMessage("SDL Succesfully initialized\n");
+		logMessage("Using Base Path: %s\n", basePath);
+
 		Uint32 WindowFlags = SDL_WINDOW_RESIZABLE;
 		
 		SdlWindow = SDL_CreateWindow("Blips (SDL3)", WINDOW_WIDTH, WINDOW_HEIGHT, WindowFlags);
