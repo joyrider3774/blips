@@ -49,4 +49,5 @@ extern Uint32 framecount;
 extern double fpsSamples[FPS_SAMPLES];
 extern int fpsAvgCount, skipCounter;
 extern char basePath[FILENAME_MAX];
+extern bool fullScreen;
 #endif

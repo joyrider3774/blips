@@ -28,7 +28,15 @@ void TitleScreen()
 		}
 		SDL_RenderTexture(Renderer, IMGTitleScreen,NULL, NULL);
 		Input->Update();
-
+        
+        if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
+        
 		if(Input->KeyboardHeld(SDLK_ESCAPE) || Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
 
@@ -97,7 +105,7 @@ void TitleScreen()
             Input->Delay();
         }
 
-        if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN))
+        if((Input->Ready()) && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN)))
         {
             switch(Selection)
             {

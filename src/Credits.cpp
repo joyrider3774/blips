@@ -44,7 +44,15 @@ void Credits()
 		Input->Update();
         if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
-
+    
+        if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
+              
         if (Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_VOLUP)) || Input->KeyboardHeld(SDLK_KP_PLUS)))
         {
             IncVolume();

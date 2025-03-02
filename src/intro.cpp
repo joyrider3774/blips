@@ -21,12 +21,21 @@ void Intro()
         frameticks = SDL_GetPerformanceCounter();
         Input->Update();
 
-        if(Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_ESCAPE) || Input->KeyboardHeld(SDLK_A) ||
-           Input->KeyboardHeld(SDLK_X) || Input->KeyboardHeld(SDLK_Z) || Input->KeyboardHeld(SDLK_Y) || Input->KeyboardHeld(SDLK_B) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) ||
-           Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X))  || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y)) )
+        if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
+
+        if((Input->Ready()) && (Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_ESCAPE) || Input->KeyboardHeld(SDLK_A) ||
+            Input->KeyboardHeld(SDLK_X) || Input->KeyboardHeld(SDLK_Z) || Input->KeyboardHeld(SDLK_Y) || Input->KeyboardHeld(SDLK_B) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) ||
+            Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X))  || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y))))
         {
             GameState=GSTitleScreen;
         }
+    
 
         if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;

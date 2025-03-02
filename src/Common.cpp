@@ -41,3 +41,4 @@ Uint32 framecount = 0;
 double fpsSamples[FPS_SAMPLES];
 int fpsAvgCount = 0, skipCounter = 10;
 char basePath[FILENAME_MAX];
+bool fullScreen = false;

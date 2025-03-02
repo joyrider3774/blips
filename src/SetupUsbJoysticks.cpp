@@ -33,6 +33,14 @@ void SetupUsbJoystickButtons()
 
 		if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
             GameState = GSQuit;
+        
+        if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
 
 		if(Input->KeyboardHeld(SDLK_ESCAPE) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)))
 		{
@@ -51,7 +59,7 @@ void SetupUsbJoystickButtons()
             Input->Delay();
         }
 
-        if (Input->KeyboardHeld(SDLK_RETURN))
+        if ((Input->Ready()) && Input->KeyboardHeld(SDLK_RETURN))
             JoystickSetup->ResetToDefaults();
 
         if(Input->Ready() && (Input->KeyboardHeld(SDLK_DOWN) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_DOWN))))
@@ -149,8 +157,8 @@ void SetupUsbJoystickButtons()
                     lastfpstime = SDL_GetTicks();
                 }
             }
-        }
-
+        }        
+        
         if(Input->Ready() && (Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_SPACE) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A))))
         {
             if (alpha == 255)
@@ -167,8 +175,8 @@ void SetupUsbJoystickButtons()
                     SDL_FRect Rect1;
                     Rect1.x = 45.0f*UI_WIDTH_SCALE;
                     Rect1.y = 70.0f*UI_HEIGHT_SCALE;
-                    Rect1.w = 295.0f*UI_WIDTH_SCALE;
-                    Rect1.h = 193.0f*UI_HEIGHT_SCALE;
+                    Rect1.w = 250.0f*UI_WIDTH_SCALE;
+                    Rect1.h = 123.0f*UI_HEIGHT_SCALE;
                     SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
                     SDL_RenderFillRect(Renderer, &Rect1);
                     SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
@@ -176,8 +184,8 @@ void SetupUsbJoystickButtons()
                     SDL_FRect Rect2;
                     Rect2.x = 46.0f*UI_WIDTH_SCALE;
                     Rect2.y = 71.0f*UI_HEIGHT_SCALE;
-                    Rect2.w = 294.0f*UI_WIDTH_SCALE;
-                    Rect2.h = 192.0f*UI_HEIGHT_SCALE;
+                    Rect2.w = 248.0f*UI_WIDTH_SCALE;
+                    Rect2.h = 121.0f*UI_HEIGHT_SCALE;
                     SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
                     SDL_RenderRect(Renderer, &Rect2);
                     JoystickSetup->DrawCurrentSetup(font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuBoxBorderColor);
@@ -254,7 +262,14 @@ void SetupUsbJoystickButtons()
 
                     if(Input->KeyboardHeld(SDLK_ESCAPE) || Input->SpecialsHeld(SPECIAL_QUIT_EV) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)))
                         done= true;
-
+                    
+                    if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+                    {
+                        fullScreen = !fullScreen;
+                        SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+                        Input->Delay();
+                        continue;
+                    }
                 }
                 Input->Reset();
                 Input->Delay();

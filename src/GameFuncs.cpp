@@ -344,6 +344,14 @@ char *GetString(char *NameIn,char *Msg)
 			SubmitChanges=false;
 			End = true;
 		}
+		
+		if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
 
         if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_LEFT)) || Input->KeyboardHeld(SDLK_LEFT)))
         {
@@ -682,12 +690,21 @@ bool AskQuestion(char *Msg)
 	{
 		frameticks = SDL_GetPerformanceCounter();
 		Input->Update();
+
+		if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
+        {
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
+        }
+
 		if(GlobalSoundEnabled)
-		if(!Mix_PlayingMusic())
-		{
-			Mix_PlayMusic(Music[SelectedMusic],0);
-			SetVolume(Volume);
-		}
+			if(!Mix_PlayingMusic())
+			{
+				Mix_PlayMusic(Music[SelectedMusic],0);
+				SetVolume(Volume);
+			}
 		if(showfps)
         {
             char fpsText[100];
@@ -785,12 +802,21 @@ void PrintForm(char *msg)
     {
 		frameticks = SDL_GetPerformanceCounter();
         Input->Update();
-        if(GlobalSoundEnabled)
-        if(!Mix_PlayingMusic())
+
+		if (Input->Ready() && ((Input->KeyboardHeld(SDLK_LALT) || Input->KeyboardHeld(SDLK_RALT)) && Input->KeyboardHeld(SDLK_RETURN)))
         {
-            Mix_PlayMusic(Music[SelectedMusic],0);
-            SetVolume(Volume);
+            fullScreen = !fullScreen;
+            SDL_SetWindowFullscreen(SdlWindow, fullScreen);
+            Input->Delay();
+            continue;
         }
+
+        if(GlobalSoundEnabled)
+			if(!Mix_PlayingMusic())
+			{
+				Mix_PlayMusic(Music[SelectedMusic],0);
+				SetVolume(Volume);
+			}
         if(showfps)
         {
             char fpsText[100];

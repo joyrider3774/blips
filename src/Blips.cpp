@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 		freopen("CON", "w", stdout);
 	}
 	#endif
-	bool fullScreen = false;
+	fullScreen = false;
 	bool useHWSurface = true;
 	bool noAudioInit = false;
 	for (int i = 0; i < argc; i++)
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 
 			if (fullScreen)
 			{
-				SDL_SetWindowFullscreen(SdlWindow, false);
+				SDL_SetWindowFullscreen(SdlWindow, fullScreen);
 			}
 			//SDL_AddEventWatch(resizingEventWatcher, SdlWindow);
 			logMessage("Succesfully Set %dx%d\n",WINDOW_WIDTH, WINDOW_HEIGHT);
