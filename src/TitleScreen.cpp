@@ -150,12 +150,20 @@ void TitleScreen()
             }
 
         }
-        SDL_FRect Rect = {60*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,200*UI_WIDTH_SCALE,95*UI_HEIGHT_SCALE};
+        SDL_FRect Rect;
+        Rect.x = 60.0f*UI_WIDTH_SCALE;
+        Rect.y = 70.0f*UI_HEIGHT_SCALE;
+        Rect.w = 200.0f*UI_WIDTH_SCALE;
+        Rect.h = 95.0f*UI_HEIGHT_SCALE;
         SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
    		SDL_RenderFillRect(Renderer, &Rect);
         SDL_SetRenderDrawColor(Renderer,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
    		SDL_RenderRect(Renderer, &Rect);      
-        SDL_FRect Rect2 = {61*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,198*UI_WIDTH_SCALE,93*UI_HEIGHT_SCALE};
+        SDL_FRect Rect2;
+        Rect2.x = 61.0f*UI_WIDTH_SCALE;
+        Rect2.y = 71.0f*UI_HEIGHT_SCALE;
+        Rect2.w = 198.0f*UI_WIDTH_SCALE;
+        Rect2.h = 93.0f*UI_HEIGHT_SCALE;
         SDL_RenderRect(Renderer, &Rect2);      
 		
 		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nQuit",LevelPackName);
@@ -188,7 +196,11 @@ void TitleScreen()
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+            Rect.x = 0.0f;
+            Rect.y = 0.0f;
+            Rect.w = 100.0f;
+            Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};

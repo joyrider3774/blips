@@ -393,12 +393,20 @@ char *GetString(char *NameIn,char *Msg)
         }
 		SDL_SetRenderTarget(Renderer, Buffer);
 		SDL_RenderTexture(Renderer, IMGTitleScreen,NULL,NULL);	
-		SDL_FRect Rect1 = {60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,200*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE};
+		SDL_FRect Rect1;
+		Rect1.x = 60.0f*UI_WIDTH_SCALE;
+		Rect1.y = 80.0f*UI_HEIGHT_SCALE;
+		Rect1.w = 200.0f*UI_WIDTH_SCALE;
+		Rect1.h = 80.0f*UI_HEIGHT_SCALE;
 		SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 		SDL_RenderFillRect(Renderer, &Rect1);
 		SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 		SDL_RenderRect(Renderer, &Rect1);
-		SDL_FRect Rect2 = {61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,198*UI_WIDTH_SCALE,78*UI_HEIGHT_SCALE};
+		SDL_FRect Rect2;
+		Rect2.x = 61.0f*UI_WIDTH_SCALE;
+		Rect2.y = 81.0f*UI_HEIGHT_SCALE;
+		Rect2.w = 198.0f*UI_WIDTH_SCALE;
+		Rect2.h = 78.0f*UI_HEIGHT_SCALE;
 		SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 		SDL_RenderRect(Renderer, &Rect2);
 		WriteText(font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,85*UI_HEIGHT_SCALE,2,MenuTextColor,false);
@@ -420,7 +428,11 @@ char *GetString(char *NameIn,char *Msg)
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+			Rect.x = 0.0f;
+			Rect.y = 0.0f;
+			Rect.w = 100.0f;
+			Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};
@@ -610,12 +622,20 @@ bool AskQuestion(char *Msg)
 {
 	bool Result = false;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
-	SDL_FRect Rect1 = {60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,200*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE};
+	SDL_FRect Rect1;
+	Rect1.x = 60.0f*UI_WIDTH_SCALE;
+	Rect1.y = 80.0f*UI_HEIGHT_SCALE;
+	Rect1.w = 200.0f*UI_WIDTH_SCALE;
+	Rect1.h = 80.0f*UI_HEIGHT_SCALE;
 	SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 	SDL_RenderFillRect(Renderer, &Rect1);
 	SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 	SDL_RenderRect(Renderer, &Rect1);
-	SDL_FRect Rect2 = {61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,198*UI_WIDTH_SCALE,78*UI_HEIGHT_SCALE};
+	SDL_FRect Rect2;
+	Rect2.x = 61.0f*UI_WIDTH_SCALE;
+	Rect2.y = 81.0f*UI_HEIGHT_SCALE;
+	Rect2.w = 198.0f*UI_WIDTH_SCALE;
+	Rect2.h = 78.0f*UI_HEIGHT_SCALE;
 	SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 	SDL_RenderRect(Renderer, &Rect2);
 	WriteText(font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
@@ -641,7 +661,11 @@ bool AskQuestion(char *Msg)
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+			Rect.x = 0.0f;
+			Rect.y = 0.0f;
+			Rect.w = 100.0f;
+			Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};
@@ -700,12 +724,20 @@ bool AskQuestion(char *Msg)
 void PrintForm(char *msg)
 {
     CInput *Input = new CInput(InputDelay, disableJoysticks);
-	SDL_FRect Rect1 = {60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,200*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE};
+	SDL_FRect Rect1;
+	Rect1.x = 60.0f*UI_WIDTH_SCALE;
+	Rect1.y = 80.0f*UI_HEIGHT_SCALE;
+	Rect1.w = 200.0f*UI_WIDTH_SCALE;
+	Rect1.h = 80.0f*UI_HEIGHT_SCALE;
 	SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 	SDL_RenderFillRect(Renderer, &Rect1);
 	SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 	SDL_RenderRect(Renderer, &Rect1);
-	SDL_FRect Rect2 = {61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,198*UI_WIDTH_SCALE,78*UI_HEIGHT_SCALE};
+	SDL_FRect Rect2;
+	Rect2.x = 61.0f*UI_WIDTH_SCALE;
+	Rect2.y = 81.0f*UI_HEIGHT_SCALE;
+	Rect2.w = 198.0f*UI_WIDTH_SCALE;
+	Rect2.h = 78.0f*UI_HEIGHT_SCALE;
 	SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 	SDL_RenderRect(Renderer, &Rect2);
 	WriteText(font,msg,strlen(msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
@@ -732,7 +764,11 @@ void PrintForm(char *msg)
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+			Rect.x = 0.0f;
+			Rect.y = 0.0f;
+			Rect.w = 100.0f;
+			Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};

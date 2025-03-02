@@ -63,7 +63,11 @@ void Intro()
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+            Rect.x = 0.0f;
+            Rect.y = 0.0f;
+            Rect.w = 100.0f;
+            Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};

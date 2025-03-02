@@ -37,7 +37,11 @@ void StageSelect()
             }
 		SDL_RenderTexture(Renderer, IMGBackground,NULL,NULL);
 		WorldParts.Draw();
-		SDL_FRect Rect = {0,0,ORIG_WINDOW_WIDTH-1,13*UI_HEIGHT_SCALE};
+		SDL_FRect Rect;
+		Rect.x = 0.0f;
+		Rect.y = 0.0f;
+		Rect.w = (float)ORIG_WINDOW_WIDTH-1.0f;
+		Rect.h = 13.0f*UI_HEIGHT_SCALE;
 		SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 		SDL_RenderFillRect(Renderer, &Rect);
 		SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
@@ -290,7 +294,11 @@ void StageSelect()
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+			Rect.x = 0.0f;
+			Rect.y = 0.0f;
+			Rect.w = 100.0f;
+			Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};

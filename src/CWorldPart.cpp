@@ -210,10 +210,10 @@ void CWorldPart::Draw()
 		{
 			Event_BeforeDraw();
 			SDL_FRect SrcRect,DstRect;
-			SrcRect.x = AnimPhase * TileWidth;
-			SrcRect.y = 0;
-			SrcRect.w = TileWidth;
-			SrcRect.h = TileHeight;
+			SrcRect.x = (float)(AnimPhase * TileWidth);
+			SrcRect.y = 0.0f;
+			SrcRect.w = (float)TileWidth;
+			SrcRect.h = (float)TileHeight;
 			if(ParentList)
 			{
 				DstRect.x = X- ParentList->ViewPort->MinScreenX;
@@ -234,7 +234,11 @@ void CWorldPart::Draw()
 			{
 				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
 				SDL_SetRenderDrawColor(Renderer,0,0,200,50);
-				SDL_FRect Rect = {X- ParentList->ViewPort->MinScreenX,Y- ParentList->ViewPort->MinScreenY,TileWidth,TileHeight};
+				SDL_FRect Rect;
+				Rect.x = (float)(X- ParentList->ViewPort->MinScreenX);
+				Rect.y = (float)(Y- ParentList->ViewPort->MinScreenY);
+				Rect.w = (float)TileWidth;
+				Rect.h = (float)TileHeight;
 				SDL_RenderFillRect(Renderer, &Rect);
 				SDL_SetRenderDrawColor(Renderer,0,0,255,50);
 				SDL_RenderRect(Renderer, &Rect);
@@ -244,7 +248,11 @@ void CWorldPart::Draw()
 			{
 				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
 				SDL_SetRenderDrawColor(Renderer,0,0,200,50);
-				SDL_FRect Rect = {X,Y,TileWidth,TileHeight};
+				SDL_FRect Rect;
+				Rect.x = (float)X;
+				Rect.y = (float)Y;
+				Rect.w = (float)TileWidth;
+				Rect.h = (float)TileHeight;
 				SDL_RenderFillRect(Renderer, &Rect);
 				SDL_SetRenderDrawColor(Renderer,0,0,255,50);
 				SDL_RenderRect(Renderer, &Rect);

@@ -65,12 +65,20 @@ void SetupUsbJoystickButtons()
         }
 
         SDL_RenderTexture(Renderer, IMGTitleScreen,NULL, NULL);
-        SDL_FRect Rect1 = {45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,250*UI_WIDTH_SCALE,123*UI_HEIGHT_SCALE};
+        SDL_FRect Rect1;
+        Rect1.x = 45.0f*UI_WIDTH_SCALE;
+        Rect1.y = 70.0f*UI_HEIGHT_SCALE;
+        Rect1.w = 250.0f*UI_WIDTH_SCALE;
+        Rect1.h = 123.0f*UI_HEIGHT_SCALE;
         SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
         SDL_RenderFillRect(Renderer, &Rect1);
         SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
         SDL_RenderRect(Renderer, &Rect1);
-        SDL_FRect Rect2 = {46*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,248*UI_WIDTH_SCALE,121*UI_HEIGHT_SCALE};
+        SDL_FRect Rect2;
+        Rect2.x = 46.0f*UI_WIDTH_SCALE;
+        Rect2.y = 71.0f*UI_HEIGHT_SCALE;
+        Rect2.w = 248.0f*UI_WIDTH_SCALE;
+        Rect2.h = 121.0f*UI_HEIGHT_SCALE;
         SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
 		SDL_RenderRect(Renderer, &Rect2);
         JoystickSetup->DrawCurrentSetup(font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuTextColor);
@@ -91,7 +99,11 @@ void SetupUsbJoystickButtons()
         {
             char fpsText[100];
             sprintf(fpsText, "FPS: %.2f\n", avgfps);
-            SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+            SDL_FRect Rect;
+            Rect.x = 0.0f;
+            Rect.y = 0.0f;
+            Rect.w = 100.0f;
+            Rect.h = (float)TTF_GetFontHeight(font);
             SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
             SDL_RenderFillRect(Renderer, &Rect);
             SDL_Color col = {0,0,0,255};
@@ -152,12 +164,20 @@ void SetupUsbJoystickButtons()
                     Input->Update();
                     SDL_SetRenderTarget(Renderer, Buffer);
                     SDL_RenderTexture(Renderer, IMGTitleScreen,NULL, NULL);
-                    SDL_FRect Rect1 = {45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,295*UI_WIDTH_SCALE,193*UI_HEIGHT_SCALE};
+                    SDL_FRect Rect1;
+                    Rect1.x = 45.0f*UI_WIDTH_SCALE;
+                    Rect1.y = 70.0f*UI_HEIGHT_SCALE;
+                    Rect1.w = 295.0f*UI_WIDTH_SCALE;
+                    Rect1.h = 193.0f*UI_HEIGHT_SCALE;
                     SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
                     SDL_RenderFillRect(Renderer, &Rect1);
                     SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
                     SDL_RenderRect(Renderer, &Rect1);
-                    SDL_FRect Rect2 = {46*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,294*UI_WIDTH_SCALE,192*UI_HEIGHT_SCALE};
+                    SDL_FRect Rect2;
+                    Rect2.x = 46.0f*UI_WIDTH_SCALE;
+                    Rect2.y = 71.0f*UI_HEIGHT_SCALE;
+                    Rect2.w = 294.0f*UI_WIDTH_SCALE;
+                    Rect2.h = 192.0f*UI_HEIGHT_SCALE;
                     SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
                     SDL_RenderRect(Renderer, &Rect2);
                     JoystickSetup->DrawCurrentSetup(font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuBoxBorderColor);
@@ -165,7 +185,11 @@ void SetupUsbJoystickButtons()
                     {
                         char fpsText[100];
                         sprintf(fpsText, "FPS: %.2f\n", avgfps);
-                        SDL_FRect Rect = {0, 0, 100, (float)TTF_GetFontHeight(font)};
+                        SDL_FRect Rect;
+                        Rect.x = 0.0f;
+                        Rect.y = 0.0f;
+                        Rect.w = 100.0f;
+                        Rect.h = (float)TTF_GetFontHeight(font);
                         SDL_SetRenderDrawColor(Renderer, 255,255,255,255);
                         SDL_RenderFillRect(Renderer, &Rect);
                         SDL_Color col = {0,0,0,255};
