@@ -26,7 +26,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: recursive
           
       - if: ${{ matrix.runsontype == 'windows'}}
         name: Setup Msys
