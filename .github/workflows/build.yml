@@ -152,9 +152,9 @@ jobs:
           echo "</plist>" >> "./Release/${{matrix.name}}.app/Contents/Info.plist"
       
       - if: ${{ matrix.runsontype == 'mac'}}
-        name: Code sign Appl Bundle (Mac)
+        name: Ad Hoc Code sign Appl Bundle (Mac)
         run: |
-          codesign -s - -f "./Release/${{matrix.name}}.app"
+          codesign --force --deep -s - "./Release/${{matrix.name}}.app"
           
       - if: ${{ matrix.runsontype != 'mac'}}
         name: Copy Game And Assets Other
