@@ -102,6 +102,11 @@ jobs:
           mkdir "./Release/${{matrix.name}}.app/Contents/MacOS"
           mkdir "./Release/${{matrix.name}}.app/Contents/Resources"
           cp "build/${{matrix.name}}" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}"
+          cp -r "fonts" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}/fonts"
+          cp -r "graphics" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}/graphics"
+          cp -r "levelpacks" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}/levelpacks"
+          cp -r "music" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}/music"
+          cp -r "sound" "./Release/${{matrix.name}}.app/Contents/MacOS/${{matrix.name}}/sound"
           cp ./README.md "./Release/"
           cp ./LICENSE "./Release/"
           
@@ -153,6 +158,11 @@ jobs:
           mkdir ./Release
           mkdir "./Release/${{matrix.name}}"
           cp "build/${{matrix.name}}${{matrix.binsuffix}}" "./Release/${{matrix.name}}/"
+          cp -r "fonts" "./Release/${{matrix.name}}/fonts"
+          cp -r "graphics" "./Release/${{matrix.name}}/graphics"
+          cp -r "levelpacks" "./Release/${{matrix.name}}/levelpacks"
+          cp -r "music" "./Release/${{matrix.name}}/music"
+          cp -r "sound" "./Release/${{matrix.name}}/sound"
           cp ./README.md "./Release/${{matrix.name}}/"
           cp ./LICENSE "./Release/${{matrix.name}}/"
         
