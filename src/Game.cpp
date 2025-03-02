@@ -111,7 +111,9 @@ void Game()
 			}
             else
             {
-                sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                char *TmpPath = assetPath("levelpacks");
+                sprintf(FileName,"%s/%s/level%d.lev",TmpPath,LevelPackFileName,SelectedLevel);
+                SDL_free(TmpPath);
                 WorldParts.Load(FileName);
 				//need to find player again
 				for (teller=0;teller<WorldParts.ItemCount;teller++)
@@ -313,7 +315,6 @@ void Game()
 						GameState = GSLevelEditor;
 					else
 					{
-						
 						sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 						WorldParts.Load(FileName);
 						for (teller=0;teller<WorldParts.ItemCount;teller++)
@@ -334,7 +335,11 @@ void Game()
 					{
 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName,SelectedLevel);
 						if(!FileExists(FileName))
-							sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                        {
+                            char *TmpPath = assetPath("levelpacks");
+                            sprintf(FileName,"%s/%s/level%d.lev",TmpPath,LevelPackFileName,SelectedLevel);
+                            SDL_free(TmpPath);
+                        }
 						WorldParts.Load(FileName);
 						for (teller=0;teller<WorldParts.ItemCount;teller++)
 						{

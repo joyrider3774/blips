@@ -9,6 +9,32 @@
 #include "GameFuncs.h"
 #include "CInput.h"
 
+char* assetPath(char* assetSubPath)
+{
+	char* Result = (char*) SDL_malloc(FILENAME_MAX);
+	char* Tmp = (char*) SDL_malloc(FILENAME_MAX);
+	memset(Tmp, 0, FILENAME_MAX);
+	
+	snprintf(Tmp, FILENAME_MAX, "%s", binaryPath);
+	char* find = SDL_strrchr(Tmp, '/');
+    if (find == NULL)
+    {
+        find = SDL_strrchr(Tmp, '\\');
+    }
+
+    if(find)
+	{
+        find++;
+		*find = '\0';
+		snprintf(Result, FILENAME_MAX, "%s%s",Tmp, assetSubPath);
+	}
+	else
+	{
+		snprintf(Result, FILENAME_MAX, "./%s", assetSubPath);
+	}
+	return Result;
+}
+
 void logMessage(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
 {
     va_list ap;
@@ -110,13 +136,33 @@ void LoadSounds()
 {
 	if (GlobalSoundEnabled)
 	{
-		Sounds[SND_MENU] = Mix_LoadWAV("./sound/menu.wav");
-		Sounds[SND_SELECT] = Mix_LoadWAV("./sound/select.wav");
-		Sounds[SND_ERROR] = Mix_LoadWAV("./sound/error.wav");
-		Sounds[SND_STAGEEND] = Mix_LoadWAV("./sound/stageend.wav");
-		Sounds[SND_EXPLODE] = Mix_LoadWAV("./sound/explode.wav");
-		Sounds[SND_COLLECT] = Mix_LoadWAV("./sound/collect.wav");
-		Sounds[SND_BACK] = Mix_LoadWAV("./sound/menuback.wav");
+		char *Tmp = assetPath("sound/menu.wav");
+		Sounds[SND_MENU] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/select.wav");
+		Sounds[SND_SELECT] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/error.wav");
+		Sounds[SND_ERROR] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/stageend.wav");
+		Sounds[SND_STAGEEND] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/explode.wav");
+		Sounds[SND_EXPLODE] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/collect.wav");
+		Sounds[SND_COLLECT] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/menuback.wav");
+		Sounds[SND_BACK] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
 	}
 }
 
@@ -174,20 +220,22 @@ void FindLevels()
 	InstalledLevels = 0;
 	bool homepath=false;
 	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, Teller);
-	sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);		
+	char* TmpPath = assetPath("levelpacks");
+	sprintf(FileName2,"%s/%s/level%d.lev",TmpPath, LevelPackFileName,Teller);		
 	while (FileExists(FileName) || FileExists(FileName2))
 	{
 		Teller+=30;
 		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, Teller);
-		sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
+		sprintf(FileName2,"%s/%s/level%d.lev",TmpPath, LevelPackFileName,Teller);		
 	}
 	while (!FileExists(FileName) && !FileExists(FileName2) && (Teller >=1) )
 	{
 		Teller--;
 		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, Teller);
-		sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);
+		sprintf(FileName2,"%s/%s/level%d.lev",TmpPath, LevelPackFileName,Teller);		
 	}
 	InstalledLevels=Teller;
+	SDL_free(TmpPath);
 	delete[] FileName;
 	delete[] FileName2;
 }
@@ -889,19 +937,23 @@ void SearchForMusic()
 	DIR *Directory;
 	struct stat Stats;
 	int Teller;
+	char *Tmp;
 	char FileName[FILENAME_MAX];
 	if (GlobalSoundEnabled)
 	{
-		Music[0] = Mix_LoadMUS("./music/title.mod");
+		Tmp = assetPath("music/title.mod");
+		Music[0] = Mix_LoadMUS(Tmp);
+		SDL_free(Tmp);
 	}
 	Teller=1;
-	Directory = opendir("./music");
+	char* musPath = assetPath("music");
+	Directory = opendir(musPath);
 	if (Directory)
 	{
 		Entry=readdir(Directory);
 		while(Entry)
 		{
-			sprintf(FileName,"./music/%s",Entry->d_name);
+			sprintf(FileName,"%s/%s",musPath, Entry->d_name);
 			stat(FileName,&Stats);
 			if(!S_ISDIR(Stats.st_mode))
 			{
@@ -919,6 +971,7 @@ void SearchForMusic()
 		closedir(Directory);
 	}
 	MusicCount = Teller;
+	SDL_free(musPath);
 }
 
 void DoSearchForLevelPacks(char* Path)
@@ -969,7 +1022,9 @@ void DoSearchForLevelPacks(char* Path)
 void SearchForLevelPacks()
 {
 	InstalledLevelPacksCount = 0;
-	DoSearchForLevelPacks("./levelpacks");
+	char* TmpPath = assetPath("levelpacks");
+	DoSearchForLevelPacks(TmpPath);
+	SDL_free(TmpPath);
 	char Path[FILENAME_MAX];
 	sprintf(Path, "%s/.blips_levelpacks", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 	DoSearchForLevelPacks(Path);
@@ -1061,68 +1116,96 @@ void LoadGraphics()
         SDL_DestroyTexture(IMGExplosion);
 	}
 
-    Tmp = IMG_Load("./graphics/grid.png");
+	char *TmpPath = assetPath("graphics/grid.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGGrid = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGGrid, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/intro1.png");
-    IMGIntro1 = SDL_CreateTextureFromSurface(Renderer, Tmp);
+    TmpPath = assetPath("graphics/intro1.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
+	IMGIntro1 = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/intro2.png");
+	TmpPath = assetPath("graphics/intro2.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGIntro2 = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
  
-    Tmp = IMG_Load("./graphics/intro3.png");
+	TmpPath = assetPath("graphics/intro3.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGIntro3 = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/floor.png");
+	TmpPath = assetPath("graphics/floor.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGFloor = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGFloor, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/explosion.png");
+	TmpPath = assetPath("graphics/explosion.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGExplosion = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGExplosion, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/wall.png");
+	TmpPath = assetPath("graphics/wall.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGWall = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGWall, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/bomb.png");
+	TmpPath = assetPath("graphics/bomb.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGBomb = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGBomb, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/diamond.png");
+	TmpPath = assetPath("graphics/diamond.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGDiamond = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGDiamond, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/box.png");
+	TmpPath = assetPath("graphics/box.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGBox = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGBox, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/player.png");
+	TmpPath = assetPath("graphics/player.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGPlayer = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGPlayer, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/empty.png");
+	TmpPath = assetPath("graphics/empty.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGEmpty = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGEmpty, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/titlescreen.png");
+	TmpPath = assetPath("graphics/titlescreen.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGTitleScreen = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
 
-    Tmp = IMG_Load("./graphics/background.png");
+	TmpPath = assetPath("graphics/background.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
     IMGBackground = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
 }

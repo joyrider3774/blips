@@ -49,6 +49,8 @@ static void printHelp(char* exe)
 
 int main(int argc, char **argv)
 {
+	if(argc > 0)
+		snprintf(binaryPath, 1000, "%s", argv[0]);
 	SDL_srand((int) time(NULL));
 	//attach to potential console when using -mwindows so we can get output in a cmd / msys prompt 
 	//but see no console window when running from explorer start menu or so
@@ -182,9 +184,15 @@ int main(int argc, char **argv)
 					if (TTF_Init())
 					{
 						logMessage("Succesfully initialized TTF\n");
-						font = TTF_OpenFont("./fonts/font.ttf",9*UI_HEIGHT_SCALE);
-						BigFont = TTF_OpenFont("./fonts/font2.ttf",20*UI_HEIGHT_SCALE);
-						MonoFont = TTF_OpenFont("./fonts/font1.ttf",17*UI_HEIGHT_SCALE);
+						char *TmpPath = assetPath("fonts/font.ttf");
+						font = TTF_OpenFont(TmpPath,9*UI_HEIGHT_SCALE);
+						SDL_free(TmpPath);
+						TmpPath = assetPath("fonts/font2.ttf");
+						BigFont = TTF_OpenFont(TmpPath,20*UI_HEIGHT_SCALE);
+						SDL_free(TmpPath);
+						TmpPath = assetPath("fonts/font1.ttf");
+						MonoFont = TTF_OpenFont(TmpPath,17*UI_HEIGHT_SCALE);
+						SDL_free(TmpPath);
 						if (font && BigFont && MonoFont)
 						{
 							logMessage("Succesfully Loaded fonts\n");

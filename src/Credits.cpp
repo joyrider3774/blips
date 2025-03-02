@@ -14,7 +14,11 @@ void Credits()
     char *Tekst = new char[500];
 	sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName);
 	if(!FileExists(FileName))
-		sprintf(FileName,"./levelpacks/%s/credits.dat",LevelPackFileName);		
+    {
+        char *TmpPath = assetPath("levelpacks");
+		sprintf(FileName,"%s/%s/credits.dat",TmpPath,LevelPackFileName);
+        SDL_free(TmpPath);
+    }
 	Fp = fopen(FileName,"rt");
 	if (Fp)
 	{

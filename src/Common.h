@@ -48,4 +48,5 @@ extern double frameTime, avgfps;
 extern Uint32 framecount;
 extern double fpsSamples[FPS_SAMPLES];
 extern int fpsAvgCount, skipCounter;
+extern char binaryPath[FILENAME_MAX];
 #endif
