@@ -150,7 +150,11 @@ jobs:
           echo "    <integer>1</integer>" >> "./Release/${{matrix.name}}.app/Contents/Info.plist"
           echo "  </dict>" >> "./Release/${{matrix.name}}.app/Contents/Info.plist"
           echo "</plist>" >> "./Release/${{matrix.name}}.app/Contents/Info.plist"
-          
+      
+      - if: ${{ matrix.runsontype == 'mac'}}
+        name: Code sign Appl Bundle (Mac)
+        run: |
+          codesign -s - -f "./Release/${{matrix.name}}.app"
           
       - if: ${{ matrix.runsontype != 'mac'}}
         name: Copy Game And Assets Other
