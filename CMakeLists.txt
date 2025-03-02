@@ -110,7 +110,7 @@ if(USE_VENDORED_SDL)
 		find_library(CT_LIB CoreText REQUIRED)
 		find_library(CG_LIB CoreGraphics REQUIRED)
 		find_library(CF_LIB CoreFoundation REQUIRED)
-		target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${CF_LIB} ${CT_LIB} ${IO_LIB} ${CS_LIB} ${CG_LIB})
+		target_link_libraries(${PROJECT_NAME} PUBLIC ${CF_LIB} ${CT_LIB} ${IO_LIB} ${CS_LIB} ${CG_LIB})
 	endif()
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE 
