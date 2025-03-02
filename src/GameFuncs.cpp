@@ -12,26 +12,9 @@
 char* assetPath(char* assetSubPath)
 {
 	char* Result = (char*) SDL_malloc(FILENAME_MAX);
-	char* Tmp = (char*) SDL_malloc(FILENAME_MAX);
-	memset(Tmp, 0, FILENAME_MAX);
-	
-	snprintf(Tmp, FILENAME_MAX, "%s", binaryPath);
-	char* find = SDL_strrchr(Tmp, '/');
-    if (find == NULL)
-    {
-        find = SDL_strrchr(Tmp, '\\');
-    }
 
-    if(find)
-	{
-        find++;
-		*find = '\0';
-		snprintf(Result, FILENAME_MAX, "%s%s",Tmp, assetSubPath);
-	}
-	else
-	{
-		snprintf(Result, FILENAME_MAX, "./%s", assetSubPath);
-	}
+	snprintf(Result, FILENAME_MAX, "%s/%s", basePath, assetSubPath);
+	
 	return Result;
 }
 

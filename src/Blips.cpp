@@ -49,8 +49,6 @@ static void printHelp(char* exe)
 
 int main(int argc, char **argv)
 {
-	if(argc > 0)
-		snprintf(binaryPath, 1000, "%s", argv[0]);
 	SDL_srand((int) time(NULL));
 	//attach to potential console when using -mwindows so we can get output in a cmd / msys prompt 
 	//but see no console window when running from explorer start menu or so
@@ -100,6 +98,13 @@ int main(int argc, char **argv)
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO))
 	{
+		memset(basePath, 0, FILENAME_MAX);
+		const char* SDL_BasePath = SDL_GetBasePath();
+		if(SDL_BasePath)
+			snprintf(basePath, strlen(SDL_BasePath), "%s", SDL_BasePath);
+		else
+			snprintf(basePath, FILENAME_MAX, "./");
+
 		logMessage("SDL Succesfully initialized\n");
 		Uint32 WindowFlags = SDL_WINDOW_RESIZABLE;
 		
