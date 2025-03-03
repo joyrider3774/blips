@@ -5,7 +5,6 @@
 #endif
 
 
-#include <time.h>
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
@@ -35,7 +34,7 @@ static void printHelp(char* exe)
         ++binaryName;
 
     printf("Blips Sdl 3 Version\n");
-    printf("Usage: %s [-w <WIDTH>] [-h <HEIGHT>] [-f] [-ns] [-a] [-fps] [-nd]\n", binaryName);
+    printf("Usage: %s [-w <WIDTH>] [-h <HEIGHT>] [-f] [-ns] [-a] [-fps] [-nd] [-nj]\n", binaryName);
     printf("\n");
     printf("Commands:\n");
     printf("  -w <WIDTH>: use <WIDTH> as window width\n");
@@ -45,20 +44,21 @@ static void printHelp(char* exe)
     printf("  -s: Use Software rendering (default is hardware accelerated)\n");
     printf("  -fps: Show fps\n");
     printf("  -nd: no fps delay (run as fast as possible)\n");
+	printf("  -nj: disable joystick input\n");
 }
 
 int main(int argc, char **argv)
 {
-	SDL_srand((int) time(NULL));
+	SDL_srand(GetTickCount64());
 	//attach to potential console when using -mwindows so we can get output in a cmd / msys prompt 
 	//but see no console window when running from explorer start menu or so
-	#if defined _WIN32 || defined __CYGWIN__
+#if defined _WIN32 || defined __CYGWIN__
 	if(AttachConsole((DWORD)-1))
 	{
 		freopen("CON", "w", stderr);
 		freopen("CON", "w", stdout);
 	}
-	#endif
+#endif
 	fullScreen = false;
 	bool useHWSurface = true;
 	bool noAudioInit = false;
@@ -86,6 +86,9 @@ int main(int argc, char **argv)
 
 		if(SDL_strcmp(argv[i], "-nd") == 0)
 			nodelay = true;
+		
+		if(SDL_strcmp(argv[i], "-nj") == 0)
+			disableJoysticks = true;
 
 		if(SDL_strcmp(argv[i], "-w") == 0)
 			if(i+1 < argc)

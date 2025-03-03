@@ -20,7 +20,14 @@
 #include <SDL3/SDL.h>
 
 class CInput {
+    private:
+        int GetJoystickNr(SDL_JoystickID id);
+        int PNumJoysticks;
+        int UpdateCounter;
+        int PUpdateCounterDelay;
     public:
+        SDL_Joystick *Joysticks[MAXJOYSTICKS];
+        int OpenJoystickCount;
         bool _JoystickHeld[MAXJOYSTICKS][MAXJOYSTICKBUTTONS];
         bool _SpecialsHeld[MAXSPECIALKEYS];
         bool _KeyboardHeld[SDL_SCANCODE_COUNT];        
@@ -36,10 +43,6 @@ class CInput {
         bool SpecialsHeld(int SpecialKey) {return _SpecialsHeld[SpecialKey];};
         bool MouseHeld(int MouseNr, int MouseButton){return _MouseHeld[MouseNr][MouseButton];};
         int NumJoysticks() { return PNumJoysticks;};
-    private:
-       int PNumJoysticks;
-       int UpdateCounter;
-       int PUpdateCounterDelay;
 };
 
 #endif

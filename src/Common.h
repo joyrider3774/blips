@@ -24,7 +24,6 @@ extern CUsbJoystickSetup *JoystickSetup;
 extern unsigned char HashTable[1004];
 extern SDL_Texture* Buffer, *Buffer2;
 extern TTF_Font* font,* BigFont,*MonoFont;
-extern SDL_Joystick *Joystick;
 extern GameStates GameState;
 extern int MusicCount, SelectedMusic, InstalledLevelPacksCount, InstalledLevels, SelectedLevel, SelectedLevelPack, UnlockedLevels;
 extern bool LevelEditorMode, LevelHasChanged, StageReload;
