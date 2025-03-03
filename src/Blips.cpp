@@ -49,7 +49,7 @@ static void printHelp(const char* exe)
 
 int main(int argc, char **argv)
 {
-	SDL_srand(GetTickCount64());
+	SDL_srand(SDL_GetTicks());
 	//attach to potential console when using -mwindows so we can get output in a cmd / msys prompt 
 	//but see no console window when running from explorer start menu or so
 #if defined _WIN32 || defined __CYGWIN__
