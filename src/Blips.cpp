@@ -21,9 +21,9 @@
 #include "Game.h"
 #include "LevelEditor.h"
 
-static void printHelp(char* exe)
+static void printHelp(const char* exe)
 {
-    char* binaryName = SDL_strrchr(exe, '/');
+    const char* binaryName = SDL_strrchr(exe, '/');
     if (binaryName == NULL)
     {
         binaryName = SDL_strrchr(exe, '\\');

@@ -117,7 +117,7 @@ void CWorldParts::Sort()
 
 }
 
-void CWorldParts::Save(char *Filename)
+void CWorldParts::Save(const char *Filename)
 {
 	FILE *Fp;
 	int Teller,BufferPosition=0;
@@ -139,7 +139,7 @@ void CWorldParts::Save(char *Filename)
 	delete[] Buffer;
 }
 
-void CWorldParts::Load(char *Filename)
+void CWorldParts::Load(const char *Filename)
 {
 	int X,Y,Type;
 	FILE *Fp;

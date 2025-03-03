@@ -9,7 +9,7 @@
 #include "GameFuncs.h"
 #include "CInput.h"
 
-char* assetPath(char* assetSubPath)
+char* assetPath(const char* assetSubPath)
 {
 	char* Result = (char*) SDL_malloc(FILENAME_MAX);
 
@@ -225,7 +225,7 @@ void FindLevels()
 	delete[] FileName2;
 }
 
-void WriteText(TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
+void WriteText(TTF_Font* FontIn,const char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
 {
 	char List[100][255];
 	int Lines,Teller,Chars;
@@ -276,7 +276,7 @@ void WriteText(TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpaci
 }
 
 
-bool FileExists(char * FileName)
+bool FileExists(const char * FileName)
 {
 	FILE *Fp;
 	Fp = fopen(FileName,"rb");
@@ -317,7 +317,7 @@ void RemoveUnderScores (char *string)
 }
 
 
-char *GetString(char *NameIn,char *Msg)
+char *GetString(const char *NameIn,const char *Msg)
 {
 	char *PackName = new char[21];
 	bool End=false,SubmitChanges=false;
@@ -659,7 +659,7 @@ void LoadUnlockData()
 
 }
 
-bool AskQuestion(char *Msg)
+bool AskQuestion(const char *Msg)
 {
 	bool Result = false;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
@@ -771,7 +771,7 @@ bool AskQuestion(char *Msg)
 	return Result;
 }
 
-void PrintForm(char *msg)
+void PrintForm(const char *msg)
 {
     CInput *Input = new CInput(InputDelay, disableJoysticks);
 	SDL_FRect Rect1;
@@ -985,7 +985,7 @@ void SearchForMusic()
 	SDL_free(musPath);
 }
 
-void DoSearchForLevelPacks(char* Path)
+void DoSearchForLevelPacks(const char* Path)
 {
 	struct dirent *Entry;
 	DIR *Directory;

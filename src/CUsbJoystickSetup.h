@@ -19,7 +19,7 @@ class CUsbJoystickSetup {
        int PNrOfDefinitions;
        SJoystickButtonDefinition PJoystickButtons[MAXDEFINITIONS];
     public:
-        bool AddDefinition(int Button, char* Definition, int value, int defaultValue);
+        bool AddDefinition(int Button,const char* Definition, int value, int defaultValue);
         int GetButtonValue(int Button);
         bool SaveCurrentButtonValues(const char *Filename);
         bool LoadCurrentButtonValues(const char *Filename);

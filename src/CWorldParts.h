@@ -25,8 +25,8 @@ class CWorldParts
 		void Remove(int PlayFieldXin,int PlayFieldYin);
 		void Remove(int PlayFieldXin,int PlayFieldYin,int Type);
 		void RemoveAll();
-		void Save(char *Filename);
-		void Load(char *Filename);
+		void Save(const char *Filename);
+		void Load(const char *Filename);
 		~CWorldParts();
 };
 
