@@ -322,13 +322,15 @@ char *GetString(const char *NameIn,const char *Msg)
 	char *PackName = new char[21];
 	bool End=false,SubmitChanges=false;
 	int Teller,MaxSelection=0, Selection = 0,asci=97;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	sprintf(PackName,"%s",NameIn);
 	MaxSelection = strlen(NameIn);
 	PackName[Selection+1]='\0';
 	if (MaxSelection == 0)
 		PackName[MaxSelection]=chr(asci);
 	char Tekst[100];
+	//reset 
+	Input->SetInputDelay(InputDelay);
+	Input->Reset();
 	while (!End)
 	{
 		frameticks = SDL_GetPerformanceCounter();
@@ -536,7 +538,6 @@ char *GetString(const char *NameIn,const char *Msg)
 		}
 	if (!SubmitChanges)
 		sprintf(PackName,"%s",NameIn);
-	delete Input;
 	return PackName;
 }
 
@@ -662,7 +663,6 @@ void LoadUnlockData()
 bool AskQuestion(const char *Msg)
 {
 	bool Result = false;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	SDL_FRect Rect1;
 	Rect1.x = 60.0f*UI_WIDTH_SCALE;
 	Rect1.y = 80.0f*UI_HEIGHT_SCALE;
@@ -688,6 +688,9 @@ bool AskQuestion(const char *Msg)
 	SDL_SetRenderLogicalPresentation(Renderer, ORIG_WINDOW_WIDTH, ORIG_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);        
 	SDL_RenderTexture(Renderer, Buffer2, NULL, NULL);
 	SDL_RenderPresent(Renderer);
+	//reset 
+	Input->SetInputDelay(InputDelay);
+	Input->Reset();
 	while (!(Input->KeyboardHeld(SDLK_Z) || Input->SpecialsHeld(SPECIAL_QUIT_EV) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_SPACE) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X)) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_Y) || Input->KeyboardHeld(SDLK_ESCAPE) || Input->KeyboardHeld(SDLK_N) || Input->KeyboardHeld(SDLK_X)))
 	{
 		frameticks = SDL_GetPerformanceCounter();
@@ -767,13 +770,11 @@ bool AskQuestion(const char *Msg)
 		GameState = GSQuit;
 	if (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_Y))
 		Result = true;
-	delete Input;
 	return Result;
 }
 
 void PrintForm(const char *msg)
 {
-    CInput *Input = new CInput(InputDelay, disableJoysticks);
 	SDL_FRect Rect1;
 	Rect1.x = 60.0f*UI_WIDTH_SCALE;
 	Rect1.y = 80.0f*UI_HEIGHT_SCALE;
@@ -799,7 +800,9 @@ void PrintForm(const char *msg)
 	SDL_SetRenderLogicalPresentation(Renderer, ORIG_WINDOW_WIDTH, ORIG_WINDOW_HEIGHT, SDL_LOGICAL_PRESENTATION_LETTERBOX);        
 	SDL_RenderTexture(Renderer, Buffer2, NULL, NULL);
 	SDL_RenderPresent(Renderer);
-
+	//reset 
+	Input->SetInputDelay(InputDelay);
+	Input->Reset();
     while (!( Input->SpecialsHeld(SPECIAL_QUIT_EV) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_ESCAPE) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_SPACE)))
     {
 		frameticks = SDL_GetPerformanceCounter();
@@ -877,8 +880,6 @@ void PrintForm(const char *msg)
     }
 	if(Input->SpecialsHeld(SPECIAL_QUIT_EV))
 		GameState = GSQuit;
-
-	delete Input;
 }
 
 

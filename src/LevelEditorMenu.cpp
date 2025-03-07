@@ -14,7 +14,6 @@ void LevelEditorMenu()
 	int Teller, Selection = 1;
 	char *PackName,*CreatorName;
 	char FileName[FILENAME_MAX];
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	char *Tekst = new char[300];
 	while (GameState == GSLevelEditorMenu)
 	{
@@ -326,5 +325,4 @@ void LevelEditorMenu()
             }
 	}
 	delete[] Tekst;
-	delete Input;
 }

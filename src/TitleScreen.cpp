@@ -8,7 +8,6 @@ void TitleScreen()
 	int alpha = 0;
     SDL_Surface *Tmp;
 	int Teller, Selection = 1;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	char *Tekst = new char[300];
 	while (GameState == GSTitleScreen)
 	{
@@ -257,5 +256,4 @@ void TitleScreen()
         }
     }
 	delete[] Tekst;
-	delete Input;
 }

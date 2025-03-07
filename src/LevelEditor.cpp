@@ -48,7 +48,7 @@ void LevelEditor()
 	bool ShowPosition=true,AnotherPartFound,SamePartFound,PlayerFound=false,ShowGrid=true;
 	char Tekst[200];
 	char *FileName = new char[FILENAME_MAX];
-	CInput *Input = new CInput(InputDelay-5, disableJoysticks);
+    Input->SetInputDelay(InputDelay-5);
 	CSelector Selector(&WorldParts);
 	int MaxX=0,MaxY=0,MinY=NrOfRows,MinX=NrOfCols,Xi=0,Yi=0;
     if (StageReload)
@@ -505,5 +505,4 @@ void LevelEditor()
         }
 	}
 	delete[] FileName;
-	delete Input;
 }

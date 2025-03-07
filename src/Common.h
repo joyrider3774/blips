@@ -5,6 +5,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "Defines.h"
+#include "CInput.h"
 #include "CWorldParts.h"
 #include "CUsbJoystickSetup.h"
 
@@ -49,4 +50,5 @@ extern double fpsSamples[FPS_SAMPLES];
 extern int fpsAvgCount, skipCounter;
 extern char basePath[FILENAME_MAX];
 extern bool fullScreen;
+extern CInput *Input;
 #endif

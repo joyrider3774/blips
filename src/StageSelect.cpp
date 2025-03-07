@@ -13,7 +13,6 @@ void StageSelect()
 	char *FileName = new char[FILENAME_MAX];
 	char Tekst[300];
 	char Tekst1[300];
-    CInput *Input = new CInput(InputDelay, disableJoysticks);
 	if (SelectedLevel > 0)
 	{
 		sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
@@ -400,5 +399,4 @@ void StageSelect()
 		}
 	}
 	delete[] FileName;
-	delete Input;
 }

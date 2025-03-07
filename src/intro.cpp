@@ -6,7 +6,6 @@
 
 void Intro()
 {
-    CInput *Input = new CInput(10, disableJoysticks);
     Uint8 alpha = 0;
     Uint32 Time=0;
     int IntroScreenNr = 1;
@@ -134,6 +133,4 @@ void Intro()
         }
 
     }
-	delete Input;
-
 }

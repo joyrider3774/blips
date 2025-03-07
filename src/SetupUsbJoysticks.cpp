@@ -11,7 +11,7 @@ void SetupUsbJoystickButtons()
 	int Teller, Selection = 0;
 	char *Tekst = new char[300];
 	bool done = false;
-	CInput *Input = new CInput(10, disableJoysticks);
+	Input->SetInputDelay(10);
 	while (GameState == GSSetupUsbJoystickButtons)
 	{
         frameticks = SDL_GetPerformanceCounter();
@@ -278,6 +278,5 @@ void SetupUsbJoystickButtons()
         }
 	}
 	delete[] Tekst;
-	delete Input;
 }
 

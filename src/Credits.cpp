@@ -7,7 +7,6 @@
 void Credits()
 {
     int alpha = 0;
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	char *LevelPackCreator = new char[21];
 	char FileName[FILENAME_MAX];
 	FILE *Fp;
@@ -162,5 +161,4 @@ void Credits()
 	}
 	delete[] Tekst;
 	delete[] LevelPackCreator;
-	delete Input;
 }

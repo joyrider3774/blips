@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include "CUsbJoystickSetup.h"
+#include "CInput.h"
 #include "SPoint.h"
 #include "Defines.h"
 #include "Common.h"
@@ -41,3 +42,4 @@ double fpsSamples[FPS_SAMPLES];
 int fpsAvgCount = 0, skipCounter = 10;
 char basePath[FILENAME_MAX];
 bool fullScreen = false;
+CInput *Input;

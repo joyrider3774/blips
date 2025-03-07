@@ -216,8 +216,13 @@ int main(int argc, char **argv)
 							FindLevels();
 							LoadSettings();
 							LoadGraphics();
+							Input = new CInput(InputDelay, disableJoysticks);
 							while (GameState != GSQuit)
 							{
+								//reset after each state, some states change it
+								Input->SetInputDelay(InputDelay);
+								//to make sure no buttons or key presses simple through other states when switching them
+								Input->Reset();
 								switch(GameState)
 								{
 									case GSIntro :
@@ -251,6 +256,7 @@ int main(int argc, char **argv)
 										break;
 								}
 							}
+							delete Input;
 							SaveSettings();
 							UnLoadGraphics();
 							UnloadSounds();

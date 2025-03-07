@@ -36,6 +36,7 @@ class CInput {
         ~CInput(void);
         void Update();
         void Reset();
+        void SetInputDelay(int UpdateCounterDelay) { PUpdateCounterDelay = UpdateCounterDelay;};
         bool Ready(){ return (UpdateCounter == 0);};
         void Delay(){ UpdateCounter = PUpdateCounterDelay;};
         bool KeyboardHeld(SDL_Keycode code){return _KeyboardHeld[(int)SDL_GetScancodeFromKey(code, NULL)];};

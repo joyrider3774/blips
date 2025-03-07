@@ -39,7 +39,6 @@ void Game()
 		Player = new CPlayer(0,0);
 		WorldParts.Add(Player);
 	}
-	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	Time = SDL_GetTicks();
 	if (MusicCount > 1)
  	{
@@ -428,5 +427,4 @@ void Game()
 			Input->Reset();
 		}
     }
-    delete Input;
 }
