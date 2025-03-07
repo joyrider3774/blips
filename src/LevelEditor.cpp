@@ -55,6 +55,7 @@ void LevelEditor()
 	{
 		sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 		WorldParts.Load(FileName);
+        WorldParts.LimitVPLevel();
 		remove(FileName);
 		StageReload=false;
 	}

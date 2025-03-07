@@ -24,6 +24,7 @@ void StageSelect()
 			SDL_free(TmpPath);
 		}
 		WorldParts.Load(FileName);
+		WorldParts.LimitVPLevel();
 
 	}
 	else
@@ -42,9 +43,9 @@ void StageSelect()
 		SDL_RenderTexture(Renderer, IMGBackground,NULL,NULL);
 		WorldParts.Draw();
 		SDL_FRect Rect;
-		Rect.x = 0.0f;
+		Rect.x = -1.0f;
 		Rect.y = 0.0f;
-		Rect.w = (float)ORIG_WINDOW_WIDTH-1.0f;
+		Rect.w = (float)ORIG_WINDOW_WIDTH+1;
 		Rect.h = 13.0f*UI_HEIGHT_SCALE;
 		SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 		SDL_RenderFillRect(Renderer, &Rect);
@@ -149,6 +150,7 @@ void StageSelect()
 									SDL_free(TmpPath);
 								}
 								WorldParts.Load(FileName);
+								WorldParts.LimitVPLevel();
 							}
 						}
 					}
@@ -183,6 +185,7 @@ void StageSelect()
 								SDL_free(TmpPath);
 							}
 							WorldParts.Load(FileName);
+							WorldParts.LimitVPLevel();
 							GameState = GSGame;
 						}
 						Input->Reset();
@@ -211,6 +214,7 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
+						WorldParts.LimitVPLevel();
 					}
 				}
 				else
@@ -229,6 +233,7 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
+						WorldParts.LimitVPLevel();
 					}
 				}
 				Input->Delay();
@@ -250,6 +255,7 @@ void StageSelect()
 					}
 							
 					WorldParts.Load(FileName);
+					WorldParts.LimitVPLevel();
 				}
 				Input->Delay();
 			}
@@ -276,6 +282,7 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
+						WorldParts.LimitVPLevel();
 					}
 				}
 				else
@@ -293,6 +300,7 @@ void StageSelect()
 							SDL_free(TmpPath);
 						}
 						WorldParts.Load(FileName);
+						WorldParts.LimitVPLevel();
 					}
 				}
 
@@ -316,6 +324,7 @@ void StageSelect()
 					}
 							
 					WorldParts.Load(FileName);
+					WorldParts.LimitVPLevel();
 				}
 				Input->Delay();
 			}
