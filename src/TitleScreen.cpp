@@ -168,10 +168,10 @@ void TitleScreen()
         SDL_SetRenderDrawColor(Renderer,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
    		SDL_RenderRect(Renderer, &Rect);      
         SDL_FRect Rect2;
-        Rect2.x = 61.0f*UI_WIDTH_SCALE;
-        Rect2.y = 71.0f*UI_HEIGHT_SCALE;
-        Rect2.w = 198.0f*UI_WIDTH_SCALE;
-        Rect2.h = 93.0f*UI_HEIGHT_SCALE;
+        Rect2.x = 62.0f*UI_WIDTH_SCALE;
+        Rect2.y = 72.0f*UI_HEIGHT_SCALE;
+        Rect2.w = 196.0f*UI_WIDTH_SCALE;
+        Rect2.h = 91.0f*UI_HEIGHT_SCALE;
         SDL_RenderRect(Renderer, &Rect2);      
 		
 		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nQuit",LevelPackName);

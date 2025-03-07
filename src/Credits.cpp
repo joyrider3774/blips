@@ -84,10 +84,10 @@ void Credits()
         SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
 		SDL_RenderRect(Renderer, &Rect1);
         SDL_FRect Rect2;
-        Rect2.x = 61.0f*UI_WIDTH_SCALE;
-        Rect2.y = 81.0f*UI_HEIGHT_SCALE;
-        Rect2.w = 198.0f*UI_WIDTH_SCALE;
-        Rect2.h = 78.0f*UI_HEIGHT_SCALE;
+        Rect2.x = 62.0f*UI_WIDTH_SCALE;
+        Rect2.y = 82.0f*UI_HEIGHT_SCALE;
+        Rect2.w = 196.0f*UI_WIDTH_SCALE;
+        Rect2.h = 76.0f*UI_HEIGHT_SCALE;
         SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
         SDL_RenderRect(Renderer, &Rect2);
 		WriteText(font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,1,MenuTextColor,false);
