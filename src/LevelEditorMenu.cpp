@@ -65,13 +65,16 @@ void LevelEditorMenu()
         {
             if(Selection==4)
                 if (InstalledLevelPacksCount > 0)
-                    if(SelectedLevelPack > 0)
-                    {
-                        SelectedLevelPack--;
-                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        AddUnderScores(LevelPackFileName);
-                    }
+                {
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    SelectedLevelPack--;
+                    if(SelectedLevelPack < 0)
+                        SelectedLevelPack = InstalledLevelPacksCount -1;
+                    sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    AddUnderScores(LevelPackFileName);
+                }
             Input->Delay();
         }
 
@@ -79,13 +82,16 @@ void LevelEditorMenu()
         {
             if (Selection==4)
                 if (InstalledLevelPacksCount > 0)
-                    if(SelectedLevelPack < InstalledLevelPacksCount-1)
-                    {
-                        SelectedLevelPack++;
-                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        AddUnderScores(LevelPackFileName);
-                    }
+                {
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    SelectedLevelPack++;
+                    if(SelectedLevelPack > InstalledLevelPacksCount-1)
+                        SelectedLevelPack = 0;
+                    sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    AddUnderScores(LevelPackFileName);
+                }
             Input->Delay();
         }
 
@@ -118,7 +124,7 @@ void LevelEditorMenu()
             GameState = GSQuit;
 
         if((Input->Ready()) && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_SPACE) || Input->KeyboardHeld(SDLK_RETURN)))
-        {
+        {            
             switch(Selection)
             {
                 case 1:
@@ -219,12 +225,26 @@ void LevelEditorMenu()
 
                     }
                     break;
+                case 4:
+                    if (InstalledLevelPacksCount > 0)
+                    {
+                        if (GlobalSoundEnabled)
+                            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        SelectedLevelPack++;
+                        if(SelectedLevelPack > InstalledLevelPacksCount-1)
+                            SelectedLevelPack = 0;
+                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                        AddUnderScores(LevelPackFileName);
+                    }
+                    break;
                 case 5:
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                     GameState = GSTitleScreen;
                     break;
             }
+            Input->Delay();
         }
         SDL_SetRenderTarget(Renderer, Buffer);
         SDL_FRect Rect1;
