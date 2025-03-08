@@ -23,10 +23,10 @@ void Credits()
 	{
 		fscanf(Fp,"[Credits]\nCreator='%[^']'\n",LevelPackCreator);
 		fclose(Fp);
-		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2024.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby %s.",LevelPackName,LevelPackCreator);
+		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2025.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby %s.",LevelPackName,LevelPackCreator);
 	}
 	else
-		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2024.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby unknown person.",LevelPackName);
+		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2025.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby unknown person.",LevelPackName);
 	while (GameState == GSCredits)
 	{
         frameticks = SDL_GetPerformanceCounter();
