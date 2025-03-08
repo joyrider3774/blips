@@ -134,6 +134,8 @@ void TitleScreen()
                             SDL_RenderTexture(Renderer, IMGTitleScreen,NULL,NULL);
                             sprintf(Tekst,"There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!",LevelPackName);
                             PrintForm(Tekst);
+                            if (GlobalSoundEnabled)
+                                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                             Input->Reset();
                         }
                     }

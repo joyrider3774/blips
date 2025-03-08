@@ -221,6 +221,8 @@ void LevelEditorMenu()
 
                             SearchForLevelPacks();
                         }
+                        if (GlobalSoundEnabled)
+                            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                         Input->Reset();
 
                     }

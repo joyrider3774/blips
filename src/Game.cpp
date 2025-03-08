@@ -108,10 +108,9 @@ void Game()
                 if (AskQuestion("Are you sure you want to return to the stage selector?\n\nPress (A) to confirm (X) to Cancel"))
                 {
                     GameState = GSStageSelect;
-                    if (GlobalSoundEnabled)
-                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
-                    GameState = GSStageSelect;
-                }                
+                }
+                if (GlobalSoundEnabled)
+                	Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                 Input->Reset();
                 
 			}
@@ -127,18 +126,16 @@ void Game()
 			{				
                 if (AskQuestion("Are you sure you want to return to level editor?\n\nPress (A) to confirm (X) to Cancel"))
                 {
-                    if (GlobalSoundEnabled)
-                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     GameState=GSLevelEditor;
                 }
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                 Input->Reset();
 			}
             else
             {
                 if (AskQuestion("Are you sure you want to reload the level?\n\nPress (A) to confirm (X) to Cancel"))
 			    {
-                    if (GlobalSoundEnabled)
-                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     char *TmpPath = assetPath("levelpacks");
                     sprintf(FileName,"%s/%s/level%d.lev",TmpPath,LevelPackFileName,SelectedLevel);
                     SDL_free(TmpPath);
@@ -153,6 +150,8 @@ void Game()
                         }
                     }
                 }
+                if (GlobalSoundEnabled)
+					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                 Input->Reset();
             }
             Input->Delay();
@@ -342,7 +341,9 @@ void Game()
 				if (LevelEditorMode)
 				{
 					if (AskQuestion("Too bad you died !\nDo you want to return to the\nlevel editor ?\n\n(A) Leveleditor (X) Play Again"))
+                    {
 						GameState = GSLevelEditor;
+                    }
 					else
 					{
 						sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
@@ -357,6 +358,8 @@ void Game()
 
 						}
 					}
+                    if (GlobalSoundEnabled)
+				        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					Input->Reset();
 				}
 				else
@@ -387,7 +390,11 @@ void Game()
 						}
 					}
 					else
+                    {
 						GameState = GSStageSelect;
+                    }
+                    if (GlobalSoundEnabled)
+				        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					Input->Reset();
 
 				}
@@ -401,7 +408,9 @@ void Game()
 			if (LevelEditorMode)
 			{
 				if (AskQuestion("Congratulations !\nYou Succesfully Solved this level\nDo you want to return to the\nlevel editor ?\n(A) Leveleditor (X) Play Again"))
+                {
 					GameState = GSLevelEditor;
+                }
 				else
 				{
 					sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
@@ -416,8 +425,9 @@ void Game()
 					}
 
 				}
+                if (GlobalSoundEnabled)
+				    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 				Input->Reset();
-
 			}
 			else
 			{
@@ -427,6 +437,8 @@ void Game()
 					{
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nThe next level has now been unlocked!\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 						PrintForm(Text);
+                        if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 						UnlockedLevels++;
 						SelectedLevel++;
 						SaveUnlockData();
@@ -436,6 +448,8 @@ void Game()
 					{
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nlevelpack %s\nis now finished, try out another one!\n\nPress (A) to continue",SelectedLevel,InstalledLevels,LevelPackName);
 						PrintForm(Text);
+                        if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 						GameState = GSTitleScreen;
 					}
 				}
@@ -443,6 +457,8 @@ void Game()
 				{
 					sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 					PrintForm(Text);
+                    if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					GameState = GSStageSelect;
 
 				}

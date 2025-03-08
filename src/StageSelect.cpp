@@ -116,6 +116,8 @@ void StageSelect()
 			{
 				if(LevelEditorMode && (SelectedLevel > 0))
 				{
+					if (GlobalSoundEnabled)
+                	    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					sprintf(Tekst,"Are you sure you want to delete this level:\n%s - Level %d\n\nPress (A) to Delete (X) to Cancel",LevelPackName,SelectedLevel);
 					if (AskQuestion(Tekst))
 					{
@@ -153,6 +155,8 @@ void StageSelect()
 							}
 						}
 					}
+					if (GlobalSoundEnabled)
+						Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					Input->Reset();
 				}
 				Input->Delay();
@@ -187,6 +191,8 @@ void StageSelect()
 							WorldParts.LimitVPLevel();
 							GameState = GSGame;
 						}
+						if (GlobalSoundEnabled)
+							Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 						Input->Reset();
 					}
 				Input->Delay();
