@@ -15,8 +15,10 @@ CInput::CInput(int UpdateCounterDelay, bool DisableJoysticks)
 	{        
         for(int i = 0; i < MAXJOYSTICKS; i++)
             Joysticks[i] = NULL;
+            
+        SDL_SetJoystickEventsEnabled(true);
         SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-        SDL_SetJoystickEventsEnabled(true); 
+         
 	}
     PUpdateCounterDelay = UpdateCounterDelay;
     UpdateCounter = 0;
