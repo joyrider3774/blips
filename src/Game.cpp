@@ -102,35 +102,58 @@ void Game()
         {
             if(!LevelEditorMode)
 			{
-				if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
-                GameState = GSStageSelect;
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    
+                if (AskQuestion("Are you sure you want to return to the stage selector?\n\nPress (A) to confirm (X) to Cancel"))
+                {
+                    GameState = GSStageSelect;
+                    if (GlobalSoundEnabled)
+                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    GameState = GSStageSelect;
+                }                
+                Input->Reset();
+                
 			}
+            Input->Delay();
         }
 
         if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_START)) || Input->KeyboardHeld(SDLK_RETURN)))
         {
+            if (GlobalSoundEnabled)
+                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    
             if(LevelEditorMode)
-			{
-				if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
-                GameState=GSLevelEditor;
+			{				
+                if (AskQuestion("Are you sure you want to return to level editor?\n\nPress (A) to confirm (X) to Cancel"))
+                {
+                    if (GlobalSoundEnabled)
+                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    GameState=GSLevelEditor;
+                }
+                Input->Reset();
 			}
             else
             {
-                char *TmpPath = assetPath("levelpacks");
-                sprintf(FileName,"%s/%s/level%d.lev",TmpPath,LevelPackFileName,SelectedLevel);
-                SDL_free(TmpPath);
-                WorldParts.Load(FileName);
-				//need to find player again
-				for (teller=0;teller<WorldParts.ItemCount;teller++)
-				{
-					if (WorldParts.Items[teller]->GetType() == IDPlayer)
-					{
-						Player = (CPlayer*) WorldParts.Items[teller];
-						break;
-					}
-				}
+                if (AskQuestion("Are you sure you want to reload the level?\n\nPress (A) to confirm (X) to Cancel"))
+			    {
+                    if (GlobalSoundEnabled)
+                	    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    char *TmpPath = assetPath("levelpacks");
+                    sprintf(FileName,"%s/%s/level%d.lev",TmpPath,LevelPackFileName,SelectedLevel);
+                    SDL_free(TmpPath);
+                    WorldParts.Load(FileName);
+                    //need to find player again
+                    for (teller=0;teller<WorldParts.ItemCount;teller++)
+                    {
+                        if (WorldParts.Items[teller]->GetType() == IDPlayer)
+                        {
+                            Player = (CPlayer*) WorldParts.Items[teller];
+                            break;
+                        }
+                    }
+                }
+                Input->Reset();
             }
             Input->Delay();
         }
