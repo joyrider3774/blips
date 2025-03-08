@@ -22,7 +22,6 @@
 class CInput {
     private:
         int GetJoystickNr(SDL_JoystickID id);
-        int PNumJoysticks;
         int UpdateCounter;
         int PUpdateCounterDelay;
     public:
@@ -43,7 +42,6 @@ class CInput {
         bool JoystickHeld(int JoystickNr, int JoystickButton) { return _JoystickHeld[JoystickNr][JoystickButton];};
         bool SpecialsHeld(int SpecialKey) {return _SpecialsHeld[SpecialKey];};
         bool MouseHeld(int MouseNr, int MouseButton){return _MouseHeld[MouseNr][MouseButton];};
-        int NumJoysticks() { return PNumJoysticks;};
 };
 
 #endif

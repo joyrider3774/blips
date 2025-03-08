@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 				WINDOW_HEIGHT = SDL_atoi(argv[i+1]);
 	}
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO))
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
 	{
 		logMessage("SDL Succesfully initialized\n");
 

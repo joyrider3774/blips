@@ -6,30 +6,17 @@
 // All joysticks are always opened and they all assign all the same values of joystick nr 0 in the array
 // this game was initially made for a system that had fixed amount of joysticks
 
-CInput::CInput(int UpdateCounterDelay, bool DisableJoysticks) {
+CInput::CInput(int UpdateCounterDelay, bool DisableJoysticks) 
+{
     Reset();
     OpenJoystickCount = 0;
 
 	if(!DisableJoysticks)
-	{
-        SDL_JoystickID* JoystickIDs = SDL_GetJoysticks(&PNumJoysticks);
-        if (JoystickIDs == NULL)
-            logMessage("SDL_GetJoysticks Failed %s\n", SDL_GetError());
-        else
-            logMessage("Found %d Joysticks\n", PNumJoysticks);
-
-    	for (int teller=0;teller< PNumJoysticks;teller++)
-        {
-            Joysticks[OpenJoystickCount] = SDL_OpenJoystick(JoystickIDs[teller]);
-            if(Joysticks[OpenJoystickCount])
-            {
-                logMessage("Opened Joystick %d %s\n", OpenJoystickCount+1, SDL_GetJoystickName(Joysticks[OpenJoystickCount]));
-                SDL_SetJoystickEventsEnabled(true);
-                OpenJoystickCount++;
-            }
-            else
-                logMessage("Failed opening joystick %d: %s\n", OpenJoystickCount+1, SDL_GetError());
-        }
+	{        
+        for(int i = 0; i < MAXJOYSTICKS; i++)
+            Joysticks[i] = NULL;
+        SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+        SDL_SetJoystickEventsEnabled(true); 
 	}
     PUpdateCounterDelay = UpdateCounterDelay;
     UpdateCounter = 0;
@@ -47,11 +34,17 @@ int CInput::GetJoystickNr(SDL_JoystickID ID)
 }
 
 CInput::~CInput() {
-    for(int i = 0; i < OpenJoystickCount; i++)
+    for(int i = 0; i < MAXJOYSTICKS; i++)
     {
-        logMessage("Closing joystick %d: %s\n", 1, SDL_GetJoystickName(Joysticks[i]));
-        SDL_CloseJoystick(Joysticks[i]);
+        if(Joysticks[i])
+        {
+            logMessage("Closing joystick %d: %s\n", i+1, SDL_GetJoystickName(Joysticks[i]));
+            SDL_CloseJoystick(Joysticks[i]);
+            Joysticks[i] = NULL;
+        }
     }
+    if(SDL_WasInit(SDL_INIT_JOYSTICK))
+        SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
 
 void CInput::Update() {
@@ -66,7 +59,44 @@ void CInput::Update() {
             _KeyboardHeld[Event.key.scancode] = true;
         if(Event.type == SDL_EVENT_KEY_UP)
             _KeyboardHeld[Event.key.scancode] = false;
-		if (Event.type == SDL_EVENT_JOYSTICK_HAT_MOTION)
+        
+        if(Event.type == SDL_EVENT_JOYSTICK_ADDED)
+        {
+            for (int i = 0 ; i < MAXJOYSTICKS; i++)
+            {
+                if(Joysticks[i] == NULL)
+                {
+                    Joysticks[i] = SDL_OpenJoystick(Event.jdevice.which);
+                    if(Joysticks[i])
+                    {
+                        logMessage("Opened Joystick %d %s\n", i+1, SDL_GetJoystickName(Joysticks[i]));
+                        SDL_SetJoystickEventsEnabled(true);
+                        if(i+1 > OpenJoystickCount)
+                            OpenJoystickCount = i+1;
+                    }
+                    else
+                        logMessage("Failed opening joystick %d: %s\n", i+1, SDL_GetError());    
+                    break;
+                }
+            }
+        }
+
+        if(Event.type == SDL_EVENT_JOYSTICK_REMOVED)
+        {
+            for(int i = 0; i < OpenJoystickCount; i++)
+            {
+                if(Event.jdevice.which == SDL_GetJoystickID(Joysticks[i]))
+                {
+                    logMessage("Closing joystick %d: %s\n", 1, SDL_GetJoystickName(Joysticks[i]));
+                    SDL_CloseJoystick(Joysticks[i]);
+                    Joysticks[i] = NULL;
+                    OpenJoystickCount--;
+                    break;
+                }
+            }  
+        }
+
+        if (Event.type == SDL_EVENT_JOYSTICK_HAT_MOTION)
 		{
 			switch (Event.jhat.value)
 			{
