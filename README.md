@@ -17,15 +17,30 @@ Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban st
 ## Playing the Game:
 The aim of the game is to collect all the dollar coins in a level, you need to create pathways to these coins by pushing boxes around or even make them explode by pushing them into the dynamite
 
+## Command Line Parameters
+```
+Blips.exe [-w <WIDTH>] [-h <HEIGHT>] [-f] [-ns] [-a] [-fps] [-nd] [-nj]
+
+Commands:
+  -w <WIDTH>: use <WIDTH> as window width
+  -h <HEIGHT>: use <HEIGHT> as window height
+  -f: Run fullscreen
+  -ns: No Sound
+  -s: Use Software rendering (default is hardware accelerated)
+  -fps: Show fps
+  -nd: no fps delay (run as fast as possible)
+  -nj: disable joystick input
+```
+
 ## Controls Gamepad (xbox controller)
 
 | Button | Action |
 | ------ | ------ |
-| A |	Confirm in menus, level selector and questions asked, place a part in the level editor |
+| A | Confirm in menus, level selector and questions asked, place a part in the level editor |
 | B | Quit to title screen on the level selector, Quit to level selector in game and level editor mode. Quit the game on the titlescreen |
 | Y | In Level editor Mode, Create a new level when being in the level selector. In the level editor itself erase all parts from the screen. Inside the game itself restart the level |
 | X	| In the level editor, center the level on screen |
-| JOYSTICK |	move main player |
+| JOYSTICK | move main player |
 | SELECT | Show statistics during a game. Hide the part position/grid in the level editor |
 | L | At the level Selector decrease selected level with 5, During game play select the next Skin. In the level editor select previous part |
 | R | At the level Selector increase selected level with 5, During game play select next music. In the level editor select next part. |
@@ -36,7 +51,7 @@ The aim of the game is to collect all the dollar coins in a level, you need to c
 
 | Button | Action |
 | ------ | ------ |
-| A, SPACE, RETURN |	Confirm in menus, level selector and questions asked, place a part in the level editor |
+| A, SPACE, RETURN | Confirm in menus, level selector and questions asked, place a part in the level editor |
 | B | Show statistics during a game. Hide the part position/grid in the level editor |
 | Y | In Level editor Mode, Create a new level when being in the level selector. In the level editor itself erase all parts from the screen. Inside the game itself restart the level |
 | X	| In the level editor, center the level on screen |
