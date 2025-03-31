@@ -856,9 +856,8 @@ void LoadGraphics()
 	}
 
     Tmp = IMG_Load("./graphics/grid.png");
-    IMGGrid = SDL_DisplayFormat(Tmp);
+    IMGGrid = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGGrid, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGGrid->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/intro1.png");
     IMGIntro1 = SDL_DisplayFormat(Tmp);
@@ -875,42 +874,34 @@ void LoadGraphics()
     Tmp = IMG_Load("./graphics/floor.png");
     IMGFloor = SDL_DisplayFormat(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGFloor, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGFloor->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/explosion.png");
-    IMGExplosion = SDL_DisplayFormat(Tmp);
+    IMGExplosion = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGExplosion, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGExplosion->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/wall.png");
     IMGWall = SDL_DisplayFormat(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGWall, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGWall->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/bomb.png");
-    IMGBomb = SDL_DisplayFormat(Tmp);
+    IMGBomb = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGBomb, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGBomb->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/diamond.png");
-    IMGDiamond = SDL_DisplayFormat(Tmp);
+    IMGDiamond = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGDiamond, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGDiamond->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/box.png");
-    IMGBox = SDL_DisplayFormat(Tmp);
+    IMGBox = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGBox, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGBox->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/player.png");
-    IMGPlayer = SDL_DisplayFormat(Tmp);
+    IMGPlayer = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGPlayer, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGPlayer->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/empty.png");
-    IMGEmpty = SDL_DisplayFormat(Tmp);
+    IMGEmpty = SDL_DisplayFormatAlpha(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGEmpty, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGEmpty->format,255,0,255));
 
     Tmp = IMG_Load("./graphics/titlescreen.png");
     IMGTitleScreen = SDL_DisplayFormat(Tmp);
@@ -919,5 +910,4 @@ void LoadGraphics()
     Tmp = IMG_Load("./graphics/background.png");
     IMGBackground = SDL_DisplayFormat(Tmp);
     SDL_FreeSurface(Tmp);
-    SDL_SetColorKey(IMGBackground, (SDL_SRCCOLORKEY|SDL_RLEACCEL),SDL_MapRGB(IMGBackground->format,255,0,255));
 }
