@@ -59,14 +59,20 @@ int main(int argc, char **argv)
 		printf("SDL Succesfully initialized\n");
 		Uint32 flags = SDL_SWSURFACE;
 		if (fullscreen)
+		{
+			WINDOW_WIDTH = 0;
+			WINDOW_HEIGHT = 0;
 			flags |= SDL_FULLSCREEN;
-        Screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT,0, flags);
+		}
+		Screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT,0, flags);
         Icon = IMG_Load("./graphics/blips.png");
         SDL_WM_SetIcon(Icon,NULL);
         SDL_WM_SetCaption( "Blips - Created By Willems Davy - Original game by Bryant Brownell", NULL );
 
 		if(Screen)
 		{
+			WINDOW_WIDTH = Screen->w;
+			WINDOW_HEIGHT = Screen->h;
 		    printf("Succesfully Set %dx%dx%d\n",WINDOW_WIDTH,WINDOW_HEIGHT,SCREEN_BPP);
 			if(fullscreen)
 			{

@@ -89,8 +89,16 @@ void SetupUsbJoystickButtons()
         SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
         if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 		{
-			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
+			double wscale = (double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH;
+			if(ORIG_WINDOW_HEIGHT * wscale > WINDOW_HEIGHT)
+				wscale = (double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT;
+			SDL_Rect dst;
+			dst.x = (WINDOW_WIDTH - (ORIG_WINDOW_WIDTH * wscale)) / 2;
+			dst.y = (WINDOW_HEIGHT - (ORIG_WINDOW_HEIGHT * wscale)) / 2,
+			dst.w = ORIG_WINDOW_WIDTH * wscale;
+			dst.h = ORIG_WINDOW_HEIGHT * wscale;
+			SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,wscale,wscale,0);
+			SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,&dst);
 			SDL_FreeSurface(ScreenBufferZoom);
 		}
 		else
@@ -119,11 +127,19 @@ void SetupUsbJoystickButtons()
                     SDL_BlitSurface(Tmp,NULL,Buffer,NULL);
                     SDL_FillRect(Screen,NULL,SDL_MapRGB(Screen->format,0,0,0));
                     if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
-					{
-						SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,(double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH,(double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT,0);
-						SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,NULL);
-						SDL_FreeSurface(ScreenBufferZoom);
-					}
+                    {
+                        double wscale = (double)WINDOW_WIDTH / ORIG_WINDOW_WIDTH;
+                        if(ORIG_WINDOW_HEIGHT * wscale > WINDOW_HEIGHT)
+                            wscale = (double)WINDOW_HEIGHT / ORIG_WINDOW_HEIGHT;
+                        SDL_Rect dst;
+                        dst.x = (WINDOW_WIDTH - (ORIG_WINDOW_WIDTH * wscale)) / 2;
+                        dst.y = (WINDOW_HEIGHT - (ORIG_WINDOW_HEIGHT * wscale)) / 2,
+                        dst.w = ORIG_WINDOW_WIDTH * wscale;
+                        dst.h = ORIG_WINDOW_HEIGHT * wscale;
+                        SDL_Surface *ScreenBufferZoom = zoomSurface(Buffer,wscale,wscale,0);
+                        SDL_BlitSurface(ScreenBufferZoom,NULL,Screen,&dst);
+                        SDL_FreeSurface(ScreenBufferZoom);
+                    }
 					else
 					{
 						SDL_BlitSurface(Buffer, NULL, Screen, NULL);
