@@ -19,8 +19,8 @@ void Intro()
     {
         Input->Update();
 
-        if(Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] ||
-           Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_b] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
+        if(Input->KeyboardHeld[KEY_A] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_B] || Input->KeyboardHeld[SDLK_a] ||
+           Input->KeyboardHeld[KEY_X] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[KEY_SELECT] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] ||
            Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)]  || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] )
         {
             GameState=GSTitleScreen;

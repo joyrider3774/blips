@@ -30,50 +30,56 @@ void TitleScreen()
 		SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
 		Input->Update();
 
-		if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV])
+		if(Input->KeyboardHeld[KEY_B] || Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
-		if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+		if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[KEY_VOLUP]))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[KEY_VOLMIN]))
         {
             DecVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT]))
         {
             if(Selection==3)
                 if (InstalledLevelPacksCount > 0)
-                    if(SelectedLevelPack > 0)
-                    {
-                        SelectedLevelPack--;
-                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        AddUnderScores(LevelPackFileName);
-                    }
+                {
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    SelectedLevelPack--;
+                    if(SelectedLevelPack < 0)
+                        SelectedLevelPack = InstalledLevelPacksCount -1;
+                    sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    AddUnderScores(LevelPackFileName);
+                }
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT]))
         {
             if (Selection==3)
                 if (InstalledLevelPacksCount > 0)
-                    if(SelectedLevelPack < InstalledLevelPacksCount-1)
-                    {
-                        SelectedLevelPack++;
-                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
-                        AddUnderScores(LevelPackFileName);
-                    }
+                {
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    SelectedLevelPack++;
+                    if(SelectedLevelPack > InstalledLevelPacksCount-1)
+                        SelectedLevelPack = 0;
+                    sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                    AddUnderScores(LevelPackFileName);
+                }
             Input->Delay();
         }
 
-        if((Input->Ready()) && (Input->KeyboardHeld[SDLK_DOWN] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]) &&
+        if((Input->Ready()) && (Input->KeyboardHeld[KEY_DOWN] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]) &&
            !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r]))
         {
             if (Selection < 6)
@@ -86,7 +92,7 @@ void TitleScreen()
             Input->Delay();
         }
 
-        if((Input->Ready()) && (Input->KeyboardHeld[SDLK_UP] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]) &&
+        if((Input->Ready()) && (Input->KeyboardHeld[KEY_UP] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]) &&
            !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_r]))
         {
             if (Selection > 1)
@@ -98,7 +104,7 @@ void TitleScreen()
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_RETURN])
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_A] || Input->KeyboardHeld[KEY_START]))
         {
             switch(Selection)
             {
@@ -122,6 +128,8 @@ void TitleScreen()
                             SDL_BlitSurface(IMGTitleScreen,NULL,Buffer,NULL);
                             sprintf(Tekst,"There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!",LevelPackName);
                             PrintForm(Tekst);
+                            if (GlobalSoundEnabled)
+                                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                             Input->Reset();
                         }
                     }
@@ -131,6 +139,19 @@ void TitleScreen()
                     LevelEditorMode=true;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    break;
+                case 3:
+                    if (InstalledLevelPacksCount > 0)
+                    {
+                        if (GlobalSoundEnabled)
+                            Mix_PlayChannel(-1,Sounds[SND_SELECT], 0);
+                        SelectedLevelPack++;
+                        if(SelectedLevelPack > InstalledLevelPacksCount-1)
+                            SelectedLevelPack = 0;
+                        sprintf(LevelPackName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                        sprintf(LevelPackFileName,"%s",InstalledLevelPacks[SelectedLevelPack]);
+                        AddUnderScores(LevelPackFileName);
+                    }
                     break;
                 case 4:
                     GameState=GSCredits;
@@ -149,11 +170,11 @@ void TitleScreen()
                     break;
 
             }
-
+            Input->Delay();
         }
    		boxRGBA(Tmp,60*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,165*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 		rectangleRGBA(Tmp,60*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,165*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		rectangleRGBA(Tmp,61*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,164*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		rectangleRGBA(Tmp,62*UI_WIDTH_SCALE,72*UI_HEIGHT_SCALE,258*UI_WIDTH_SCALE,163*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nQuit",LevelPackName);
 		WriteText(Tmp,BigFont,Tekst,strlen(Tekst),90*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 1)

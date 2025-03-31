@@ -28,7 +28,9 @@ bool LevelErrorsFound()
 		if (GlobalSoundEnabled)
 			Mix_PlayChannel(-1,Sounds[SND_ERROR],0);
 		PrintForm("Can not save this level because there's\nno player in the level! Please add a Player\nand try again or cancel saving.\n\nPress 'A' to continue");
-		return true;
+		if (GlobalSoundEnabled)
+            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+        return true;
 	}
 	else
         if (NumDiamond==0)
@@ -36,6 +38,8 @@ bool LevelErrorsFound()
             if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_ERROR],0);
             PrintForm("Can not save this level because there's\nno star in the level! Please add a star\nand try again or cancel saving.\n\nPress 'A' to continue");
+            if (GlobalSoundEnabled)
+                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
             return true;
         }
 
@@ -61,6 +65,7 @@ void LevelEditor()
 	{
 		sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
 		WorldParts.Load(FileName);
+        WorldParts.LimitVPLevel();
 		remove(FileName);
 		StageReload=false;
 	}
@@ -138,22 +143,24 @@ void LevelEditor()
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[KEY_VOLUP]))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[KEY_VOLMIN]))
         {
             DecVolume();
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[KEY_B])
         {
             if (LevelHasChanged)
             {
+                if (GlobalSoundEnabled)
+					Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                 if(AskQuestion("The current level isn't saved yet!\nDo you want to save it now ?\n\nPress (A) to save, (X) to cancel saving"))
                 {
                     SDL_BlitSurface(IMGBackground,NULL,Buffer,NULL);
@@ -192,30 +199,30 @@ void LevelEditor()
                             SelectedLevel = InstalledLevels;
                         LevelHasChanged=false;
                         GameState = GSStageSelect;
-						if (GlobalSoundEnabled)
-                			Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     }
                 }
                 else
 				{
-					if (GlobalSoundEnabled)
-                		Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                     GameState = GSStageSelect;
 				}
+                if (GlobalSoundEnabled)
+				    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                 Input->Reset();
             }
             else
 			{
 				if (GlobalSoundEnabled)
-                		Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
                 GameState = GSStageSelect;
 			}
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[KEY_START]))
         {
             if(!LevelErrorsFound())
             {
+                if (GlobalSoundEnabled)
+					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 				sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
                 WorldParts.Save(FileName);
                 StageReload = true;
@@ -227,19 +234,19 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[SDLK_PAGEDOWN] || Input->KeyboardHeld[SDLK_l]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_L)] || Input->KeyboardHeld[KEY_L] || Input->KeyboardHeld[SDLK_l]))
         {
             Selector.DecSelection();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[KEY_R] || Input->KeyboardHeld[SDLK_r]))
         {
             Selector.IncSelection();
             Input->Delay();
         }
 
-        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_SPACE])
+        if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_A])
         {
             SamePartFound = false;
             for(Teller=0;Teller<WorldParts.ItemCount;Teller++)
@@ -345,7 +352,7 @@ void LevelEditor()
             }
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT]))
         {
             Selector.MoveLeft();
             if(Selector.GetPlayFieldX() <  WorldParts.ViewPort->VPMinX+3)
@@ -353,7 +360,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT]))
         {
             Selector.MoveRight();
             if(Selector.GetPlayFieldX() > WorldParts.ViewPort->VPMaxX - 3)
@@ -361,7 +368,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[KEY_UP]))
         {
             Selector.MoveUp();
             if(Selector.GetPlayFieldY() < WorldParts.ViewPort->VPMinY+3)
@@ -369,7 +376,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[KEY_DOWN]))
         {
             Selector.MoveDown();
             if(Selector.GetPlayFieldY() > WorldParts.ViewPort->VPMaxY-3)
@@ -377,7 +384,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[SDLK_b]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_SELECT)] || Input->KeyboardHeld[KEY_SELECT]))
         {
             if(ShowPosition && ShowGrid)
                 ShowGrid = !ShowGrid;
@@ -393,19 +400,25 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_BACKSPACE] || Input->KeyboardHeld[SDLK_DELETE]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[SDLK_BACKSPACE] || Input->KeyboardHeld[SDLK_DELETE]))
         {
             if (WorldParts.ItemCount > 0)
-            if(AskQuestion("You are about to delete all parts\nin this level, are you sure\nyou want to do this?\n\nPress (A) to delete, (X) to cancel"))
             {
-                LevelHasChanged = true;
-                WorldParts.RemoveAll();
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                if(AskQuestion("You are about to delete all parts\nin this level, are you sure\nyou want to do this?\n\nPress (A) to delete, (X) to cancel"))
+                {
+                    LevelHasChanged = true;
+                    WorldParts.RemoveAll();
+                }
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
             }
             Input->Reset();
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] ))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[KEY_X] || Input->KeyboardHeld[SDLK_z] ))
         {
             MinX = NrOfCols-1;
             MinY = NrOfRows-1;

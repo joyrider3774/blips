@@ -83,54 +83,75 @@ void Game()
         if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[SDLK_KP_PLUS]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLUP)] || Input->KeyboardHeld[KEY_VOLUP]))
         {
             IncVolume();
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[SDLK_KP_MINUS]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_VOLMIN)] || Input->KeyboardHeld[KEY_VOLMIN]))
         {
             DecVolume();
             Input->Delay();
         }
 
-        if(Input->Ready() && Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[SDLK_ESCAPE])
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)] || Input->KeyboardHeld[KEY_B]))
         {
             if(!LevelEditorMode)
 			{
-				if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
-                GameState = GSStageSelect;
-			}
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    
+                if (AskQuestion("Are you sure you want to return to the stage selector?\n\nPress (A) to confirm (X) to Cancel"))
+                {
+                    GameState = GSStageSelect;
+                }
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                Input->Reset();
+            }                                
+            Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[SDLK_RETURN]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_START)] || Input->KeyboardHeld[KEY_START]))
         {
+            if (GlobalSoundEnabled)
+                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    
             if(LevelEditorMode)
-			{
-				if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
-                GameState=GSLevelEditor;
+			{				
+                if (AskQuestion("Are you sure you want to return to level editor?\n\nPress (A) to confirm (X) to Cancel"))
+                {
+                    GameState=GSLevelEditor;
+                }
+                if (GlobalSoundEnabled)
+                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                Input->Reset();
 			}
             else
             {
-                sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
-                WorldParts.Load(FileName);
-				//need to find player again
-				for (teller=0;teller<WorldParts.ItemCount;teller++)
-				{
-					if (WorldParts.Items[teller]->GetType() == IDPlayer)
-					{
-						Player = (CPlayer*) WorldParts.Items[teller];
-						break;
-					}
-				}
+                if (AskQuestion("Are you sure you want to reload the level?\n\nPress (A) to confirm (X) to Cancel"))
+			    {
+                    sprintf(FileName,"./levelpacks/%s/level%d.lev",LevelPackFileName,SelectedLevel);
+                    WorldParts.Load(FileName);
+                    //need to find player again
+                    for (teller=0;teller<WorldParts.ItemCount;teller++)
+                    {
+                        if (WorldParts.Items[teller]->GetType() == IDPlayer)
+                        {
+                            Player = (CPlayer*) WorldParts.Items[teller];
+                            break;
+                        }
+                    }
+                }
+                if (GlobalSoundEnabled)
+					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                Input->Reset();
             }
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[SDLK_PAGEUP] || Input->KeyboardHeld[SDLK_r]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_R)] || Input->KeyboardHeld[KEY_R] || Input->KeyboardHeld[SDLK_r]))
         {
             if (MusicCount > 1)
             {
@@ -147,39 +168,39 @@ void Game()
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT]))
         {
             Input->Delay();
         }
 
-        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        if (Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT]))
         {
 
             Input->Delay();
         }
 
-        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[SDLK_DOWN])
+        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[KEY_DOWN])
         {
             Input->Delay();
         }
 
         //move up
-        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[SDLK_UP])
+        if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[KEY_UP])
         {
             Input->Delay();
         }
 
         if(Time+10<SDL_GetTicks())
         {
-            if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y])
+            if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[KEY_Y])
             {
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT])
+                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT])
                     WorldParts.ViewPort->Move(-2,0);
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT])
+                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT])
                     WorldParts.ViewPort->Move(2,0);
-                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP])
+                if(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[KEY_UP])
                     WorldParts.ViewPort->Move(0,-2);
-                if( (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
+                if( (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[KEY_DOWN]))
                     WorldParts.ViewPort->Move(0,2);
                 ResetViewPort = true;
             }
@@ -192,27 +213,27 @@ void Game()
                     ResetViewPort = false;
                 }
             }
-            if (!Player->IsMoving && !Player->IsDeath && !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[SDLK_y]))
+            if (!Player->IsMoving && !Player->IsDeath && !(Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[KEY_Y]))
             {
 
                 //move down
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[SDLK_DOWN])
+                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]|| Input->KeyboardHeld[KEY_DOWN])
                 {
                         Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()+1,false);
                 }
 
                 //move up
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[SDLK_UP])
+                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]|| Input->KeyboardHeld[KEY_UP])
                 {
                         Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()-1,false);
                 }
                 //move left
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT])
+                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT])
                 {
                         Player->MoveTo(Player->GetPlayFieldX()-1,Player->GetPlayFieldY(),false);
                 }
                 //move right
-                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT])
+                if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT])
                 {
                         Player->MoveTo(Player->GetPlayFieldX()+1,Player->GetPlayFieldY(),false);
                 }
@@ -280,10 +301,11 @@ void Game()
 				if (LevelEditorMode)
 				{
 					if (AskQuestion("Too bad you died !\nDo you want to return to the\nlevel editor ?\n\n(A) Leveleditor (X) Play Again"))
-						GameState = GSLevelEditor;
-					else
 					{
-						
+                        GameState = GSLevelEditor;
+                    }	
+					else
+					{						
 						sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
 						WorldParts.Load(FileName);
 						for (teller=0;teller<WorldParts.ItemCount;teller++)
@@ -296,6 +318,8 @@ void Game()
 
 						}
 					}
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					Input->Reset();
 				}
 				else
@@ -321,8 +345,12 @@ void Game()
 							WorldParts.Add(Player);
 						}
 					}
-					else
+                    else
+					{
 						GameState = GSStageSelect;
+                    }
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					Input->Reset();
 
 				}
@@ -336,7 +364,9 @@ void Game()
 			if (LevelEditorMode)
 			{
 				if (AskQuestion("Congratulations !\nYou Succesfully Solved this level\nDo you want to return to the\nlevel editor ?\n(A) Leveleditor (X) Play Again"))
-					GameState = GSLevelEditor;
+				{
+                    GameState = GSLevelEditor;
+                }
 				else
 				{
 					sprintf(FileName,"%s/.blips_temp.lev",getenv("HOME") == NULL ? ".": getenv("HOME"));
@@ -351,6 +381,8 @@ void Game()
 					}
 
 				}
+                if (GlobalSoundEnabled)
+				    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 				Input->Reset();
 
 			}
@@ -362,6 +394,8 @@ void Game()
 					{
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nThe next level has now been unlocked!\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 						PrintForm(Text);
+                        if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 						UnlockedLevels++;
 						SelectedLevel++;
 						SaveUnlockData();
@@ -371,6 +405,8 @@ void Game()
 					{
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nlevelpack %s\nis now finished, try out another one!\n\nPress (A) to continue",SelectedLevel,InstalledLevels,LevelPackName);
 						PrintForm(Text);
+                        if (GlobalSoundEnabled)
+                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 						GameState = GSTitleScreen;
 					}
 				}
@@ -378,6 +414,8 @@ void Game()
 				{
 					sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 					PrintForm(Text);
+                    if (GlobalSoundEnabled)
+                		Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
 					GameState = GSStageSelect;
 
 				}

@@ -17,7 +17,7 @@ CUsbJoystickSetup::CUsbJoystickSetup() {
 CUsbJoystickSetup::~CUsbJoystickSetup() {
 }
 
-bool CUsbJoystickSetup::AddDefinition(int Button, char* Definition, int Value, int DefaultValue) {
+bool CUsbJoystickSetup::AddDefinition(int Button, const char* Definition, int Value, int DefaultValue) {
     if (Button >=0 && Button < NROFBUTTONS)
     {
         memset( PJoystickButtons[Button].ButtonDescription,0,DESCRIPTIONSIZE);

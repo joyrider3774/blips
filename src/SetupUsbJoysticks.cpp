@@ -38,14 +38,14 @@ void SetupUsbJoystickButtons()
 		if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
 
-		if(Input->KeyboardHeld[SDLK_ESCAPE] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
+		if(Input->KeyboardHeld[KEY_B] ||  Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
 		{
 			if (GlobalSoundEnabled)
             	Mix_PlayChannel(-1,Sounds[SND_BACK],0); 
             GameState = GSTitleScreen;
 		}
 
-        if(Input->Ready() && (Input->KeyboardHeld[SDLK_UP] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]))
+        if(Input->Ready() && (Input->KeyboardHeld[KEY_UP] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)]))
         {
             Selection--;
             if( Selection < 0)
@@ -55,10 +55,10 @@ void SetupUsbJoystickButtons()
             Input->Delay();
         }
 
-        if (Input->KeyboardHeld[SDLK_RETURN])
+        if (Input->KeyboardHeld[KEY_START])
             JoystickSetup->ResetToDefaults();
 
-        if(Input->Ready() && (Input->KeyboardHeld[SDLK_DOWN] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]))
+        if(Input->Ready() && (Input->KeyboardHeld[KEY_DOWN] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)]))
         {
             Selection++;
             if( Selection >=NROFBUTTONS)
@@ -71,7 +71,7 @@ void SetupUsbJoystickButtons()
         SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
         boxRGBA(Tmp,45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,295*UI_WIDTH_SCALE,193*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 		rectangleRGBA(Tmp,45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,295*UI_WIDTH_SCALE,193*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		rectangleRGBA(Tmp,46*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,294*UI_WIDTH_SCALE,192*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		rectangleRGBA(Tmp,47*UI_WIDTH_SCALE,72*UI_HEIGHT_SCALE,293*UI_WIDTH_SCALE,191*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
         JoystickSetup->DrawCurrentSetup(Tmp,font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuTextColor);
         if (alpha < 255)
         {
@@ -107,7 +107,7 @@ void SetupUsbJoystickButtons()
 		}
         SDL_Flip(Screen);
 
-        if(Input->Ready() && (Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)]))
+        if(Input->Ready() && (Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[KEY_A] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)]))
         {
             if (alpha == 255)
             {
@@ -120,7 +120,7 @@ void SetupUsbJoystickButtons()
                     SDL_BlitSurface(IMGTitleScreen,NULL,Tmp,NULL);
                     boxRGBA(Tmp,45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,295*UI_WIDTH_SCALE,193*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
                     rectangleRGBA(Tmp,45*UI_WIDTH_SCALE,70*UI_HEIGHT_SCALE,295*UI_WIDTH_SCALE,193*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-                    rectangleRGBA(Tmp,46*UI_WIDTH_SCALE,71*UI_HEIGHT_SCALE,294*UI_WIDTH_SCALE,192*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+                    rectangleRGBA(Tmp,47*UI_WIDTH_SCALE,72*UI_HEIGHT_SCALE,293*UI_WIDTH_SCALE,191*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 
 
                     JoystickSetup->DrawCurrentSetup(Tmp,font,55*UI_WIDTH_SCALE,73*UI_HEIGHT_SCALE,155*UI_WIDTH_SCALE,8*UI_HEIGHT_SCALE,Selection,MenuTextColor,MenuBoxBorderColor);
@@ -158,10 +158,10 @@ void SetupUsbJoystickButtons()
                         done = true;
                     }
 
-                    if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_SPACE]))
+                    if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[KEY_A]))
                         done = true;
 
-                    if(Input->KeyboardHeld[SDLK_ESCAPE] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
+                    if(Input->KeyboardHeld[KEY_B] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_B)])
                         done= true;
                     SDL_framerateDelay(&Fpsman);
                 }

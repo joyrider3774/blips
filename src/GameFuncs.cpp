@@ -152,7 +152,10 @@ void LoadJoystickSettings()
     JoystickSetup->AddDefinition(BUT_VOLUP,"Volume up",9,9);
     JoystickSetup->AddDefinition(BUT_VOLMIN,"Volume down",8,8);
 #endif
-JoystickSetup->LoadCurrentButtonValues("./joystick.def");
+	char FileName[FILENAME_MAX];
+	sprintf(FileName,"%s/.blips_joystick.def", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
+	JoystickSetup->LoadCurrentButtonValues(FileName);
+
 }
 
 
@@ -163,7 +166,6 @@ void FindLevels()
 	char *FileName = new char[FILENAME_MAX];
 	char *FileName2 = new char[FILENAME_MAX];
 	InstalledLevels = 0;
-	bool homepath=false;
 	sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", getenv("HOME") == NULL ? ".": getenv("HOME"), LevelPackFileName, Teller);
 	sprintf(FileName2,"./levelpacks/%s/level%d.lev",LevelPackFileName,Teller);		
 	while (FileExists(FileName) || FileExists(FileName2))
@@ -183,7 +185,7 @@ void FindLevels()
 	delete[] FileName2;
 }
 
-void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
+void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,const char* Tekst,int NrOfChars,int X,int Y,int YSpacing,SDL_Color ColorIn,bool Centered)
 {
 	char List[100][255];
 	int Lines,Teller,Chars;
@@ -227,7 +229,7 @@ void WriteText(SDL_Surface* Surface,TTF_Font* FontIn,char* Tekst,int NrOfChars,i
 }
 
 
-bool FileExists(char * FileName)
+bool FileExists(const char * FileName)
 {
 	FILE *Fp;
 	Fp = fopen(FileName,"rb");
@@ -268,7 +270,7 @@ void RemoveUnderScores (char *string)
 }
 
 
-char *GetString(char *NameIn,char *Msg)
+char *GetString(const char *NameIn,const char *Msg)
 {
 	char *PackName = new char[21];
 	bool End=false,SubmitChanges=false;
@@ -297,7 +299,7 @@ char *GetString(char *NameIn,char *Msg)
 			End = true;
 		}
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[SDLK_LEFT]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_LEFT)] || Input->KeyboardHeld[KEY_LEFT]))
         {
             if (Selection > 0)
             {	Selection--;
@@ -306,7 +308,7 @@ char *GetString(char *NameIn,char *Msg)
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[SDLK_RIGHT]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_RIGHT)] || Input->KeyboardHeld[KEY_RIGHT]))
         {
             if (Selection < 19)
             {
@@ -322,7 +324,7 @@ char *GetString(char *NameIn,char *Msg)
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[SDLK_UP]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_UP)] || Input->KeyboardHeld[KEY_UP]))
         {
             asci++;
             if (asci==123)
@@ -342,7 +344,7 @@ char *GetString(char *NameIn,char *Msg)
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[SDLK_DOWN]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_DOWN)] || Input->KeyboardHeld[KEY_DOWN]))
         {
             asci--;
             if(asci==96)
@@ -361,7 +363,7 @@ char *GetString(char *NameIn,char *Msg)
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_RETURN]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[KEY_START]))
         {
             if (GlobalSoundEnabled)
                 Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
@@ -369,7 +371,7 @@ char *GetString(char *NameIn,char *Msg)
             SubmitChanges=true;
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_x] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[SDLK_ESCAPE] ))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[KEY_X] || Input->KeyboardHeld[SDLK_z] || Input->KeyboardHeld[KEY_B] ))
         {
             End=true;
             SubmitChanges=false;
@@ -377,7 +379,7 @@ char *GetString(char *NameIn,char *Msg)
 		SDL_BlitSurface(IMGTitleScreen,NULL,Buffer,NULL);
 		boxRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 		rectangleRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-		rectangleRGBA(Buffer,61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+		rectangleRGBA(Buffer,62*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,258*UI_WIDTH_SCALE,158*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 		WriteText(Buffer,font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,85*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		WriteText(Buffer,MonoFont,PackName,strlen(PackName),85*UI_WIDTH_SCALE,110*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 0)
@@ -436,7 +438,7 @@ char *GetString(char *NameIn,char *Msg)
 void SaveUnlockData()
 {
 	FILE *Fp;
-	int Teller;
+	size_t Teller;
 	char Filename[FILENAME_MAX];
 	unsigned char LevelHash[4];
 	unsigned char HashBuffer[64];
@@ -551,13 +553,13 @@ void LoadUnlockData()
 
 }
 
-bool AskQuestion(char *Msg)
+bool AskQuestion(const char *Msg)
 {
 	bool Result = false;
 	CInput *Input = new CInput(InputDelay, disableJoysticks);
 	boxRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 	rectangleRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-	rectangleRGBA(Buffer,61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+	rectangleRGBA(Buffer,62*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,258*UI_WIDTH_SCALE,158*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 	WriteText(Buffer,font,Msg,strlen(Msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 	if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 	{
@@ -579,7 +581,7 @@ bool AskQuestion(char *Msg)
 	}
     SDL_Flip(Screen);
 	{
-		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[SDLK_x]))
+		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_A] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[KEY_B] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[KEY_X]))
 		{
 		    Input->Update();
 			if(GlobalSoundEnabled)
@@ -592,19 +594,19 @@ bool AskQuestion(char *Msg)
 		}
 		if (Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
-		if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_y])
+		if (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_A] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_Y])
 			Result = true;
 	}
 	delete Input;
 	return Result;
 }
 
-void PrintForm(char *msg)
+void PrintForm(const char *msg)
 {
     CInput *Input = new CInput(InputDelay, disableJoysticks);
 	boxRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.unused);
 	rectangleRGBA(Buffer,60*UI_WIDTH_SCALE,80*UI_HEIGHT_SCALE,260*UI_WIDTH_SCALE,160*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
-	rectangleRGBA(Buffer,61*UI_WIDTH_SCALE,81*UI_HEIGHT_SCALE,259*UI_WIDTH_SCALE,159*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
+	rectangleRGBA(Buffer,62*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,258*UI_WIDTH_SCALE,158*UI_HEIGHT_SCALE,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.unused);
 	WriteText(Buffer,font,msg,strlen(msg),65*UI_WIDTH_SCALE,83*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 	if ((WINDOW_WIDTH != ORIG_WINDOW_WIDTH) || (WINDOW_HEIGHT != ORIG_WINDOW_HEIGHT))
 	{
@@ -625,7 +627,7 @@ void PrintForm(char *msg)
 		SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 	}
     SDL_Flip(Screen);
-    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[SDLK_ESCAPE] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[SDLK_RETURN] || Input->KeyboardHeld[SDLK_SPACE]))
+    while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_B] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_A]))
     {
         Input->Update();
         if(GlobalSoundEnabled)
@@ -739,7 +741,7 @@ void SearchForMusic()
 	MusicCount = Teller;
 }
 
-void DoSearchForLevelPacks(char* Path)
+void DoSearchForLevelPacks(const char* Path)
 {
 	struct dirent *Entry;
 	DIR *Directory;
