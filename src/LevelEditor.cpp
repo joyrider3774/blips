@@ -400,7 +400,7 @@ void LevelEditor()
             Input->Delay();
         }
 
-        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[SDLK_BACKSPACE] || Input->KeyboardHeld[SDLK_DELETE]))
+        if(Input->Ready() && (Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_Y)] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[SDLK_DELETE]))
         {
             if (WorldParts.ItemCount > 0)
             {

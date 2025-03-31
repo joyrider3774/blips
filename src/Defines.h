@@ -60,6 +60,22 @@
 #define BUT_VOLMIN 12
 #define BUT_VOLUP 13
 
+#ifdef MIYOO
+#define KEY_UP SDLK_UP
+#define KEY_RIGHT SDLK_RIGHT
+#define KEY_DOWN SDLK_DOWN
+#define KEY_LEFT SDLK_LEFT
+#define KEY_A SDLK_SPACE
+#define KEY_X SDLK_LSHIFT
+#define KEY_Y SDLK_LALT
+#define KEY_B SDLK_LCTRL
+#define KEY_START SDLK_RETURN
+#define KEY_SELECT SDLK_RCTRL
+#define KEY_L SDLK_e
+#define KEY_R SDLK_t
+#define KEY_VOLMIN SDLK_TAB
+#define KEY_VOLUP SDLK_BACKSPACE
+#else
 #define KEY_UP SDLK_UP
 #define KEY_RIGHT SDLK_RIGHT
 #define KEY_DOWN SDLK_DOWN
@@ -74,5 +90,6 @@
 #define KEY_R SDLK_PAGEUP
 #define KEY_VOLMIN SDLK_KP_MINUS
 #define KEY_VOLUP SDLK_KP_PLUS
+#endif
 
 #endif
