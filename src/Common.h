@@ -38,4 +38,9 @@ extern FPSmanager Fpsman;
 extern bool disableJoysticks;
 extern int WINDOW_WIDTH;
 extern int WINDOW_HEIGHT;
+extern Uint32 FrameTicks;
+extern Uint32 FrameCount;
+extern Uint32 LastFps;
+extern bool ShowFps;
+extern bool noDelay;
 #endif

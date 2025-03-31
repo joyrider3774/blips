@@ -12,6 +12,30 @@
 #include "CInput.h"
 #include "SDL_rotozoom.h"
 
+void HandleFPS()
+{
+	if(!ShowFps)
+		return;
+	FrameCount++;
+	char Text[100];
+	sprintf(Text, "FPS:%d", LastFps);
+	SDL_Surface *Tmp = TTF_RenderText_Solid(font, Text, {0, 0, 0, 255});
+	boxRGBA(Screen,0,0,Tmp->w + 6, Tmp->h + 6,255,255,255,255);
+	SDL_Rect Dst;
+	Dst.x = 3;
+	Dst.y = 3;
+	Dst.w = Tmp->w;
+	Dst.h = Tmp->h;
+	SDL_BlitSurface(Tmp, NULL, Screen, &Dst);
+	SDL_FreeSurface(Tmp);
+	if(SDL_GetTicks() - FrameTicks >= 1000)
+	{
+		LastFps = FrameCount;
+		FrameCount = 0;
+		FrameTicks = SDL_GetTicks();		
+	}
+}
+
 void UnLoadGraphics()
 {
     if(IMGGrid)
@@ -412,8 +436,10 @@ char *GetString(const char *NameIn,const char *Msg)
 		{
 			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
+		HandleFPS();
         SDL_Flip(Screen);
-        SDL_framerateDelay(&Fpsman);
+        if(!noDelay)
+            SDL_framerateDelay(&Fpsman);
 	}
 	PackName[MaxSelection+1] = '\0';
 	while ((PackName[0] == ' ') && (MaxSelection>-1))
@@ -579,6 +605,7 @@ bool AskQuestion(const char *Msg)
 	{
 		SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 	}
+	HandleFPS();
     SDL_Flip(Screen);
 	{
 		while (!(Input->KeyboardHeld[SDLK_z] || Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_A] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_X)] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_Y] || Input->KeyboardHeld[KEY_B] || Input->KeyboardHeld[SDLK_n] || Input->KeyboardHeld[KEY_X]))
@@ -590,7 +617,8 @@ bool AskQuestion(const char *Msg)
 				Mix_PlayMusic(Music[SelectedMusic],0);
 				SetVolume(Volume);
 			}
-			SDL_framerateDelay(&Fpsman);
+			if(!noDelay)
+				SDL_framerateDelay(&Fpsman);
 		}
 		if (Input->SpecialsHeld[SPECIAL_QUIT_EV])
             GameState = GSQuit;
@@ -626,6 +654,7 @@ void PrintForm(const char *msg)
 	{
 		SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 	}
+	HandleFPS();
     SDL_Flip(Screen);
     while (!( Input->SpecialsHeld[SPECIAL_QUIT_EV] || Input->JoystickHeld[0][JoystickSetup->GetButtonValue(BUT_A)] || Input->KeyboardHeld[KEY_B] || Input->KeyboardHeld[SDLK_a] || Input->KeyboardHeld[SDLK_q] || Input->KeyboardHeld[KEY_START] || Input->KeyboardHeld[KEY_A]))
     {
@@ -636,7 +665,8 @@ void PrintForm(const char *msg)
             Mix_PlayMusic(Music[SelectedMusic],0);
             SetVolume(Volume);
         }
-        SDL_framerateDelay(&Fpsman);
+        if(!noDelay)
+            SDL_framerateDelay(&Fpsman);
     }
 	if(Input->SpecialsHeld[SPECIAL_QUIT_EV])
 		GameState = GSQuit;

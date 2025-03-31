@@ -77,7 +77,7 @@ void Intro()
 		{
 			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
-
+        HandleFPS();
         SDL_Flip(Screen);
         SDL_framerateDelay(&Fpsman);
 

@@ -24,6 +24,11 @@ int main(int argc, char **argv)
 	disableJoysticks = false;
 	for (int i=0; i < argc; i++)
 	{
+		
+		if(strcasecmp(argv[i], "-nd") == 0)
+			noDelay = true;
+		if(strcasecmp(argv[i], "-fps") == 0)
+			ShowFps = true;
 		if(strcasecmp(argv[i], "-f") == 0)
 			fullscreen = true;
 		if(strcasecmp(argv[i], "-d") == 0)

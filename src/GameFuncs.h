@@ -29,5 +29,5 @@ void DecVolume();
 void IncVolume();
 void SetVolume(const int VolumeIn);
 void LoadGraphics();
-
+void HandleFPS();
 #endif

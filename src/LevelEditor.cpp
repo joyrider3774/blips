@@ -137,6 +137,7 @@ void LevelEditor()
 		{
 			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
+        HandleFPS();
         SDL_Flip(Screen);
 
         Input->Update();
@@ -460,7 +461,8 @@ void LevelEditor()
                 LevelHasChanged = true;
             Input->Delay();
         }
-        SDL_framerateDelay(&Fpsman);
+        if(!noDelay)
+            SDL_framerateDelay(&Fpsman);
 	}
 	delete[] FileName;
 	SDL_FreeSurface(Tmp);

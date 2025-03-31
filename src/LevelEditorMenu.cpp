@@ -289,8 +289,10 @@ void LevelEditorMenu()
 		{
 			SDL_BlitSurface(Buffer, NULL, Screen, NULL);
 		}
+        HandleFPS();
         SDL_Flip(Screen);
-        SDL_framerateDelay(&Fpsman);
+        if(!noDelay)
+            SDL_framerateDelay(&Fpsman);
 	}
 	delete[] Tekst;
 	SDL_FreeSurface(Tmp);
