@@ -62,6 +62,8 @@ Commands:
 | RETURN | Test level when being in the level editor, go back to level editor after testing, Restart the current level |
 | Y + Arrow keys | When playing a level you can look around in the level freely |
 
+## SDL1 version
+An SDL1 Version is available in the [SDL1_Version](https://github.com/joyrider3774/blips/tree/SDL1_Version) branch
 
 ## Credits
 Game is a remake of dos bips game made by Bryant Brownell and based on the gp2x version i initially made
