@@ -66,7 +66,7 @@ Commands:
 An SDL1 Version is available in the [SDL1_Version](https://github.com/joyrider3774/blips/tree/SDL1_Version) branch
 
 ## Credits
-Game is a remake of dos bips game made by Bryant Brownell and based on the gp2x version i initially made
+Game is a remake of dos bips game made by Bryant Brownell (bryant.brownell@gmail.com) and based on the gp2x version i initially made
 
 ### Libraries
 - SDL
