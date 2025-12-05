@@ -151,6 +151,10 @@ void LoadSounds()
 		Tmp = assetPath("sound/menuback.wav");
 		Sounds[SND_BACK] = Mix_LoadWAV(Tmp);
 		SDL_free(Tmp);
+
+		Tmp = assetPath("sound/move.wav");
+		Sounds[SND_MOVE] = Mix_LoadWAV(Tmp);
+		SDL_free(Tmp);
 	}
 }
 

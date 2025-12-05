@@ -232,6 +232,10 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 				AnimBase = 12;
 			}
 			IsMoving = true;
+			if(GlobalSoundEnabled)
+			{
+        		Mix_PlayChannel(-1,Sounds[SND_MOVE],0);
+			}
 		}
 		else
 		{

@@ -39,7 +39,7 @@
 #define ZExplosion 15
 #define MaxLevelPacks 200
 #define MaxMusicFiles 26
-#define NrOfSounds 7
+#define NrOfSounds 8
 #define SND_MENU 0
 #define SND_SELECT 1
 #define SND_ERROR 2
@@ -47,6 +47,7 @@
 #define SND_EXPLODE 4
 #define SND_COLLECT 5
 #define SND_BACK 6
+#define SND_MOVE 7
 #define MaxAlpha 150
 #define InputDelay 13
 
