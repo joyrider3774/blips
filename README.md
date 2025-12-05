@@ -96,6 +96,6 @@ Music was made by donskeeto
 
 ### Sound
 - stageend.wav: [game music stingers and ui sfx pack 2](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) - I Payed for this Asset do not reuse !
-- "move " - created by me (willems davy) using BXFR - feel free to use
+- move.wav - created by me (willems davy) using BXFR - feel free to use
 
 
