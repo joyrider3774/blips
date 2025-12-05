@@ -10,7 +10,7 @@
 bool GlobalSoundEnabled = true;
 Mix_Chunk *Sounds[NrOfSounds];
 
-SDL_Texture *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGWall=NULL,
+SDL_Texture *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGWall=NULL,
             *IMGIntro1=NULL,*IMGIntro2=NULL,*IMGIntro3=NULL,*IMGBomb=NULL,*IMGDiamond=NULL,*IMGExplosion=NULL,*IMGGrid=NULL;
 
 CUsbJoystickSetup *JoystickSetup;

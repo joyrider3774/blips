@@ -1,7 +1,7 @@
 # Blips
 ![DownloadCountTotal](https://img.shields.io/github/downloads/joyrider3774/blips/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/joyrider3774/blips/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/joyrider3774/blips?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/joyrider3774/blips?style=plastic)
 
-Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban style puzzle game but with exploding dynamite and collecting coins
+Blips is a remake of the dos bips original, gold and platinum game made by Bryant Brownell, its a sokoban style puzzle game but with exploding dynamite, special boxes and collecting coins
 
 ## Screenshots
 ![screenshot 1](screenshots/screenshot1.png)
@@ -11,6 +11,8 @@ Blips is a remake of the dos bips game made by Bryant Brownell, its a sokoban st
 
 ## Game Features:
 - 26 Levels of original Bips game
+- 18 Levels of original Bips Gold game
+- 25 Levels of original Bips Platinum game
 - Level Editor (Create your own Level Packs)
 - Autosaves progress
 
@@ -36,7 +38,7 @@ Commands:
 
 | Button | Action |
 | ------ | ------ |
-| A | Confirm in menus, level selector and questions asked, place a part in the level editor |
+| A | Confirm in menus, level selector and questions asked, place a part in the level editor, Switch players if 2 players exists |
 | B | Quit to title screen on the level selector, Quit to level selector in game and level editor mode. Quit the game on the titlescreen |
 | Y | In Level editor Mode, Create a new level when being in the level selector. In the level editor itself erase all parts from the screen. Inside the game itself restart the level |
 | X	| In the level editor, center the level on screen |
@@ -51,7 +53,7 @@ Commands:
 
 | Button | Action |
 | ------ | ------ |
-| A, SPACE, RETURN | Confirm in menus, level selector and questions asked, place a part in the level editor |
+| A, SPACE, RETURN | Confirm in menus, level selector and questions asked, place a part in the level editor, Switch players if 2 players exists |
 | B | Show statistics during a game. Hide the part position/grid in the level editor |
 | Y | In Level editor Mode, Create a new level when being in the level selector. In the level editor itself erase all parts from the screen. Inside the game itself restart the level |
 | X	| In the level editor, center the level on screen |
@@ -66,7 +68,7 @@ Commands:
 An SDL1 Version is available in the [SDL1_Version](https://github.com/joyrider3774/blips/tree/SDL1_Version) branch
 
 ## Credits
-Game is a remake of dos bips game made by Bryant Brownell (bryant.brownell@gmail.com) and based on the gp2x version i initially made
+Game is a remake of dos bips, bips gold and bips platinum game made by Bryant Brownell and based on the gp2x version i initially made
 
 ### Libraries
 - SDL

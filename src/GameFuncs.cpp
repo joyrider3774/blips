@@ -57,6 +57,11 @@ void UnLoadGraphics()
 		SDL_DestroyTexture(IMGPlayer);
 	}
 
+	if(IMGPlayer2)
+	{
+		SDL_DestroyTexture(IMGPlayer2);
+	}
+
 	if(IMGBox)
 	{
 		SDL_DestroyTexture(IMGBox);
@@ -1083,6 +1088,11 @@ void LoadGraphics()
 		SDL_DestroyTexture(IMGPlayer);
 	}
 
+	if(IMGPlayer2)
+	{
+		SDL_DestroyTexture(IMGPlayer2);
+	}
+
 	if(IMGBox)
 	{
 		SDL_DestroyTexture(IMGBox);
@@ -1199,6 +1209,13 @@ void LoadGraphics()
     Tmp = IMG_Load(TmpPath);
 	SDL_free(TmpPath);
     IMGPlayer = SDL_CreateTextureFromSurface(Renderer, Tmp);
+	SDL_SetTextureBlendMode(IMGPlayer, SDL_BLENDMODE_BLEND);
+    SDL_DestroySurface(Tmp);
+
+	TmpPath = assetPath("graphics/player2.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
+    IMGPlayer2 = SDL_CreateTextureFromSurface(Renderer, Tmp);
 	SDL_SetTextureBlendMode(IMGPlayer, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(Tmp);
 

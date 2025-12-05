@@ -11,6 +11,10 @@ void Credits()
 	char FileName[FILENAME_MAX];
 	FILE *Fp;
     char *Tekst = new char[500];
+    char *Tekst2 = new char[500];
+    char *Tekst3 = new char[500];
+    sprintf(Tekst,"Blips was created by Willems Davy (2008-2025).\nHttps://joyrider3774.itch.io");
+    sprintf(Tekst2, "Original games by Bryant Brownell.\nbryant.brownell@gmail.com");
 	sprintf(FileName,"%s/.blips_levelpacks/%s/credits.dat", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName);
 	if(!FileExists(FileName))
     {
@@ -23,10 +27,10 @@ void Credits()
 	{
 		fscanf(Fp,"[Credits]\nCreator='%[^']'\n",LevelPackCreator);
 		fclose(Fp);
-		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2025.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby %s.",LevelPackName,LevelPackCreator);
+		sprintf(Tekst3,"Levelpack %s was created\nby %s",LevelPackName,LevelPackCreator);
 	}
 	else
-		sprintf(Tekst,"Blips was created by\nWillems Davy - Willems Soft 2008-2025.\nHttps://joyrider3774.itch.io\n\nLevelpack %s was created\nby unknown person.",LevelPackName);
+		sprintf(Tekst3,"Levelpack %s was created\nby unknown person.",LevelPackName);
 	while (GameState == GSCredits)
 	{
         frameticks = SDL_GetPerformanceCounter();
@@ -90,6 +94,8 @@ void Credits()
         SDL_SetRenderDrawColor(Renderer, MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
         SDL_RenderRect(Renderer, &Rect2);
 		WriteText(font,Tekst,strlen(Tekst),65*UI_WIDTH_SCALE,82*UI_HEIGHT_SCALE,1,MenuTextColor,false);
+        WriteText(font,Tekst2,strlen(Tekst),65*UI_WIDTH_SCALE,107*UI_HEIGHT_SCALE,1,MenuTextColor,false);
+        WriteText(font,Tekst3,strlen(Tekst),65*UI_WIDTH_SCALE,132*UI_HEIGHT_SCALE,1,MenuTextColor,false);
         if (alpha < 255)
         {
             if(alpha+AlphaInc > MaxAlpha)

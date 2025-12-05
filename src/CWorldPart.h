@@ -21,10 +21,12 @@ class CWorldPart
 
 	public:
 		CWorldParts *ParentList;
+		bool IsDeath;
 		bool IsMoving;
 		bool Selected;
 		CWorldPart(const int PlayFieldXin,const int PlayFieldYin);
 		void Hide();
+		bool NeedHide();
 		void AddToMoveQue(int PlayFieldXIn,int PlayFieldYIn);
 		void Kill();
 		bool NeedToKill();
@@ -62,6 +64,13 @@ class CWall : public CWorldPart
 		CWall(const int PlayFieldXin,const int PlayFieldYin);
 };
 
+class CWallBreakable : public CWorldPart
+{
+ 	public:
+		CWallBreakable(const int PlayFieldXin,const int PlayFieldYin);
+};
+
+
 class CFloor : public CWorldPart
 {
  	public:
@@ -97,6 +106,42 @@ class CBox : public CWorldPart
  		bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
  	public:
 		CBox(const int PlayFieldXin,const int PlayFieldYin);
+};
+
+class CBox1 : public CWorldPart
+{
+ 	private:
+ 		void Event_ArrivedOnNewSpot();
+ 		bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
+ 	public:
+		CBox1(const int PlayFieldXin,const int PlayFieldYin);
+};
+
+class CBox2 : public CWorldPart
+{
+ 	private:
+ 		void Event_ArrivedOnNewSpot();
+ 		bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
+ 	public:
+		CBox2(const int PlayFieldXin,const int PlayFieldYin);
+};
+
+class CBoxWall : public CWorldPart
+{
+ 	private:
+ 		void Event_ArrivedOnNewSpot();
+ 		bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
+ 	public:
+		CBoxWall(const int PlayFieldXin,const int PlayFieldYin);
+};
+
+class CBoxBomb : public CWorldPart
+{
+ 	private:
+ 		void Event_ArrivedOnNewSpot();
+ 		bool CanMoveTo(const int PlayFieldXin,const int PlayFieldYin);
+ 	public:
+		CBoxBomb(const int PlayFieldXin,const int PlayFieldYin);
 };
 
 #endif

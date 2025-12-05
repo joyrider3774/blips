@@ -17,7 +17,7 @@ enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSQuit,GSGame,GSStageClear,GSSt
 extern bool GlobalSoundEnabled;
 extern Mix_Chunk *Sounds[NrOfSounds];
 
-extern SDL_Texture *IMGBackground, *IMGFloor, *IMGPlayer, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
+extern SDL_Texture *IMGBackground, *IMGFloor, *IMGPlayer, *IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
             *IMGIntro1, *IMGIntro2, *IMGIntro3, *IMGBomb, *IMGDiamond, *IMGExplosion, *IMGGrid;
 
 extern CUsbJoystickSetup *JoystickSetup;

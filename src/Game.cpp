@@ -23,7 +23,8 @@ void Game()
 	char Text[500];
 	int alpha=0,teller;
 	Uint32 Time=0;
-	CPlayer *Player=0;
+	CPlayer *Player=NULL;
+    CPlayer2 *Player2=NULL;;
 	bool ResetViewPort=false;
 	for (teller=0;teller<WorldParts.ItemCount;teller++)
 	{
@@ -32,9 +33,13 @@ void Game()
 			Player = (CPlayer*) WorldParts.Items[teller];
 			break;
 		}
+        if (WorldParts.Items[teller]->GetType() == IDPlayer2)
+		{
+			Player2 = (CPlayer2*) WorldParts.Items[teller];
+		}
 	}
 	//should never happen
-	if(!Player)
+	if(!Player && !Player2)
 	{
 		Player = new CPlayer(0,0);
 		WorldParts.Add(Player);
@@ -219,29 +224,36 @@ void Game()
                     ResetViewPort = false;
                 }
             }
-            if (!Player->IsMoving && !Player->IsDeath && !(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y)) || Input->KeyboardHeld(SDLK_Y)))
+            if (!WorldParts.Player->IsMoving && (((WorldParts.Player1) && !WorldParts.Player1->IsDeath) || ((WorldParts.Player2) && !WorldParts.Player2->IsDeath)) && 
+                !(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y)) || Input->KeyboardHeld(SDLK_Y)))
             {
+
+                if (Input->Ready() && ((JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_SPACE)))
+				{
+					WorldParts.SwitchPlayers();
+					Input->Delay();
+				}
 
                 //move down
                 if (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_DOWN))|| Input->KeyboardHeld(SDLK_DOWN))
                 {
-                        Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()+1,false);
+                        WorldParts.Player->MoveTo(WorldParts.Player->GetPlayFieldX(),WorldParts.Player->GetPlayFieldY()+1,false);
                 }
 
                 //move up
                 if (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_UP))|| Input->KeyboardHeld(SDLK_UP))
                 {
-                        Player->MoveTo(Player->GetPlayFieldX(),Player->GetPlayFieldY()-1,false);
+                        WorldParts.Player->MoveTo(WorldParts.Player->GetPlayFieldX(),WorldParts.Player->GetPlayFieldY()-1,false);
                 }
                 //move left
                 if (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_LEFT)) || Input->KeyboardHeld(SDLK_LEFT))
                 {
-                        Player->MoveTo(Player->GetPlayFieldX()-1,Player->GetPlayFieldY(),false);
+                        WorldParts.Player->MoveTo(WorldParts.Player->GetPlayFieldX()-1,WorldParts.Player->GetPlayFieldY(),false);
                 }
                 //move right
                 if (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_RIGHT)) || Input->KeyboardHeld(SDLK_RIGHT))
                 {
-                        Player->MoveTo(Player->GetPlayFieldX()+1,Player->GetPlayFieldY(),false);
+                        WorldParts.Player->MoveTo(WorldParts.Player->GetPlayFieldX()+1,WorldParts.Player->GetPlayFieldY(),false);
                 }
 
             }
@@ -325,7 +337,7 @@ void Game()
             }
         }
         SDL_SetRenderTarget(Renderer, Buffer);
-        if (Player->IsDeath)
+        if (((WorldParts.Player1) && WorldParts.Player1->IsDeath) || ((WorldParts.Player2) && WorldParts.Player2->IsDeath))
         {
             ExplosionsFound =false;
             for(teller=0;teller<WorldParts.ItemCount;teller++)

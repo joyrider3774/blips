@@ -44,7 +44,7 @@ void CSelector::IncSelection()
 {
 	int X,Y;
 	Selection++;
-	if (Selection > 7)
+	if (Selection > 13)
 		Selection = 1;
 	X = Part->GetPlayFieldX();
 	Y = Part->GetPlayFieldY();
@@ -72,6 +72,24 @@ void CSelector::IncSelection()
         case IDDiamond:
 			Part = new CDiamond(X,Y);
 			break;
+		case IDPlayer2:
+			Part = new CPlayer2(X,Y);
+			break;
+		case IDBox1:
+			Part = new CBox1(X,Y);
+			break;
+		case IDBox2:
+			Part = new CBox2(X,Y);
+			break;
+		case IDBoxBomb:
+			Part = new CBoxBomb(X,Y);
+			break;
+		case IDBoxWall:
+			Part = new CBoxWall(X,Y);
+			break;
+		case IDWallBreakable:
+			Part = new CWallBreakable(X,Y);
+			break;
 	}
 	Part->ParentList = PList;
 	Part->Selected = true;
@@ -82,7 +100,7 @@ void CSelector::DecSelection()
 	int X,Y;
 	Selection--;
 	if (Selection < 1)
-		Selection = 7;
+		Selection = 13;
 	X = Part->GetPlayFieldX();
 	Y = Part->GetPlayFieldY();
 	delete Part;
@@ -108,6 +126,24 @@ void CSelector::DecSelection()
 			break;
          case IDDiamond:
 			Part = new CDiamond(X,Y);
+			break;
+		case IDPlayer2:
+			Part = new CPlayer2(X,Y);
+			break;
+		case IDBox1:
+			Part = new CBox1(X,Y);
+			break;
+		case IDBox2:
+			Part = new CBox2(X,Y);
+			break;
+		case IDBoxBomb:
+			Part = new CBoxBomb(X,Y);
+			break;
+		case IDBoxWall:
+			Part = new CBoxWall(X,Y);
+			break;
+		case IDWallBreakable:
+			Part = new CWallBreakable(X,Y);
 			break;
 	}
 

@@ -13,7 +13,7 @@ void CWorldParts::CenterVPOnPlayer()
 {
     int Teller=0,PlayerX=-1,PlayerY=-1;
     for (Teller=0;Teller<ItemCount;Teller++)
-        if(Items[Teller]->GetType() == IDPlayer)
+        if(Items[Teller]->GetType() == ActivePlayer)
         {
 
             PlayerX = Items[Teller]->GetPlayFieldX();
@@ -22,6 +22,26 @@ void CWorldParts::CenterVPOnPlayer()
         }
     ViewPort->SetViewPort(PlayerX-10, PlayerY-6,PlayerX+10, PlayerY+6);
 }
+
+void CWorldParts::SwitchPlayers()
+{
+	if (!Player2)
+		return;
+
+	if (ActivePlayer == IDPlayer)
+	{
+		ActivePlayer = IDPlayer2;
+		Player = Player2;
+	}
+	else
+	{
+		ActivePlayer = IDPlayer;
+		Player = Player1;
+	}
+	ActivePlayerFlicker = 18;
+	CenterVPOnPlayer();
+}
+
 
 void CWorldParts::LimitVPLevel()
 {
@@ -50,6 +70,10 @@ void CWorldParts::RemoveAll()
 		Items[Teller] = NULL;
 	}
 	ItemCount=0;
+	MoveAbleItemCount = 0;
+	ActivePlayer = -1;
+	Player1 = NULL;
+	Player2 = NULL;
 }
 void CWorldParts::Remove(int PlayFieldXin,int PlayFieldYin)
 {
@@ -91,6 +115,20 @@ void CWorldParts::Add(CWorldPart *WorldPart)
 		Items[ItemCount] = WorldPart;
 		ItemCount++;
 		Sort();
+	}
+
+	if (WorldPart->GetType() == IDPlayer)
+	{
+		Player1 = WorldPart;
+		Player = Player1;
+		ActivePlayer = IDPlayer;
+	}
+
+	if (WorldPart->GetType() == IDPlayer2)
+	{
+		Player2 = WorldPart;
+		Player = Player2;
+		ActivePlayer = IDPlayer2;
 	}
 }
 
@@ -185,12 +223,35 @@ void CWorldParts::Load(const char *Filename)
                 case IDDiamond:
                      Add( new CDiamond(X,Y));
                     break;
+				case IDPlayer2:
+					Add( new CPlayer2(X,Y));
+					break;
+				case IDBox1:
+					Add( new CBox1(X,Y));
+					break;
+				case IDBox2:
+					Add( new CBox2(X,Y));
+					break;
+				case IDBoxBomb:
+					Add( new CBoxBomb(X,Y));
+					break;
+				case IDBoxWall:
+					Add( new CBoxWall(X,Y));
+					break;
+				case IDWallBreakable:
+					Add( new CWallBreakable(X,Y));
+					break;
 
 			}
 		}
 		delete[] Buffer;
 		fclose(Fp);
 		DisableSorting=false;
+		if (Player1 && Player2)
+		{
+			Player = Player1;
+			ActivePlayer = IDPlayer;
+		}
 		Sort();
 		LimitVPLevel();
 		CenterVPOnPlayer();
@@ -201,9 +262,19 @@ void CWorldParts::Load(const char *Filename)
 void CWorldParts::Move()
 {
 	int Teller;
+	MoveAbleItemCount = 0;
 	for (Teller=0;Teller<ItemCount;Teller++)
-	{
-		Items[Teller]->Move();
+	{		
+		if(Items[Teller]->IsMoving)
+		{
+			//other items are not moveable and have no effect
+			if (!Items[Teller]->NeedToKill() && !Items[Teller]->NeedHide())
+			{
+				Items[Teller]->Move();
+				if (!Items[Teller]->NeedToKill() && !Items[Teller]->NeedHide())
+					MoveAbleItems[MoveAbleItemCount++] = Items[Teller];
+			}
+		}	
 	}
 }
 
@@ -219,14 +290,31 @@ void CWorldParts::Draw()
 	         Teller--;
 	     }
 	     else
+		 {
             if((Items[Teller]->GetPlayFieldX() >= ViewPort->VPMinX) && (Items[Teller]->GetPlayFieldX()-1 <= ViewPort->VPMaxX) &&
                 (Items[Teller]->GetPlayFieldY() >= ViewPort->VPMinY) && (Items[Teller]->GetPlayFieldY()-1 <= ViewPort->VPMaxY))
-                {
-                    Items[Teller]->Draw();
-                }
-
-
+            {
+				if (ActivePlayerFlicker > 0)
+				{
+					if (Items[Teller]->GetType() == ActivePlayer)
+					{
+						if (ActivePlayerFlicker % 3 == 0)
+							Items[Teller]->Draw();
+					}
+					else
+						Items[Teller]->Draw();
+				}
+				else
+					Items[Teller]->Draw();					
+            }
+		}
 	}
+	//Redraw moving items so they are always drawn on top
+	for (int Teller = 0; Teller < MoveAbleItemCount; Teller++)
+		MoveAbleItems[Teller]->Draw();
+		
+	if (ActivePlayerFlicker > 0)
+		ActivePlayerFlicker--;
 }
 
 CWorldParts::~CWorldParts()

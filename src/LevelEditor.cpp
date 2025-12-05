@@ -14,7 +14,7 @@ bool LevelErrorsFound()
 	int Teller,NumPlayer=0,NumDiamond=0;
 	for (Teller=0;Teller<WorldParts.ItemCount;Teller++)
 	{
-		if(WorldParts.Items[Teller]->GetType() == IDPlayer)
+		if(WorldParts.Items[Teller]->GetType() == IDPlayer || WorldParts.Items[Teller]->GetType() == IDPlayer2)
 			NumPlayer++;
         if(WorldParts.Items[Teller]->GetType() == IDDiamond)
 			NumDiamond++;
@@ -63,13 +63,30 @@ void LevelEditor()
 		remove(FileName);
 		StageReload=false;
 	}
+    CWorldPart* Player1 = NULL, * Player2 = NULL;
     for (Teller = 0;Teller< WorldParts.ItemCount;Teller++)
+    {
         if(WorldParts.Items[Teller]->GetType() == IDPlayer)
         {
-            PlayerFound = true;
-            Selector.SetPosition(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY());
-            break;
+            Player1 = WorldParts.Items[Teller];
         }
+
+        if (WorldParts.Items[Teller]->GetType() == IDPlayer2)
+		{
+			Player2 = WorldParts.Items[Teller];
+		}
+    }
+    if (Player1)
+	{
+        Selector.SetPosition(Player1->GetPlayFieldX(),Player1->GetPlayFieldY());
+		PlayerFound = true;
+	}
+	if (!Player1 && Player2)
+	{
+        Selector.SetPosition(Player2->GetPlayFieldX(),Player2->GetPlayFieldY());
+		PlayerFound = true;
+    }
+	
     WorldParts.ViewPort->SetVPLimit(0,0,NrOfCols-1,NrOfRows-1);
     if (!PlayerFound)
     {
@@ -359,15 +376,83 @@ void LevelEditor()
                     break;
                 case IDBox:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
                     WorldParts.Add(new CBox(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
                     break;
+                case IDBox1:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    WorldParts.Add(new CBox1(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
+                case IDBox2:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    WorldParts.Add(new CBox2(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
+                case IDBoxBomb:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    WorldParts.Add(new CBoxBomb(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
+                case IDBoxWall:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    WorldParts.Add(new CBoxWall(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
                 case IDPlayer:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
                     for(Teller=0;Teller<WorldParts.ItemCount;Teller++)
@@ -377,9 +462,41 @@ void LevelEditor()
                     }
                     WorldParts.Add(new CPlayer(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
                     break;
+                case IDPlayer2:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    for(Teller=0;Teller<WorldParts.ItemCount;Teller++)
+                    {
+                        if (WorldParts.Items[Teller]->GetType() == IDPlayer2)
+                            WorldParts.Remove(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY(),IDPlayer2);
+                    }
+                    WorldParts.Add(new CPlayer2(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
                 case IDWall:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY());
                     WorldParts.Add(new CWall(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
+                    break;
+                case IDWallBreakable:
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
+                    WorldParts.Add(new CWallBreakable(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
                     break;
                 case IDFloor:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDFloor);
@@ -388,16 +505,28 @@ void LevelEditor()
                     break;
                 case IDBomb:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
                     WorldParts.Add(new CBomb(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
                     break;
                 case IDDiamond:
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWall);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDWallBreakable);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox1);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBox2);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxBomb);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBoxWall);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer);
+                    WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDPlayer2);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDBomb);
                     WorldParts.Remove(Selector.GetPlayFieldX(),Selector.GetPlayFieldY(),IDDiamond);
                     WorldParts.Add(new CDiamond(Selector.GetPlayFieldX(),Selector.GetPlayFieldY()));
@@ -502,15 +631,26 @@ void LevelEditor()
             WorldParts.ViewPort->SetViewPort((NrOfCols/2)-10,(NrOfRows/2)-6,(NrOfCols/2)+10,(NrOfRows/2)+6);
             Selector.SetPosition((NrOfCols/2),(NrOfRows/2));
             //if player found center viewport on player !
+            CWorldPart* Player1 = NULL, * Player2 = NULL;
             for (Teller = 0;Teller<WorldParts.ItemCount;Teller++)
             {
                 if(WorldParts.Items[Teller]->GetType() == IDPlayer)
                 {
-                    Selector.SetPosition(WorldParts.Items[Teller]->GetPlayFieldX(),WorldParts.Items[Teller]->GetPlayFieldY());
-                    WorldParts.CenterVPOnPlayer();
-                    break;
+                    Player1 = WorldParts.Items[Teller];                   
+                }
+
+                if (WorldParts.Items[Teller]->GetType() == IDPlayer2)
+                {
+                    Player2 = WorldParts.Items[Teller];
                 }
             }
+            if(Player1)
+			    Selector.SetPosition(Player1->GetPlayFieldX(),Player1->GetPlayFieldY());
+		    if(!Player1 && Player2)
+			    Selector.SetPosition(Player2->GetPlayFieldX(), Player2->GetPlayFieldY());
+             
+            WorldParts.CenterVPOnPlayer();
+
             WorldParts.ViewPort->SetVPLimit(0,0,NrOfCols-1,NrOfRows-1);
             if (Xi != 0 || Yi!=0)
                 LevelHasChanged = true;

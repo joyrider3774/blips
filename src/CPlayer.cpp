@@ -14,7 +14,6 @@ CPlayer::CPlayer(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(Pla
 	AnimDelayCounter =0;
 	Type = IDPlayer;
 	Z = ZPlayer;
-	IsDeath=false;
 }
 
 
@@ -27,14 +26,26 @@ bool CPlayer::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
 		if (ParentList)
 		{
 			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+
 				if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
 				{
-					if((ParentList->Items[Teller]->GetType() == IDWall))
+					if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDWallBreakable) || 
+						(ParentList->Items[Teller]->GetType() == IDPlayer)  || (ParentList->Items[Teller]->GetType() == IDPlayer2)  || 
+						((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox1)) || 
+						((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox2)))
 					{
 						Result = false;
 						break;
 					}
-					if((ParentList->Items[Teller]->GetType() == IDBox))
+
+					if((ParentList->Items[Teller]->GetType() == IDBox) || 
+						((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox1)) ||
+						((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox2)) || 
+						(ParentList->Items[Teller]->GetType() == IDBoxWall) ||
+						(ParentList->Items[Teller]->GetType() == IDBoxBomb))
 					{
 						if (PlayFieldX > PlayFieldXin)
 						{
@@ -56,6 +67,7 @@ bool CPlayer::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
 					}
 
 				}
+			}
 		}
 	}
 	else
@@ -69,14 +81,18 @@ void CPlayer::Event_ArrivedOnNewSpot()
     if (ParentList)
     {
         for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+		{
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+
             if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
             {
                 if((ParentList->Items[Teller]->GetType() == IDBomb))
-                {
-                    ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+                {                   
                     ParentList->Items[Teller]->Kill();
                     IsDeath = true;
                     Hide();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
 
                     break;
                 }
@@ -89,6 +105,7 @@ void CPlayer::Event_ArrivedOnNewSpot()
                 }
 
             }
+		}
     }
 }
 
@@ -127,7 +144,7 @@ void CPlayer::Event_Moving(int ScreenPosX,int ScreenPosY,int ScreenXi,int Screen
 void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWards)
 {
  	int Teller;
- 	if(!IsMoving)
+ 	if(!IsMoving &!NeedToKill() && !NeedHide())
 	{
 		if(this->CanMoveTo(PlayFieldXin,PlayFieldYin) || BackWards)
 		{
@@ -140,7 +157,11 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 				{
 					for(Teller=0;Teller<ParentList->ItemCount;Teller++)
 					{
-						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDWall)) && ((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)))
+						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDBoxWall) ||
+							((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox1)) || 
+							((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox2)) ||
+							(ParentList->Items[Teller]->GetType() == IDBoxBomb)) && 
+							((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)))
 						{
 							ParentList->Items[Teller]->MoveTo(PlayFieldX+1,PlayFieldY,false);
 							break;
@@ -157,7 +178,11 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 				{
 					for(Teller=0;Teller<ParentList->ItemCount;Teller++)
 					{
-						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDWall)) && ((PlayFieldX == ParentList->Items[Teller]->GetPlayFieldX() )  && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)))
+						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDBoxWall) ||
+							((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox1)) || 
+							((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox2)) ||
+							(ParentList->Items[Teller]->GetType() == IDBoxBomb)) && 
+							((PlayFieldX == ParentList->Items[Teller]->GetPlayFieldX() )  && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)))
 						{
 							ParentList->Items[Teller]->MoveTo(PlayFieldX-1,PlayFieldY,false);
 							break;
@@ -173,7 +198,11 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 				{
 					for(Teller=0;Teller<ParentList->ItemCount;Teller++)
 					{
-						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDWall)) && ((PlayFieldY == ParentList->Items[Teller]->GetPlayFieldY())  && (ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX)))
+						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDBoxWall) ||
+							((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox1)) || 
+							((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox2)) ||
+							(ParentList->Items[Teller]->GetType() == IDBoxBomb)) && 
+							((PlayFieldY == ParentList->Items[Teller]->GetPlayFieldY())  && (ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX)))
 						{
 							ParentList->Items[Teller]->MoveTo(PlayFieldX,PlayFieldY-1,false);
 							break;
@@ -189,7 +218,11 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 				{
 					for(Teller=0;Teller<ParentList->ItemCount;Teller++)
 					{
-						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDWall)) && ((ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)  && (ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX )))
+						if(((ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDBoxWall) ||
+							((GetType() == IDPlayer) && (ParentList->Items[Teller]->GetType() == IDBox1)) || 
+							((GetType() == IDPlayer2) && (ParentList->Items[Teller]->GetType() == IDBox2)) ||
+							(ParentList->Items[Teller]->GetType() == IDBoxBomb)) && 
+							((ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY)  && (ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX )))
 						{
 							ParentList->Items[Teller]->MoveTo(PlayFieldX,PlayFieldY+1,false);
 							break;
@@ -231,3 +264,9 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 
  	}
  }
+
+CPlayer2::CPlayer2(const int PlayFieldXin,const int PlayFieldYin) : CPlayer(PlayFieldXin,PlayFieldYin)
+{
+	Image=&IMGPlayer2;
+	Type=IDPlayer2;
+}

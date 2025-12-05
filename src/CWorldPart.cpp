@@ -26,12 +26,18 @@ CWorldPart::CWorldPart(const int PlayFieldXin,const int PlayFieldYin)
 	Group=0;
 	PNeedToKill = false;
 	BHide = false;
+	IsDeath = false;
 }
 
 
 void CWorldPart::Hide() 
 {
 	BHide = true;
+}
+
+bool CWorldPart::NeedHide() 
+{
+	return BHide;
 }
 
 void CWorldPart::AddToMoveQue(int PlayFieldXIn,int PlayFieldYIn)
@@ -138,7 +144,7 @@ void CWorldPart::SetPosition(const int PlayFieldXin,const int PlayFieldYin)
 
 void CWorldPart::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWards)
 {
-	if(!IsMoving)
+	if(!IsMoving &!NeedToKill() && !NeedHide())
 	{
 		if((PlayFieldXin != PlayFieldX) || (PlayFieldYin != PlayFieldY))
 			if(this->CanMoveTo(PlayFieldXin,PlayFieldYin) || BackWards)
@@ -166,12 +172,12 @@ bool CWorldPart::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
 
 void CWorldPart::Move()
 {
-	if (!FirstArriveEventFired)
-	{
-		Event_ArrivedOnNewSpot();
-		FirstArriveEventFired=true;
-	}
-	if (IsMoving)
+	// if (!FirstArriveEventFired)
+	// {
+	// 	Event_ArrivedOnNewSpot();
+	// 	FirstArriveEventFired=true;
+	// }
+	if(IsMoving &!NeedToKill() && !NeedHide())
 	{
 		if (MoveDelayCounter == MoveDelay)
 		{
@@ -280,6 +286,14 @@ CWall::CWall(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFie
 	Z = ZWall;
 }
 
+CWallBreakable::CWallBreakable(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
+{
+	Image = &IMGWall;
+	AnimPhase = 1;
+	Type = IDWallBreakable;
+	Z = ZWall;
+}
+
 CFloor::CFloor(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
 {
 	Image = &IMGFloor;
@@ -342,8 +356,6 @@ CBox::CBox(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayField
 	Z = ZBox;
 }
 
-
-
 bool CBox::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
 {
 	int Teller;
@@ -353,12 +365,20 @@ bool CBox::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
 		if (ParentList)
 		{
 			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
-				if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDDiamond))
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+				if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDWallBreakable) || 
+					(ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDDiamond) ||
+					(ParentList->Items[Teller]->GetType() == IDPlayer) || (ParentList->Items[Teller]->GetType() == IDPlayer2) ||
+					(ParentList->Items[Teller]->GetType() == IDBox1) || (ParentList->Items[Teller]->GetType() == IDBox2) ||
+					(ParentList->Items[Teller]->GetType() == IDBoxWall))
 					if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
 					{
 						Result = false;
 						break;
 					}
+			}
 		}
 	}
 	else
@@ -374,14 +394,345 @@ void CBox::Event_ArrivedOnNewSpot()
 	{
 		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
 		{
-           if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY) &&
-              (ParentList->Items[Teller]->GetType() == IDBomb))
-              {
-                  ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
-                  ParentList->Items[Teller]->Kill();
-                  Kill();
-              }
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+           	if ((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
+		   	{
+            	if (ParentList->Items[Teller]->GetType() == IDBomb)
+              	{                  
+                	ParentList->Items[Teller]->Kill();
+                	Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+        		}
+
+				if (ParentList->Items[Teller]->GetType() == IDBoxBomb)
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing					
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					break;
+				}
+			}
+		}
+	}
+}
+
+CBox1::CBox1(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
+{
+	Image = &IMGBox;
+	Type = IDBox1;
+	MoveDelay = 0;
+	MoveSpeed = 2;
+	AnimPhase = 2;
+	Z = ZBox;
+}
+
+bool CBox1::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
+{
+	int Teller;
+	bool Result = true;
+	if ((PlayFieldXin >= 0) && (PlayFieldXin < NrOfCols) && (PlayFieldYin >= 0) && (PlayFieldYin < NrOfRows))
+	{
+		if (ParentList)
+		{
+			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+				if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDWallBreakable) || 
+					(ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDDiamond) ||
+					(ParentList->Items[Teller]->GetType() == IDPlayer) || (ParentList->Items[Teller]->GetType() == IDPlayer2) ||
+					(ParentList->Items[Teller]->GetType() == IDBox1) || (ParentList->Items[Teller]->GetType() == IDBox2) ||
+					(ParentList->Items[Teller]->GetType() == IDBoxWall))
+					if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
+					{
+						Result = false;
+						break;
+					}
+			}
+		}
+	}
+	else
+		Result = false;
+	return Result;
+}
+
+void CBox1::Event_ArrivedOnNewSpot()
+{
+	int Teller;
+	AnimPhase = 2;
+	if (ParentList)
+	{
+		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
+		{
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+        	
+			if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
+		    {
+            	if (ParentList->Items[Teller]->GetType() == IDBomb)
+              	{                	
+                	ParentList->Items[Teller]->Kill();
+                	Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+              	}
+
+				if (ParentList->Items[Teller]->GetType() == IDBoxBomb)
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing					
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					break;
+				}
+			}
+		}
+	}
+}
+
+CBox2::CBox2(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
+{
+	Image = &IMGBox;
+	Type = IDBox2;
+	MoveDelay = 0;
+	MoveSpeed = 2;
+	AnimPhase = 3;
+	Z = ZBox;
+}
+
+bool CBox2::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
+{
+	int Teller;
+	bool Result = true;
+	if ((PlayFieldXin >= 0) && (PlayFieldXin < NrOfCols) && (PlayFieldYin >= 0) && (PlayFieldYin < NrOfRows))
+	{
+		if (ParentList)
+		{
+			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+				
+				if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDWallBreakable) || 
+					(ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDDiamond) ||
+					(ParentList->Items[Teller]->GetType() == IDPlayer) || (ParentList->Items[Teller]->GetType() == IDPlayer2) ||
+					(ParentList->Items[Teller]->GetType() == IDBox1) || (ParentList->Items[Teller]->GetType() == IDBox2) ||
+					(ParentList->Items[Teller]->GetType() == IDBoxWall))
+					if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
+					{
+						Result = false;
+						break;
+					}
+			}
+		}
+	}
+	else
+		Result = false;
+	return Result;
+}
+
+void CBox2::Event_ArrivedOnNewSpot()
+{
+	int Teller;
+	AnimPhase = 3;
+	if (ParentList)
+	{
+		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
+		{
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+
+        	if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
+			{
+              	if (ParentList->Items[Teller]->GetType() == IDBomb)
+              	{                	
+                	ParentList->Items[Teller]->Kill();
+                	Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+              	}
+				
+				if (ParentList->Items[Teller]->GetType() == IDBoxBomb)
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing					
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					break;
+				}
+			}
 
 		}
 	}
 }
+
+CBoxWall::CBoxWall(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
+{
+	Image = &IMGBox;
+	Type = IDBoxWall;
+	MoveDelay = 0;
+	MoveSpeed = 2;
+	AnimPhase = 1;
+	Z = ZBox;
+}
+
+bool CBoxWall::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
+{
+	int Teller;
+	bool Result = true;
+	if ((PlayFieldXin >= 0) && (PlayFieldXin < NrOfCols) && (PlayFieldYin >= 0) && (PlayFieldYin < NrOfRows))
+	{
+		if (ParentList)
+		{
+			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+				
+				if((ParentList->Items[Teller]->GetType() == IDWall) || (ParentList->Items[Teller]->GetType() == IDWallBreakable) || 
+					(ParentList->Items[Teller]->GetType() == IDBox) || (ParentList->Items[Teller]->GetType() == IDDiamond) ||
+					(ParentList->Items[Teller]->GetType() == IDPlayer) || (ParentList->Items[Teller]->GetType() == IDPlayer2) ||
+					(ParentList->Items[Teller]->GetType() == IDBox1) || (ParentList->Items[Teller]->GetType() == IDBox2))
+					if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
+					{
+						Result = false;
+						break;
+					}
+			}
+		}
+	}
+	else
+		Result = false;
+	return Result;
+}
+
+void CBoxWall::Event_ArrivedOnNewSpot()
+{
+	int Teller;
+	AnimPhase = 1;
+	if (ParentList)
+	{
+		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
+		{
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+        	
+			if ((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
+			{
+            	if (ParentList->Items[Teller]->GetType() == IDBomb)
+              	{                	
+                  	ParentList->Items[Teller]->Kill();
+                  	Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+              	}
+
+			 	if ((ParentList->Items[Teller]->GetType() == IDBoxWall) && (ParentList->Items[Teller] != this))
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					ParentList->Add(new CWall(PlayFieldX,PlayFieldY));		
+					break;
+				}
+
+				if ((ParentList->Items[Teller]->GetType() == IDBoxBomb) && (this != ParentList->Items[Teller]))
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing					
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					break;
+				}
+			}
+		}
+	}
+}
+
+CBoxBomb::CBoxBomb(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
+{
+	Image = &IMGBox;
+	Type = IDBoxBomb;
+	MoveDelay = 0;
+	MoveSpeed = 2;
+	AnimPhase = 4;
+	Z = ZBox;
+}
+
+bool CBoxBomb::CanMoveTo(const int PlayFieldXin,const int PlayFieldYin)
+{
+	int Teller;
+	bool Result = true;
+	if ((PlayFieldXin >= 0) && (PlayFieldXin < NrOfCols) && (PlayFieldYin >= 0) && (PlayFieldYin < NrOfRows))
+	{
+		if (ParentList)
+		{
+			for (Teller=0;Teller<ParentList->ItemCount;Teller++)
+			{
+				if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+					continue;
+				
+				if((ParentList->Items[Teller]->GetType() == IDWall) || 
+					(ParentList->Items[Teller]->GetType() == IDDiamond))
+					if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldXin) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldYin))
+					{
+						Result = false;
+						break;
+					}
+			}
+		}
+	}
+	else
+		Result = false;
+	return Result;
+}
+
+void CBoxBomb::Event_ArrivedOnNewSpot()
+{
+	int Teller;
+	AnimPhase = 4;
+	if (ParentList)
+	{
+		for (Teller=0;Teller< ParentList->ItemCount;Teller++)
+		{
+			if (ParentList->Items[Teller]->NeedToKill() || ParentList->Items[Teller]->NeedHide())
+				continue;
+        	
+			if((ParentList->Items[Teller]->GetPlayFieldX() == PlayFieldX) && (ParentList->Items[Teller]->GetPlayFieldY() == PlayFieldY))
+			{
+             	if (ParentList->Items[Teller]->GetType() == IDBomb)
+              	{
+                  	ParentList->Items[Teller]->Kill();
+                  	Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+              	}
+
+				if ((ParentList->Items[Teller]->GetType() != IDWall) && (ParentList->Items[Teller]->GetType() != IDDiamond) && 
+					(ParentList->Items[Teller]->GetType() != IDFloor) && (ParentList->Items[Teller] != this))
+				{
+					///kill needs to come first, Add sorts the lists skewing indexing
+					if ((ParentList->Items[Teller]->GetType() == IDPlayer) || (ParentList->Items[Teller]->GetType() == IDPlayer2))
+					{
+						ParentList->Items[Teller]->IsDeath = true;
+						ParentList->Items[Teller]->Hide();
+					}
+					else
+						ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));										
+					break;
+				}
+
+				if ((ParentList->Items[Teller]->GetType() == IDBoxBomb) && (this != ParentList->Items[Teller]))
+				{
+					//kill needs to come first, Add sorts the lists skewing indexing					
+					ParentList->Items[Teller]->Kill();
+					Kill();
+					ParentList->Add(new CExplosion(PlayFieldX,PlayFieldY));
+					break;
+				}
+			}
+		}
+	}
+}
+
