@@ -210,6 +210,8 @@ void StageSelect()
 					}
 					else
 					{
+						if (GlobalSoundEnabled)
+							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 						{
@@ -226,6 +228,8 @@ void StageSelect()
 				{
 					if (SelectedLevel != 1)
 					{
+						if (GlobalSoundEnabled)
+							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
 						SelectedLevel -= 5;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
@@ -248,6 +252,8 @@ void StageSelect()
 			{           
 				if (SelectedLevel != InstalledLevels)
 				{
+					if (GlobalSoundEnabled)
+						Mix_PlayChannel(-1,Sounds[SND_MENU],0);
 					SelectedLevel +=5;
 					if (SelectedLevel > InstalledLevels)
 						SelectedLevel = InstalledLevels;
@@ -278,6 +284,9 @@ void StageSelect()
 					}
 					else
 					{
+						if (GlobalSoundEnabled)
+							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+
 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 						{
@@ -294,6 +303,8 @@ void StageSelect()
 				{
 					if(SelectedLevel != 1)
 					{
+						if (GlobalSoundEnabled)
+							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
 						SelectedLevel--;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
@@ -316,6 +327,8 @@ void StageSelect()
 			{
 				if(SelectedLevel != InstalledLevels)
 				{
+					if (GlobalSoundEnabled)
+						Mix_PlayChannel(-1,Sounds[SND_MENU],0);
 					SelectedLevel++;
 
 					if (SelectedLevel > InstalledLevels)
