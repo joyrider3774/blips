@@ -12,12 +12,12 @@
 #define PIXELFORMAT SDL_PIXELFORMAT_RGBA32
 #define FPS_SAMPLES 5
 
-enum GameStates {GSTitleScreen,GSCredits,GSIntro,GSQuit,GSGame,GSStageClear,GSStageSelect,GSLevelEditor,GSLevelEditorMenu,GSTest,GSSetupUsbJoystickButtons};
+enum GameStates {GSTitleScreen,GSCredits,GSInstructions,GSIntro,GSQuit,GSGame,GSStageClear,GSStageSelect,GSLevelEditor,GSLevelEditorMenu,GSTest,GSSetupUsbJoystickButtons};
 
 extern bool GlobalSoundEnabled;
 extern Mix_Chunk *Sounds[NrOfSounds];
 
-extern SDL_Texture *IMGBackground, *IMGFloor, *IMGPlayer, *IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGWall,
+extern SDL_Texture *IMGBackground, *IMGFloor, *IMGPlayer, *IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGInstructions, *IMGWall,
             *IMGIntro1, *IMGIntro2, *IMGIntro3, *IMGBomb, *IMGDiamond, *IMGExplosion, *IMGGrid;
 
 extern CUsbJoystickSetup *JoystickSetup;

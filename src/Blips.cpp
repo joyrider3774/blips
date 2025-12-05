@@ -20,6 +20,7 @@
 #include "LevelEditorMenu.h"
 #include "Game.h"
 #include "LevelEditor.h"
+#include "Instructions.h"
 
 static void printHelp(const char* exe)
 {
@@ -225,6 +226,9 @@ int main(int argc, char **argv)
 								Input->Reset();
 								switch(GameState)
 								{
+									case GSInstructions :
+										Instructions();
+										break;
 									case GSIntro :
 										Intro();
 										break;

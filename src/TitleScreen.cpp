@@ -88,7 +88,7 @@ void TitleScreen()
         if((Input->Ready()) && (Input->KeyboardHeld(SDLK_DOWN) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_DOWN))) &&
            !(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_R)) || Input->KeyboardHeld(SDLK_R)))
         {
-            if (Selection < 6)
+            if (Selection < 7)
             {
                 Selection++;
                 if (GlobalSoundEnabled)
@@ -168,8 +168,13 @@ void TitleScreen()
                     GameState = GSSetupUsbJoystickButtons;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
-                    break;
+                    break;                
                 case 6:
+                    GameState = GSInstructions;
+                    if (GlobalSoundEnabled)
+                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    break;
+                case 7:
                     GameState = GSQuit;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
@@ -182,19 +187,19 @@ void TitleScreen()
         Rect.x = 60.0f*UI_WIDTH_SCALE;
         Rect.y = 70.0f*UI_HEIGHT_SCALE;
         Rect.w = 200.0f*UI_WIDTH_SCALE;
-        Rect.h = 95.0f*UI_HEIGHT_SCALE;
+        Rect.h = 105.0f*UI_HEIGHT_SCALE;
         SDL_SetRenderDrawColor(Renderer, MenuBoxColor.r,MenuBoxColor.g,MenuBoxColor.b,MenuBoxColor.a);
    		SDL_RenderFillRect(Renderer, &Rect);
         SDL_SetRenderDrawColor(Renderer,MenuBoxBorderColor.r,MenuBoxBorderColor.g,MenuBoxBorderColor.b,MenuBoxBorderColor.a);
-   		SDL_RenderRect(Renderer, &Rect);      
+   		SDL_RenderRect(Renderer, &Rect);
         SDL_FRect Rect2;
         Rect2.x = 62.0f*UI_WIDTH_SCALE;
         Rect2.y = 72.0f*UI_HEIGHT_SCALE;
         Rect2.w = 196.0f*UI_WIDTH_SCALE;
-        Rect2.h = 91.0f*UI_HEIGHT_SCALE;
-        SDL_RenderRect(Renderer, &Rect2);      
+        Rect2.h = 101.0f*UI_HEIGHT_SCALE;
+        SDL_RenderRect(Renderer, &Rect2);
 		
-		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nQuit",LevelPackName);
+		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nInstructions\nQuit",LevelPackName);
 		WriteText(BigFont,Tekst,strlen(Tekst),90*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 1)
 		{

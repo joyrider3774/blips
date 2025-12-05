@@ -87,6 +87,11 @@ void UnLoadGraphics()
 		SDL_DestroyTexture(IMGTitleScreen);
 	}
 
+	if(IMGInstructions)
+	{
+		SDL_DestroyTexture(IMGInstructions);
+	}
+
     if(IMGIntro1)
 	{
         SDL_DestroyTexture(IMGIntro1);
@@ -1122,6 +1127,11 @@ void LoadGraphics()
 		SDL_DestroyTexture(IMGTitleScreen);
 	}
 
+	if(IMGInstructions)
+	{
+		SDL_DestroyTexture(IMGInstructions);
+	}
+
     if(IMGIntro1)
 	{
         SDL_DestroyTexture(IMGIntro1);
@@ -1234,6 +1244,12 @@ void LoadGraphics()
     Tmp = IMG_Load(TmpPath);
 	SDL_free(TmpPath);
     IMGTitleScreen = SDL_CreateTextureFromSurface(Renderer, Tmp);
+    SDL_DestroySurface(Tmp);
+
+	TmpPath = assetPath("graphics/instructions.png");
+    Tmp = IMG_Load(TmpPath);
+	SDL_free(TmpPath);
+    IMGInstructions = SDL_CreateTextureFromSurface(Renderer, Tmp);
     SDL_DestroySurface(Tmp);
 
 	TmpPath = assetPath("graphics/background.png");
