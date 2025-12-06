@@ -57,7 +57,7 @@ void TitleScreen()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
                     SelectedLevelPack--;
                     if(SelectedLevelPack < 0)
                         SelectedLevelPack = InstalledLevelPacksCount -1;
@@ -74,7 +74,7 @@ void TitleScreen()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
                     SelectedLevelPack++;
                     if(SelectedLevelPack > InstalledLevelPacksCount-1)
                         SelectedLevelPack = 0;
@@ -150,7 +150,7 @@ void TitleScreen()
                     if (InstalledLevelPacksCount > 0)
                     {
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_SELECT], 0);
+                            Mix_PlayChannel(-1,Sounds[SND_MENU], 0);
                         SelectedLevelPack++;
                         if(SelectedLevelPack > InstalledLevelPacksCount-1)
                             SelectedLevelPack = 0;
