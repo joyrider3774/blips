@@ -160,7 +160,7 @@ void TitleScreen()
                     }
                     break;
                 case 4:
-                    GameState=GSCredits;
+                    GameState = GSInstructions;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                     break;
@@ -170,7 +170,7 @@ void TitleScreen()
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                     break;                
                 case 6:
-                    GameState = GSInstructions;
+                    GameState=GSCredits;
                     if (GlobalSoundEnabled)
                         Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
                     break;
@@ -199,7 +199,7 @@ void TitleScreen()
         Rect2.h = 101.0f*UI_HEIGHT_SCALE;
         SDL_RenderRect(Renderer, &Rect2);
 		
-		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nCredits\nSetup External Joystick\nInstructions\nQuit",LevelPackName);
+		sprintf(Tekst,"Play Selected LevelPack\nLevel Editor\n<%s>\nInstructions\nSetup External Joystick\nCredits\nQuit",LevelPackName);
 		WriteText(BigFont,Tekst,strlen(Tekst),90*UI_WIDTH_SCALE,75*UI_HEIGHT_SCALE,2,MenuTextColor,false);
 		if (Selection > 1)
 		{
