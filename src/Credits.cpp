@@ -166,5 +166,7 @@ void Credits()
         }
 	}
 	delete[] Tekst;
+    delete[] Tekst2;
+    delete[] Tekst3;
 	delete[] LevelPackCreator;
 }
