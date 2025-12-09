@@ -20,7 +20,6 @@ jobs:
           - { runson: 'macos-14',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-15',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-26',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
-          	
 
     runs-on: ${{matrix.runson}}    
     steps:
