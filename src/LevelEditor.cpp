@@ -59,7 +59,6 @@ void LevelEditor()
 	{
 		sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
 		WorldParts.Load(FileName);
-        WorldParts.LimitVPLevel();
 		remove(FileName);
 		StageReload=false;
 	}
@@ -300,7 +299,6 @@ void LevelEditor()
                 StageReload = true;
                 GameState=GSGame;
 				WorldParts.LimitVPLevel();
-                WorldParts.CenterVPOnPlayer();
             }
             Input->Reset();
             Input->Delay();

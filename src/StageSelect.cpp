@@ -23,8 +23,6 @@ void StageSelect()
 			SDL_free(TmpPath);
 		}
 		WorldParts.Load(FileName);
-		WorldParts.LimitVPLevel();
-
 	}
 	else
 		WorldParts.RemoveAll();
@@ -151,7 +149,6 @@ void StageSelect()
 									SDL_free(TmpPath);
 								}
 								WorldParts.Load(FileName);
-								WorldParts.LimitVPLevel();
 							}
 						}
 					}
@@ -188,7 +185,6 @@ void StageSelect()
 								SDL_free(TmpPath);
 							}
 							WorldParts.Load(FileName);
-							WorldParts.LimitVPLevel();
 							GameState = GSGame;
 						}
 						if (GlobalSoundEnabled)
@@ -221,7 +217,6 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
-						WorldParts.LimitVPLevel();
 					}
 				}
 				else
@@ -242,7 +237,6 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
-						WorldParts.LimitVPLevel();
 					}
 				}
 				Input->Delay();
@@ -266,7 +260,6 @@ void StageSelect()
 					}
 							
 					WorldParts.Load(FileName);
-					WorldParts.LimitVPLevel();
 				}
 				Input->Delay();
 			}
@@ -296,7 +289,6 @@ void StageSelect()
 						}
 							
 						WorldParts.Load(FileName);
-						WorldParts.LimitVPLevel();
 					}
 				}
 				else
@@ -316,7 +308,6 @@ void StageSelect()
 							SDL_free(TmpPath);
 						}
 						WorldParts.Load(FileName);
-						WorldParts.LimitVPLevel();
 					}
 				}
 
@@ -342,7 +333,6 @@ void StageSelect()
 					}
 							
 					WorldParts.Load(FileName);
-					WorldParts.LimitVPLevel();
 				}
 				Input->Delay();
 			}

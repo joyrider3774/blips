@@ -55,7 +55,6 @@ void Game()
 			SetVolume(Volume);
 		}
 	}
-    WorldParts.LimitVPLevel();
     while (GameState == GSGame)
     {
         frameticks = SDL_GetPerformanceCounter();
@@ -220,7 +219,6 @@ void Game()
                 if (ResetViewPort)
                 {
 					WorldParts.LimitVPLevel();
-                    WorldParts.CenterVPOnPlayer();
                     ResetViewPort = false;
                 }
             }

@@ -8,8 +8,8 @@ CViewPort::CViewPort(int MinX,int MinY, int MaxX,int MaxY,int MinX2,int MinY2,in
 	{
 		VPMinX = MinX;
 		VPMinY = MinY;
-		VPMaxX = MaxX + 1;
-		VPMaxY = MaxY + 1;
+		VPMaxX = MaxX;
+		VPMaxY = MaxY;
 		MinScreenX = VPMinX * TileWidth;
 		MinScreenY = VPMinY * TileHeight;
 		MaxScreenX = VPMaxX * TileHeight;

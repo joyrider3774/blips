@@ -254,7 +254,6 @@ void CWorldParts::Load(const char *Filename)
 		}
 		Sort();
 		LimitVPLevel();
-		CenterVPOnPlayer();
 	}
 
 }
