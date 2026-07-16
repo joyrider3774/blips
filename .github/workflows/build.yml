@@ -100,7 +100,7 @@ jobs:
         name: Build Game Appimage
         run: |
           chmod +x ./build-appimage.sh
-          build-appimage.sh
+          ./build-appimage.sh
 
       - if: ${{ matrix.runsontype == 'mac'}}
         name: Copy Game And Assets Mac
