@@ -8,8 +8,8 @@
 #include "Common.h"
 
 bool GlobalSoundEnabled = true;
-Mix_Chunk *Sounds[NrOfSounds];
-
+MIX_Audio *Sounds[NrOfSounds];
+MIX_Track* SoundsTracks[NrOfTracks];
 SDL_Texture *IMGBackground=NULL,*IMGFloor=NULL,*IMGPlayer=NULL,*IMGPlayer2=NULL,*IMGBox=NULL,*IMGEmpty=NULL,*IMGTitleScreen=NULL,*IMGInstructions=NULL,*IMGWall=NULL,
             *IMGIntro1=NULL,*IMGIntro2=NULL,*IMGIntro3=NULL,*IMGBomb=NULL,*IMGDiamond=NULL,*IMGExplosion=NULL,*IMGGrid=NULL;
 
@@ -28,7 +28,8 @@ int Volume = 128;
 char LevelPackName[21]= "";
 char LevelPackFileName[21] = "";
 char InstalledLevelPacks[MaxLevelPacks][21];
-Mix_Music *Music[MaxMusicFiles];
+MIX_Audio *Music[MaxMusicFiles];
+MIX_Track *MusicTrack;
 bool disableJoysticks = false;
 bool nodelay = false;
 int WINDOW_WIDTH = 640;
@@ -43,3 +44,4 @@ int fpsAvgCount = 0, skipCounter = 10;
 char basePath[FILENAME_MAX];
 bool fullScreen = false;
 CInput *Input;
+MIX_Mixer *Mixer = NULL;

@@ -20,10 +20,10 @@ void SetupUsbJoystickButtons()
 		{
             if(GlobalSoundEnabled)
 			{
-                if(!Mix_PlayingMusic())
+                if(!MIX_TrackPlaying(MusicTrack))
                 {
                     SelectedMusic = 0;
-                    Mix_PlayMusic(Music[SelectedMusic],0);
+                    PlayMusicTrack(Music[SelectedMusic],0);
                     SetVolume(Volume);
                 }
 			}
@@ -45,7 +45,7 @@ void SetupUsbJoystickButtons()
 		if(Input->KeyboardHeld(SDLK_ESCAPE) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)))
 		{
 			if (GlobalSoundEnabled)
-            	Mix_PlayChannel(-1,Sounds[SND_BACK],0); 
+            	PlaySoundTrack(Sounds[SND_BACK]); 
             GameState = GSTitleScreen;
 		}
 
@@ -55,7 +55,7 @@ void SetupUsbJoystickButtons()
             if( Selection < 0)
                 Selection = NROFBUTTONS-1;
             if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             Input->Delay();
         }
 
@@ -68,7 +68,7 @@ void SetupUsbJoystickButtons()
             if( Selection >=NROFBUTTONS)
                 Selection = 0;
             if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             Input->Delay();
         }
 
@@ -164,7 +164,7 @@ void SetupUsbJoystickButtons()
             if (alpha == 255)
             {
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    PlaySoundTrack(Sounds[SND_SELECT]);
                 Input->Reset();
                 while (!done)
                 {

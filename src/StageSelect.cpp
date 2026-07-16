@@ -31,10 +31,10 @@ void StageSelect()
 		frameticks = SDL_GetPerformanceCounter();
 		SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
-            if (! Mix_PlayingMusic())
+            if(!MIX_TrackPlaying(MusicTrack))
             {
                 SelectedMusic = 0;
-                Mix_PlayMusic(Music[SelectedMusic],0);
+                PlayMusicTrack(Music[SelectedMusic],0);
                 SetVolume(Volume);
             }
 		SDL_RenderTexture(Renderer, IMGBackground,NULL,NULL);
@@ -99,7 +99,7 @@ void StageSelect()
         if(Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) || Input->KeyboardHeld(SDLK_ESCAPE))
         {
 			if (GlobalSoundEnabled)
-                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                PlaySoundTrack(Sounds[SND_BACK]);
             if(LevelEditorMode)
                 GameState= GSLevelEditorMenu;
             else
@@ -115,7 +115,7 @@ void StageSelect()
 				if(LevelEditorMode && (SelectedLevel > 0))
 				{
 					if (GlobalSoundEnabled)
-                	    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                	    PlaySoundTrack(Sounds[SND_SELECT]);
 					sprintf(Tekst,"Are you sure you want to delete this level:\n%s - Level %d\n\nPress (A) to Delete (X) to Cancel",LevelPackName,SelectedLevel);
 					if (AskQuestion(Tekst))
 					{
@@ -153,7 +153,7 @@ void StageSelect()
 						}
 					}
 					if (GlobalSoundEnabled)
-						Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+						PlaySoundTrack(Sounds[SND_SELECT]);
 					Input->Reset();
 				}
 				Input->Delay();
@@ -162,7 +162,7 @@ void StageSelect()
 			if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_A)) || Input->KeyboardHeld(SDLK_A) || Input->KeyboardHeld(SDLK_Q) || Input->KeyboardHeld(SDLK_RETURN) || Input->KeyboardHeld(SDLK_SPACE)))
 			{
 				if (GlobalSoundEnabled)
-					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+					PlaySoundTrack(Sounds[SND_SELECT]);
 				if(LevelEditorMode)
 				{
 					LevelHasChanged = false;
@@ -188,7 +188,7 @@ void StageSelect()
 							GameState = GSGame;
 						}
 						if (GlobalSoundEnabled)
-							Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+							PlaySoundTrack(Sounds[SND_SELECT]);
 						Input->Reset();
 					}
 				Input->Delay();
@@ -207,7 +207,7 @@ void StageSelect()
 					else
 					{
 						if (GlobalSoundEnabled)
-							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+							PlaySoundTrack(Sounds[SND_MENU]);
 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
 						{
@@ -224,7 +224,7 @@ void StageSelect()
 					if (SelectedLevel != 1)
 					{
 						if (GlobalSoundEnabled)
-							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+							PlaySoundTrack(Sounds[SND_MENU]);
 						SelectedLevel -= 5;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
@@ -247,7 +247,7 @@ void StageSelect()
 				if (SelectedLevel != InstalledLevels)
 				{
 					if (GlobalSoundEnabled)
-						Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+						PlaySoundTrack(Sounds[SND_MENU]);
 					SelectedLevel +=5;
 					if (SelectedLevel > InstalledLevels)
 						SelectedLevel = InstalledLevels;
@@ -278,7 +278,7 @@ void StageSelect()
 					else
 					{
 						if (GlobalSoundEnabled)
-							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+							PlaySoundTrack(Sounds[SND_MENU]);
 
 						sprintf(FileName,"%s/.blips_levelpacks/%s/level%d.lev", SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"), LevelPackFileName, SelectedLevel);
 						if(!FileExists(FileName))
@@ -296,7 +296,7 @@ void StageSelect()
 					if(SelectedLevel != 1)
 					{
 						if (GlobalSoundEnabled)
-							Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+							PlaySoundTrack(Sounds[SND_MENU]);
 						SelectedLevel--;
 						if (SelectedLevel < 1)
 							SelectedLevel = 1;
@@ -319,7 +319,7 @@ void StageSelect()
 				if(SelectedLevel != InstalledLevels)
 				{
 					if (GlobalSoundEnabled)
-						Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+						PlaySoundTrack(Sounds[SND_MENU]);
 					SelectedLevel++;
 
 					if (SelectedLevel > InstalledLevels)

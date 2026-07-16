@@ -51,27 +51,27 @@ void Game()
 		if(GlobalSoundEnabled)
 		{
 		    SelectedMusic =	1+SDL_rand(MusicCount-1);
-			Mix_PlayMusic(Music[SelectedMusic],0);
+			PlayMusicTrack(Music[SelectedMusic],0);
 			SetVolume(Volume);
 		}
 	}
     while (GameState == GSGame)
     {
         frameticks = SDL_GetPerformanceCounter();
-        if(!Mix_PlayingMusic())
+        if(!MIX_TrackPlaying(MusicTrack))
             if(GlobalSoundEnabled)
             {
                 if (MusicCount > 1)
                 {
                     SelectedMusic =	1+SDL_rand(MusicCount-1);
-                    Mix_PlayMusic(Music[SelectedMusic],0);
+                    PlayMusicTrack(Music[SelectedMusic],0);
                     SetVolume(Volume);
                 }
                 else
                     if(MusicCount ==1)
                     {
                         SelectedMusic =	0;
-                        Mix_PlayMusic(Music[SelectedMusic],0);
+                        PlayMusicTrack(Music[SelectedMusic],0);
                         SetVolume(Volume);
                     }
 
@@ -107,14 +107,14 @@ void Game()
             if(!LevelEditorMode)
 			{
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                    PlaySoundTrack(Sounds[SND_BACK]);
                     
                 if (AskQuestion("Are you sure you want to return to the stage selector?\n\nPress (A) to confirm (X) to Cancel"))
                 {
                     GameState = GSStageSelect;
                 }
                 if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                	PlaySoundTrack(Sounds[SND_SELECT]);
                 Input->Reset();
                 
 			}
@@ -124,7 +124,7 @@ void Game()
         if(Input->Ready() && (Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_START)) || Input->KeyboardHeld(SDLK_RETURN)))
         {
             if (GlobalSoundEnabled)
-                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                PlaySoundTrack(Sounds[SND_BACK]);
                     
             if(LevelEditorMode)
 			{				
@@ -133,7 +133,7 @@ void Game()
                     GameState=GSLevelEditor;
                 }
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    PlaySoundTrack(Sounds[SND_SELECT]);
                 Input->Reset();
 			}
             else
@@ -155,7 +155,7 @@ void Game()
                     }
                 }
                 if (GlobalSoundEnabled)
-					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+					PlaySoundTrack(Sounds[SND_SELECT]);
                 Input->Reset();
             }
             Input->Delay();
@@ -170,8 +170,8 @@ void Game()
                     SelectedMusic = 1;
                 if(GlobalSoundEnabled)
                 {
-                    Mix_HaltMusic();
-                    Mix_PlayMusic(Music[SelectedMusic],0);
+                    MIX_StopTrack(MusicTrack, 0);
+                    PlayMusicTrack(Music[SelectedMusic],0);
                     SetVolume(Volume);
                 }
             }
@@ -369,7 +369,7 @@ void Game()
 						}
 					}
                     if (GlobalSoundEnabled)
-				        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+				        PlaySoundTrack(Sounds[SND_SELECT]);
 					Input->Reset();
 				}
 				else
@@ -404,7 +404,7 @@ void Game()
 						GameState = GSStageSelect;
                     }
                     if (GlobalSoundEnabled)
-				        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+				        PlaySoundTrack(Sounds[SND_SELECT]);
 					Input->Reset();
 
 				}
@@ -414,7 +414,7 @@ void Game()
 		{
 			SDL_Delay(250);
 			if (GlobalSoundEnabled)
-				Mix_PlayChannel(-1,Sounds[SND_STAGEEND],0);
+				PlaySoundTrack(Sounds[SND_STAGEEND]);
 			if (LevelEditorMode)
 			{
 				if (AskQuestion("Congratulations !\nYou Succesfully Solved this level\nDo you want to return to the\nlevel editor ?\n(A) Leveleditor (X) Play Again"))
@@ -436,7 +436,7 @@ void Game()
 
 				}
                 if (GlobalSoundEnabled)
-				    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+				    PlaySoundTrack(Sounds[SND_SELECT]);
 				Input->Reset();
 			}
 			else
@@ -448,7 +448,7 @@ void Game()
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nThe next level has now been unlocked!\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 						PrintForm(Text);
                         if (GlobalSoundEnabled)
-                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                			PlaySoundTrack(Sounds[SND_SELECT]);
 						UnlockedLevels++;
 						SelectedLevel++;
 						SaveUnlockData();
@@ -459,7 +459,7 @@ void Game()
 						sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\nlevelpack %s\nis now finished, try out another one!\n\nPress (A) to continue",SelectedLevel,InstalledLevels,LevelPackName);
 						PrintForm(Text);
                         if (GlobalSoundEnabled)
-                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                			PlaySoundTrack(Sounds[SND_SELECT]);
 						GameState = GSTitleScreen;
 					}
 				}
@@ -468,7 +468,7 @@ void Game()
 					sprintf(Text,"Congratulations !\nYou Succesfully Solved Level %d/%d\n\nPress (A) to continue",SelectedLevel,InstalledLevels);
 					PrintForm(Text);
                     if (GlobalSoundEnabled)
-                			Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                			PlaySoundTrack(Sounds[SND_SELECT]);
 					GameState = GSStageSelect;
 
 				}

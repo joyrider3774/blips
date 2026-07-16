@@ -20,10 +20,10 @@ void LevelEditorMenu()
         frameticks = SDL_GetPerformanceCounter();
         SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
-            if (! Mix_PlayingMusic())
+            if(!MIX_TrackPlaying(MusicTrack))
             {
                 SelectedMusic = 0;
-                Mix_PlayMusic(Music[SelectedMusic],0);
+                PlayMusicTrack(Music[SelectedMusic],0);
                 SetVolume(Volume);
             }
 		SDL_RenderTexture(Renderer, IMGTitleScreen,NULL,NULL);
@@ -40,7 +40,7 @@ void LevelEditorMenu()
 		if(Input->KeyboardHeld(SDLK_ESCAPE) || Input->SpecialsHeld(SPECIAL_QUIT_EV) || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)))
 		{
 			if (GlobalSoundEnabled)
-            	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+            	PlaySoundTrack(Sounds[SND_BACK]);
             GameState = GSTitleScreen;
 		}
 
@@ -67,7 +67,7 @@ void LevelEditorMenu()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                        PlaySoundTrack(Sounds[SND_MENU]);
                     SelectedLevelPack--;
                     if(SelectedLevelPack < 0)
                         SelectedLevelPack = InstalledLevelPacksCount -1;
@@ -84,7 +84,7 @@ void LevelEditorMenu()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                        PlaySoundTrack(Sounds[SND_MENU]);
                     SelectedLevelPack++;
                     if(SelectedLevelPack > InstalledLevelPacksCount-1)
                         SelectedLevelPack = 0;
@@ -102,7 +102,7 @@ void LevelEditorMenu()
             {
                 Selection++;
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             }
 
             Input->Delay();
@@ -115,7 +115,7 @@ void LevelEditorMenu()
             {
                 Selection--;
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             }
             Input->Delay();
         }
@@ -129,7 +129,7 @@ void LevelEditorMenu()
             {
                 case 1:
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     PackName = GetString("","Enter the Levelpack name:");
                     Input->Reset();
                     if (strlen(PackName) > 0)
@@ -191,14 +191,14 @@ void LevelEditorMenu()
                         SelectedLevel=0;
                         GameState=GSStageSelect;
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                            PlaySoundTrack(Sounds[SND_SELECT]);
                     }
                     break;
                 case 3:
                     if (InstalledLevelPacksCount >0)
                     {
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                            PlaySoundTrack(Sounds[SND_SELECT]);
                         sprintf(Tekst,"do you want to delete the selected level pack:\n\"%s\"\nAll Levels in Levelpack will be deleted !!!\n\nPress A to Delete, X to Cancel",InstalledLevelPacks[SelectedLevelPack]);
                         if(AskQuestion(Tekst))
                         {
@@ -222,7 +222,7 @@ void LevelEditorMenu()
                             SearchForLevelPacks();
                         }
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                            PlaySoundTrack(Sounds[SND_SELECT]);
                         Input->Reset();
 
                     }
@@ -231,7 +231,7 @@ void LevelEditorMenu()
                     if (InstalledLevelPacksCount > 0)
                     {
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                            PlaySoundTrack(Sounds[SND_MENU]);
                         SelectedLevelPack++;
                         if(SelectedLevelPack > InstalledLevelPacksCount-1)
                             SelectedLevelPack = 0;
@@ -242,7 +242,7 @@ void LevelEditorMenu()
                     break;
                 case 5:
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     GameState = GSTitleScreen;
                     break;
             }

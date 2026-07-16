@@ -23,20 +23,20 @@ bool LevelErrorsFound()
 	if (NumPlayer==0)
 	{
 		if (GlobalSoundEnabled)
-			Mix_PlayChannel(-1,Sounds[SND_ERROR],0);
+			PlaySoundTrack(Sounds[SND_ERROR]);
 		PrintForm("Can not save this level because there's\nno player in the level! Please add a Player\nand try again or cancel saving.\n\nPress 'A' to continue");
         if (GlobalSoundEnabled)
-            Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+            PlaySoundTrack(Sounds[SND_SELECT]);
 		return true;
 	}
 	else
         if (NumDiamond==0)
         {
             if (GlobalSoundEnabled)
-                Mix_PlayChannel(-1,Sounds[SND_ERROR],0);
+                PlaySoundTrack(Sounds[SND_ERROR]);
             PrintForm("Can not save this level because there's\nno star in the level! Please add a star\nand try again or cancel saving.\n\nPress 'A' to continue");
             if (GlobalSoundEnabled)
-                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                PlaySoundTrack(Sounds[SND_SELECT]);
             return true;
         }
 
@@ -98,10 +98,10 @@ void LevelEditor()
         frameticks = SDL_GetPerformanceCounter();
         SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
-            if (! Mix_PlayingMusic())
+            if(!MIX_TrackPlaying(MusicTrack))
             {
                 SelectedMusic = 0;
-                Mix_PlayMusic(Music[SelectedMusic],0);
+                PlayMusicTrack(Music[SelectedMusic],0);
                 SetVolume(Volume);
             }
 
@@ -222,7 +222,7 @@ void LevelEditor()
             if (LevelHasChanged)
             {
                 if (GlobalSoundEnabled)
-					Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+					PlaySoundTrack(Sounds[SND_BACK]);
                 if(AskQuestion("The current level isn't saved yet!\nDo you want to save it now ?\n\nPress (A) to save, (X) to cancel saving"))
                 {                    
                     SDL_SetRenderTarget(Renderer, Buffer);
@@ -277,13 +277,13 @@ void LevelEditor()
                     GameState = GSStageSelect;
 				}
                 if (GlobalSoundEnabled)
-				    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+				    PlaySoundTrack(Sounds[SND_SELECT]);
                 Input->Reset();
             }
             else
 			{
 				if (GlobalSoundEnabled)
-                	Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                	PlaySoundTrack(Sounds[SND_BACK]);
                 GameState = GSStageSelect;
 			}
         }
@@ -293,7 +293,7 @@ void LevelEditor()
             if(!LevelErrorsFound())
             {
                 if (GlobalSoundEnabled)
-					Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+					PlaySoundTrack(Sounds[SND_SELECT]);
 				sprintf(FileName,"%s/.blips_temp.lev",SDL_getenv("HOME") == NULL ? ".": SDL_getenv("HOME"));
                 WorldParts.Save(FileName);
                 StageReload = true;
@@ -587,14 +587,14 @@ void LevelEditor()
             if (WorldParts.ItemCount > 0)
             {
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    PlaySoundTrack(Sounds[SND_SELECT]);
                 if(AskQuestion("You are about to delete all parts\nin this level, are you sure\nyou want to do this?\n\nPress (A) to delete, (X) to cancel"))
                 {
                     LevelHasChanged = true;
                     WorldParts.RemoveAll();
                 }
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                    PlaySoundTrack(Sounds[SND_SELECT]);
             }
 
             Input->Reset();

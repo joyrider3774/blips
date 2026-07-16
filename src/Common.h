@@ -15,8 +15,8 @@
 enum GameStates {GSTitleScreen,GSCredits,GSInstructions,GSIntro,GSQuit,GSGame,GSStageClear,GSStageSelect,GSLevelEditor,GSLevelEditorMenu,GSTest,GSSetupUsbJoystickButtons};
 
 extern bool GlobalSoundEnabled;
-extern Mix_Chunk *Sounds[NrOfSounds];
-
+extern MIX_Audio *Sounds[NrOfSounds];
+extern MIX_Track* SoundsTracks[NrOfTracks];
 extern SDL_Texture *IMGBackground, *IMGFloor, *IMGPlayer, *IMGPlayer2, *IMGBox, *IMGEmpty, *IMGTitleScreen, *IMGInstructions, *IMGWall,
             *IMGIntro1, *IMGIntro2, *IMGIntro3, *IMGBomb, *IMGDiamond, *IMGExplosion, *IMGGrid;
 
@@ -35,7 +35,8 @@ extern int Volume;
 extern char LevelPackName[21];
 extern char LevelPackFileName[21];
 extern char InstalledLevelPacks[MaxLevelPacks][21];
-extern Mix_Music *Music[MaxMusicFiles];
+extern MIX_Audio *Music[MaxMusicFiles];
+extern MIX_Track *MusicTrack;
 extern bool disableJoysticks;
 extern int WINDOW_WIDTH;
 extern int WINDOW_HEIGHT;
@@ -51,4 +52,5 @@ extern int fpsAvgCount, skipCounter;
 extern char basePath[FILENAME_MAX];
 extern bool fullScreen;
 extern CInput *Input;
+extern MIX_Mixer *Mixer;
 #endif

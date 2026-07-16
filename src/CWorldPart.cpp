@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include "Common.h"
+#include "GameFuncs.h"
 #include "CWorldPart.h"
 #include "SPoint.h"
 
@@ -319,7 +320,7 @@ CExplosion::CExplosion(const int PlayFieldXin,const int PlayFieldYin) : CWorldPa
 {
     if(GlobalSoundEnabled)
 	{
-        Mix_PlayChannel(-1,Sounds[SND_EXPLODE],0);
+        PlaySoundTrack(Sounds[SND_EXPLODE]);
 	}
 	Image = &IMGExplosion;
 	Type = IDExplosion;

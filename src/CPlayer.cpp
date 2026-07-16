@@ -1,4 +1,5 @@
 #include "CPlayer.h"
+#include "GameFuncs.h"
 #include <SDL3_mixer/SDL_mixer.h>
 
 CPlayer::CPlayer(const int PlayFieldXin,const int PlayFieldYin) : CWorldPart(PlayFieldXin,PlayFieldYin)
@@ -101,7 +102,7 @@ void CPlayer::Event_ArrivedOnNewSpot()
                 {
                     ParentList->Items[Teller]->Kill();
                     if(GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_COLLECT],0);
+                        PlaySoundTrack(Sounds[SND_COLLECT]);
                 }
 
             }
@@ -234,7 +235,7 @@ void CPlayer::MoveTo(const int PlayFieldXin,const int PlayFieldYin,bool BackWard
 			IsMoving = true;
 			if(GlobalSoundEnabled)
 			{
-        		Mix_PlayChannel(-1,Sounds[SND_MOVE],0);
+        		PlaySoundTrack(Sounds[SND_MOVE]);
 			}
 		}
 		else

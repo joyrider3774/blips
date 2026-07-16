@@ -12,10 +12,10 @@ void Instructions()
         frameticks = SDL_GetPerformanceCounter();
         SDL_SetRenderTarget(Renderer, Buffer);
         if(GlobalSoundEnabled)
-            if(!Mix_PlayingMusic())
+            if(!MIX_TrackPlaying(MusicTrack))
             {
                 SelectedMusic = 0;
-                Mix_PlayMusic(Music[SelectedMusic],0);
+                PlayMusicTrack(Music[SelectedMusic],0);
                 SetVolume(Volume);
             }
 		SDL_RenderTexture(Renderer, IMGInstructions,NULL,NULL);
@@ -49,7 +49,7 @@ void Instructions()
            Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_X)) ||  Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_Y))  || Input->JoystickHeld(0, JoystickSetup->GetButtonValue(BUT_B)) )
         {
 			if (GlobalSoundEnabled)
-                Mix_PlayChannel(-1,Sounds[SND_BACK],0);
+                PlaySoundTrack(Sounds[SND_BACK]);
             GameState=GSTitleScreen;
         }
 

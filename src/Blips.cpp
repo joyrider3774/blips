@@ -168,12 +168,13 @@ int main(int argc, char **argv)
 						}
 					}
 					logMessage("Available Audio Drivers: %s\n", AudioDriverNames);
+					MIX_Init();
 					SDL_AudioSpec spec;
-					spec.channels = MIX_DEFAULT_CHANNELS;
 					spec.format = SDL_AUDIO_S16;
 					spec.freq = 22050;
-
-					if (!Mix_OpenAudio(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec))
+					spec.channels = 2;
+					Mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
+					if (!Mixer)
 					{
 						logMessage("Failed to initialise sound!\n");
 						logMessage("%s\n", SDL_GetError());
@@ -282,7 +283,7 @@ int main(int argc, char **argv)
 						}
 						TTF_Quit();
 						if(GlobalSoundEnabled)
-							Mix_CloseAudio();
+							MIX_DestroyMixer(Mixer);
 					}
 					else
 					{

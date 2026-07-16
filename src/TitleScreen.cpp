@@ -17,10 +17,10 @@ void TitleScreen()
 		{
             if(GlobalSoundEnabled)
 			{
-                if(!Mix_PlayingMusic())
+                if(!MIX_TrackPlaying(MusicTrack))
                 {
                     SelectedMusic = 0;
-                    Mix_PlayMusic(Music[SelectedMusic],0);
+                    PlayMusicTrack(Music[SelectedMusic],0);
                     SetVolume(Volume);
                 }
 			}
@@ -57,7 +57,7 @@ void TitleScreen()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                        PlaySoundTrack(Sounds[SND_MENU]);
                     SelectedLevelPack--;
                     if(SelectedLevelPack < 0)
                         SelectedLevelPack = InstalledLevelPacksCount -1;
@@ -74,7 +74,7 @@ void TitleScreen()
                 if (InstalledLevelPacksCount > 0)
                 {
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                        PlaySoundTrack(Sounds[SND_MENU]);
                     SelectedLevelPack++;
                     if(SelectedLevelPack > InstalledLevelPacksCount-1)
                         SelectedLevelPack = 0;
@@ -92,7 +92,7 @@ void TitleScreen()
             {
                 Selection++;
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             }
 
             Input->Delay();
@@ -105,7 +105,7 @@ void TitleScreen()
             {
                 Selection--;
                 if (GlobalSoundEnabled)
-                    Mix_PlayChannel(-1,Sounds[SND_MENU],0);
+                    PlaySoundTrack(Sounds[SND_MENU]);
             }
             Input->Delay();
         }
@@ -125,17 +125,17 @@ void TitleScreen()
                             LevelEditorMode=false;
                             GameState=GSStageSelect;
                             if (GlobalSoundEnabled)
-                                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                                PlaySoundTrack(Sounds[SND_SELECT]);
                         }
                         else
                         {
                             if (GlobalSoundEnabled)
-                                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                                PlaySoundTrack(Sounds[SND_SELECT]);
                             SDL_RenderTexture(Renderer, IMGTitleScreen,NULL,NULL);
                             sprintf(Tekst,"There are no levels found in levelpack\n%s\n\nPlease create a level for this level pack\nfirst!",LevelPackName);
                             PrintForm(Tekst);
                             if (GlobalSoundEnabled)
-                                Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                                PlaySoundTrack(Sounds[SND_SELECT]);
                             Input->Reset();
                         }
                     }
@@ -144,13 +144,13 @@ void TitleScreen()
                     GameState=GSLevelEditorMenu;
                     LevelEditorMode=true;
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     break;
                 case 3:
                     if (InstalledLevelPacksCount > 0)
                     {
                         if (GlobalSoundEnabled)
-                            Mix_PlayChannel(-1,Sounds[SND_MENU], 0);
+                            PlaySoundTrack(Sounds[SND_MENU]);
                         SelectedLevelPack++;
                         if(SelectedLevelPack > InstalledLevelPacksCount-1)
                             SelectedLevelPack = 0;
@@ -162,22 +162,22 @@ void TitleScreen()
                 case 4:
                     GameState = GSInstructions;
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     break;
                 case 5:
                     GameState = GSSetupUsbJoystickButtons;
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     break;                
                 case 6:
                     GameState=GSCredits;
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     break;
                 case 7:
                     GameState = GSQuit;
                     if (GlobalSoundEnabled)
-                        Mix_PlayChannel(-1,Sounds[SND_SELECT],0);
+                        PlaySoundTrack(Sounds[SND_SELECT]);
                     break;
 
             }

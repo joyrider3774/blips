@@ -3,11 +3,14 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 char* assetPath(const char* assetSubPath);
 void LoadJoystickSettings();
 void UnloadSounds();
 void LoadSounds();
+void PlaySoundTrack (MIX_Audio *Audio);
+void PlayMusicTrack (MIX_Audio *Audio, int loops);
 void UnloadMusic();
 void UnLoadGraphics();
 void FindLevels();
