@@ -17,6 +17,7 @@ jobs:
           - { runson: 'ubuntu-24.04-arm', runsontype: 'linux',   sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'ubuntu-22.04-arm', runsontype: 'linux',   sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-15-intel',   runsontype: 'mac',     sys: 'usr',     env: 'intel',  name: 'Blips', binsuffix: '',     }
+          - { runson: 'macos-26-intel',   runsontype: 'mac',     sys: 'usr',     env: 'intel',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-14',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-15',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
           - { runson: 'macos-26',         runsontype: 'mac',     sys: 'usr',     env: 'arm64',  name: 'Blips', binsuffix: '',     }
@@ -26,7 +27,7 @@ jobs:
     runs-on: ${{matrix.runson}}    
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           
@@ -178,8 +179,15 @@ jobs:
           cp ./README.md "./Release/${{matrix.name}}/"
           cp ./LICENSE "./Release/${{matrix.name}}/"
         
-      - name: Store build
-        uses: actions/upload-artifact@v4
+      - if: ${{ matrix.runsontype != 'appimage'}}
+        name: Store build
+        uses: actions/upload-artifact@v7
         with:
           name: ${{matrix.name}}-${{matrix.runson}}_${{ matrix.env }}
           path: ./Release/
+          
+      - if: ${{ matrix.runsontype == 'appimage'}}
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{matrix.name}}-${{matrix.runsontype}}_${{ matrix.env }}
+          path: ./dist/
