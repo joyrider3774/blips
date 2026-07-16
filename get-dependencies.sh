@@ -46,4 +46,4 @@ mkdir build
 cd build
 cmake ..
 make
-cp ./build/Blips ./Blips
+cp ./Blips ../
