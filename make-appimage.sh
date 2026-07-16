@@ -15,11 +15,11 @@ export MAIN_BIN=Blips
 quick-sharun ./Blips
 
 # Additional changes can be done in between here
-cp -r "fonts" "./AppDir/fonts"
-cp -r "graphics" "./AppDir/graphics"
-cp -r "levelpacks" "./AppDir/levelpacks"
-cp -r "music" "./AppDir/music"
-cp -r "sound" "./AppDir/sound"
+cp -r "fonts" "./AppDir/bin/fonts"
+cp -r "graphics" "./AppDir/bin/graphics"
+cp -r "levelpacks" "./AppDir/bin/levelpacks"
+cp -r "music" "./AppDir/bin/music"
+cp -r "sound" "./AppDir/bin/sound"
 cp ./README.md "./AppDir/"
 cp ./LICENSE "./AppDir/"
 		  
