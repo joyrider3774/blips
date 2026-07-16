@@ -9,6 +9,7 @@ export ADD_HOOKS="self-updater.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
 export ICON=https://raw.githubusercontent.com/joyrider3774/blips/refs/heads/main/graphics/blips.png
 export DESKTOP=DUMMY
+export MAIN_BIN=Blips
 
 # Deploy dependencies
 quick-sharun ./Blips
